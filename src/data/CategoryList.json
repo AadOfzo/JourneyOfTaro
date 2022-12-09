@@ -1,0 +1,11 @@
+[
+  {
+    "name" : "henk",
+    "item" : "Item 1"
+  },
+  {
+    "name" : "piet",
+    "item" : "Item 1",
+    "secondItem" : "Item 2"
+  }
+]
