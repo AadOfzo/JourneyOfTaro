@@ -1,22 +1,27 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import './Navbar.css'
 import {NavLink} from "react-router-dom";
 
 //Icons
-// import { FaBars, FaHamburger, FaTimes } from "react-icons/fa";
+import {FaBars,  FaTimes} from "react-icons/fa";
 
 function Navbar() {
+    const navRef = useRef();
+
+    const showNavbar = () => {
+        navRef.current.classList.toggle("responsive_nav");
+    }
 
     return (
         <>
             <header className='navbar-header'>
-                <nav className="navbar-wrapper">
+                <nav ref={navRef} className="navbar-wrapper">
 
                     <label className="navbar-title">Journey of Taro</label>
 
                     <ul className='navbar-ul'>
                         <li><NavLink to="/"
-                                     className={({ isActive }) => isActive ? 'active-link' : 'default-link'}>
+                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
                             Home
                         </NavLink></li>
 
@@ -44,14 +49,20 @@ function Navbar() {
                                      className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
                             Login
                         </NavLink></li>
+
                     </ul>
 
-                    {/*<button><FaHamburger/></button>*/}
-                    {/*<button><FaTimes/></button>*/}
+                    <div className='toggle-nav-icons'>
+                        <button className="nav-btn nav-close-btn" onClick={showNavbar}>
+                            <FaTimes/>
+                        </button>
 
+                        <button className="nav-btn" onClick={showNavbar}>
+                            <FaBars/>
+                        </button>
+                    </div>
 
                 </nav>
-
 
             </header>
         </>

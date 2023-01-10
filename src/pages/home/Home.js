@@ -14,7 +14,6 @@ function Home() {
             <main className="home-main">
 
                 <div className="page-menus-container">
-
                     <PageMenu
                         pageImage={OutlineLogo}
                         pageName="Music"

@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
 
 :root {
-    --primary: #050505;
-    --secondary: #edae41;
+    --primary: #000000;
+    --secondary: #eaa733;
     --textPrimary: rgb(234, 167, 51);
-    --textSecondary: #020202;
+    --textSecondary: #000000;
     --testColorOne: rgb(167, 24, 24);
     --testColorTwo: rgba(141, 250, 79, 0.6);
 }
@@ -13,21 +13,28 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    flex-direction: column;
-    font-family: 'Julius Sans One', sans-serif;
-    text-decoration: none;
-    color: var(--textPrimary);
+}
+ul, li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+    color: var(--textPrimary);
+    font-family: 'Julius Sans One', sans-serif;
+}
+a, a:visited {
+    color: var(--textPrimary);
+    text-decoration: none;
+}
 .main-outer-container {
     min-height: 100vh;
     min-width: 100%;
     display: flex;
     flex-direction: column;
-}
-
-.main-header {
-
 }
 
 .main-footer {
