@@ -25,12 +25,12 @@ const SPageMenus = styled.div`
       }
 
       .page-name {
-        color: #eaa733;
+        color: var(--textPrimary);
         letter-spacing: 0.2em;
         text-transform: uppercase;
         padding: 1rem;
         position: static;
-        border: solid 1px var(--secondary);
+        //border: solid 1px var(--secondary);
 
         :hover {
           display: inherit;
@@ -40,12 +40,12 @@ const SPageMenus = styled.div`
       }
     }
     .page-item-list {
-      border: solid 1px var(--secondary);
+      //border: solid 1px var(--secondary);
       .page-item {
         text-align: center;
-        padding: 2px;
-        margin: 3px;
-        border: solid 1px var(--secondary);
+        padding: 0.2rem;
+        margin: 0.2rem;
+        //border: solid 1px var(--secondary);
       }
     }
   }

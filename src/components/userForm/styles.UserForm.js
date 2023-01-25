@@ -1,54 +1,52 @@
 import styled from "styled-components";
 
 const SUserForm = styled.div`
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-grow: 0;
-  flex-shrink: 1;
+  text-align: center;
+  //flex-grow: 0;
+  //flex-shrink: 1;
   margin: 1rem;
   padding: 1rem;
-
-  .demo-upload-form-outer-container {
-    background-color: var(--testColorOne);
+  
+  h2 {
+    padding: 0.2rem;
+    margin: 0.2rem;
   }
-
-  .demo-upload-form-container {
+  
+  form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    border: solid 1px var(--secondary);
-
-    .form-item {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      text-align: center;
-      padding: 2px;
-      margin: 3px;
-      border: solid 1px var(--secondary);
-
-      .label {
-        display: flex;
-        .input {
-          display: flex;
-          height: 1.5rem;
-          border: solid 1px var(--testColorTwo);
-        }
-      }
+    
+    p {
+      font-size: 1.2rem;
+      padding: 0.2rem;
+      margin: 0.2rem;
     }
-
-    .form-submit {
-      display: flex;
-      text-align: center;
-      background-color: var(--primary);
+    
+    input {
+      width: 100%;
       height: 1.5rem;
+      display: flex;
+      font-size: 1.2rem;
+      padding: 0.2rem;
+      margin: 0.2rem;
+    }
+    
+    button {
+      height: 2rem;
+      display: flex;
+      justify-content: center;
+      font-family: 'Julius Sans One', sans-serif;
+      font-size: 1.5rem;
+      background-color: var(--secondary);
+      padding: 0.2rem;
+      margin: 0.2rem;
     }
   }
-
-\`     ;
 `;
 
 export default SUserForm;

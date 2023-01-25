@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 
 //Icons
 import {FaBars,  FaTimes} from "react-icons/fa";
+import MusicPlayerTop from "../musicPlayer/MusicPlayerTop";
 
 function Navbar() {
     const navRef = useRef();
@@ -63,6 +64,9 @@ function Navbar() {
                     </div>
 
                 </nav>
+
+                {/*Music Player Top*/}
+                <MusicPlayerTop/>
 
             </header>
         </>

@@ -5,10 +5,12 @@ import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // // Components
 import Navbar from "./components/navbar/Navbar";
+import MusicPlayerBottom from "./components/musicPlayer/MusicPlayerBottom";
+
 
 // // // Pages
 import Home from "./pages/home/Home";
-import Music from "./pages/music/Music";
+import Music from "./pages/music/MusicPage";
 import Samples from "./pages/samples/Samples";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login";
@@ -27,6 +29,7 @@ function App() {
                 </React.Fragment>
 
                 {/*Page Routes*/}
+                {/*<Router>*/}
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="/music" element={<Music/>}/>
@@ -37,6 +40,9 @@ function App() {
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
                 {/*</Router>*/}
+
+                {/*Music Player Bottom*/}
+                <MusicPlayerBottom/>
 
                 <footer className="main-footer">
                     {/*Hier komt de Footer!!*/}
