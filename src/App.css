@@ -35,6 +35,7 @@ a, a:visited {
     min-width: 100%;
     display: flex;
     flex-direction: column;
+    align-content: center;
 }
 
 .main-footer {

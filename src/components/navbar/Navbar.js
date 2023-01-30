@@ -3,15 +3,15 @@ import './Navbar.css'
 import {NavLink} from "react-router-dom";
 
 //Icons
-import {FaBars,  FaTimes} from "react-icons/fa";
+// import {FaBars,  FaTimes} from "react-icons/fa";
 import MusicPlayerTop from "../musicPlayer/MusicPlayerTop";
 
 function Navbar() {
     const navRef = useRef();
 
-    const showNavbar = () => {
-        navRef.current.classList.toggle("responsive_nav");
-    }
+    // const showNavbar = () => {
+    //     navRef.current.classList.toggle("responsive_nav");
+    // }
 
     return (
         <>
@@ -53,15 +53,15 @@ function Navbar() {
 
                     </ul>
 
-                    <div className='toggle-nav-icons'>
-                        <button className="nav-btn nav-close-btn" onClick={showNavbar}>
-                            <FaTimes/>
-                        </button>
+                    {/*<div className='toggle-nav-icons'>*/}
+                    {/*    <button className="nav-btn nav-close-btn" onClick={showNavbar}>*/}
+                    {/*        <FaTimes/>*/}
+                    {/*    </button>*/}
 
-                        <button className="nav-btn" onClick={showNavbar}>
-                            <FaBars/>
-                        </button>
-                    </div>
+                    {/*    <button className="nav-btn" onClick={showNavbar}>*/}
+                    {/*        <FaBars/>*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
 
                 </nav>
 
