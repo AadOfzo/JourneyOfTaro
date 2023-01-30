@@ -38,6 +38,19 @@ a, a:visited {
     align-content: center;
 }
 
+.main-content-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1140px;
+}
+
+.text-container {
+    margin: 0 auto;
+    max-width: 800px;
+}
+.text-container p {
+    color: crimson;
+}
 .main-footer {
     min-height: 10vh;
     max-height: 15vh;

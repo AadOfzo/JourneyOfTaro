@@ -1,7 +1,7 @@
 import './App.css';
 // React
 import React from 'react';
-import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
 // // Components
 import Navbar from "./components/navbar/Navbar";
@@ -25,20 +25,22 @@ function App() {
                 {/*Navigation*/}
                 {/*<Router> Routes werken, maar niet met een Router er omheen*/}
                 <React.Fragment>
-                <Navbar />
+                    <Navbar/>
                 </React.Fragment>
 
                 {/*Page Routes*/}
                 {/*<Router>*/}
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/music" element={<Music/>}/>
-                    <Route path="/samples" element={<Samples/>}/>
-                    <Route path="/about" element={<About/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/upload" element={<UploadPage/>}/>
-                    <Route path="*" element={<NotFound/>}/>
-                </Routes>
+                <div className="main-content-container">
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/music" element={<Music/>}/>
+                        <Route path="/samples" element={<Samples/>}/>
+                        <Route path="/about" element={<About/>}/>
+                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/upload" element={<UploadPage/>}/>
+                        <Route path="*" element={<NotFound/>}/>
+                    </Routes>
+                </div>
                 {/*</Router>*/}
 
                 {/*Music Player Bottom*/}

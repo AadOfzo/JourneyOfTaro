@@ -7,6 +7,7 @@ const SPageMenus = styled.div`
   flex-shrink: 1;
   margin: 1rem;
   padding: 1rem;
+  text-align: center;
   ul {
 
     .first-item-list {
