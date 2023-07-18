@@ -43,7 +43,7 @@ function App() {
                 {/*</Router>*/}
 
                 {/*Music Player Bottom*/}
-                <MusicPlayerBottom/>
+                {/*<MusicPlayerBottom/>*/}
 
                 <footer className="main-footer">
                     {/*Hier komt de Footer!!*/}

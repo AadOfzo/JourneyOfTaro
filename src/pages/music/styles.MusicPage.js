@@ -6,6 +6,7 @@ const SMusicPage = styled.div`
     justify-content: center;
     align-items: center;
     flex: 1;
+  
 `;
 
 export default SMusicPage;

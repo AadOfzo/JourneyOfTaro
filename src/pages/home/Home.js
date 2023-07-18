@@ -11,7 +11,7 @@ import FaceLogo from "../../assets/images/svg/JourneyOfTaro_Logo_PortraitOutline
 function Home() {
     return (
         <>
-            <main className="home-main">
+            <main className="pages-main-container">
 
                 <div className="page-menus-container">
                     <PageMenu

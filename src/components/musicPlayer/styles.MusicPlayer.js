@@ -10,8 +10,8 @@ const SMusicPlayer = styled.div`
     display: flex;
     flex-direction: row;
     align-content: center;
-    height: 1.5rem;
-    width: 40vw;
+    height: 20px;
+    width: 625px;
     margin: 10px;
     background-color: var(--secondary);
   }
@@ -20,10 +20,11 @@ const SMusicPlayer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    height: 10vh;
-    width: 50vw;
+    height: 100px;
+    width: 700px;
     margin: 10px;
     background-color: var(--testColorTwo);
+    border-radius: 10px;
   }
 
 `;

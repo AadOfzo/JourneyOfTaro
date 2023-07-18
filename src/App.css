@@ -30,6 +30,7 @@ a, a:visited {
     color: var(--textPrimary);
     text-decoration: none;
 }
+
 .main-outer-container {
     min-height: 100vh;
     min-width: 100%;
@@ -39,17 +40,29 @@ a, a:visited {
 }
 
 .main-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
     padding: 20px;
     margin: 0 auto;
-    max-width: 1140px;
+    /*max-width: 1140px;*/
+}
+
+.pages-main-container {
+    width: 100vw;
 }
 
 .text-container {
+    display: flex;
+    align-items: center;
     margin: 0 auto;
-    max-width: 800px;
+    padding: 10px;
+    max-width: 400px;
+    border: solid 1px var(--secondary);
 }
 .text-container p {
-    color: crimson;
+    padding: 10px;
 }
 .main-footer {
     min-height: 10vh;

@@ -1,52 +1,23 @@
 import React from 'react';
-import SMusicPage from "./styles.MusicPage";
-import PageMenu from "../../components/pageMenu/PageMenu";
-import TextLogo from "../../assets/images/svg/JourneyOfTaro_Logo_Compass.svg";
+import TextContainerSquare from "../../components/contentLayout/TextContainerSquare"
 
 function MusicPage() {
-    return (
-        <>
-            <SMusicPage>
-                <main className="page-menus-container">
-                    <PageMenu
-                        pageImage={TextLogo}
-                        pageName="Music"
-                        pageItemOne="Releases"
-                        pageItemTwo="Meditations"
-                    />
+    return (<>
+        <main className="pages-main-container">
 
-                    <div className="text-container">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores cum delectus
-                            distinctio dolorum eaque error esse excepturi exercitationem fuga illum impedit, ipsam
-                            magni,
-                            modi nihil nobis, quasi quos sapiente similique tempore! Autem dolorum eligendi eum
-                            exercitationem ipsum nulla odit optio pariatur, quas quibusdam, soluta suscipit voluptate.
-                            Blanditiis delectus dicta eaque earum eius esse iusto maiores. A ab accusantium amet
-                            consequuntur culpa dolorem eum, expedita fugiat id illo in, itaque minus necessitatibus nemo
-                            nesciunt praesentium quasi ratione repudiandae velit voluptates? Aperiam architecto illo
-                            molestias nam officiis possimus, sed. Accusantium aliquam consectetur corporis culpa
-                            cupiditate
-                            dolores ea, et, facere facilis iure laudantium libero maiores minus, molestias
-                            necessitatibus
-                            odio odit pariatur quia quo ratione rerum sapiente sunt voluptate. Accusantium at ex nostrum
-                            quos reprehenderit veniam voluptas! Autem eum facilis nemo praesentium repudiandae. Aperiam
-                            cumque doloremque est eum, explicabo, labore molestias neque nobis officia repudiandae sint
-                            soluta temporibus voluptatem! Accusantium aliquam architecto assumenda atque beatae
-                            consequuntur
-                            cumque cupiditate dicta, dolor dolorum eum facere fuga hic ipsa laborum maiores modi
-                            molestiae
-                            nihil nisi perferendis perspiciatis porro praesentium recusandae repellat soluta suscipit
-                            totam.
-                            Alias aperiam at consequatur eius eligendi et explicabo magni, molestias mollitia nisi
-                            pariatur
-                            quia rerum, similique sint voluptate? Nam quidem sunt vel.
-                        </p>
-                    </div>
-                </main>
-            </SMusicPage>
-        </>
-    );
+            <TextContainerSquare
+                articleName="Music Article 1"
+                articleText="A collage of tradition collaborating with technology, where old meets new. Gamelan are gong orchestra’s from South East Asia and my journey has been guiding me to Indonesia since 2008. Here I’ve been overwhelmed by the richness of Indonesian culture and the kindness of the people. Though sharing a long history Indonesia is very different from the Netherlands.
+
+In the Netherlands 2008 were the days when Dubstep was roaming the dancefloor and I was heavily influenced by sub heavy music and Sound System culture. It was also the year when I first started going to Indonesia where I went on a mission to make field recordings.
+
+At that time mp3 players contained about 512 MB so I had to choose my music very carefully. With Amon Tobin, Digital Mystikz, Vex’d and similar artist locked in my headphones I made field recordings over the course of a year and in my head this music started fusing with Indonesian culture.
+
+These influences combined inspired the foundation to the music."
+            />
+
+        </main>
+    </>);
 }
 
 export default MusicPage;

@@ -13,8 +13,13 @@ const SUserForm = styled.div`
   }
   
   .success-message {
+    font-size: 1.5rem;
+    max-width: 400px;
     padding: 20px;
-    background-color: green;
+    margin: 20px;
+    background-color: var(--secondary);
+    color: var(--textSecondary);
+    border-radius: 10px;
   }
 
   h2 {

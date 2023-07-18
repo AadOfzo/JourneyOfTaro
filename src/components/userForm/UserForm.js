@@ -9,11 +9,10 @@ import SUserForm from "./styles.UserForm";
 const schema = z.object({
     name: string().min(2, {message: "Name is required"}),
     email: string().email({message: "Invalid email address"}),
-    password: z.string().min(6),
+    password: z.string().min(6, {message: "Password must be at least 6 characters"}),
     country: string(),
-    // testSelect: string(),
-    artistName: string().min(1),
-    demoTitle: string().min(1),
+    artistName: string().min(1, {message: "Artist name is required"}),
+    demoTitle: string().min(1, {message: "Demo title is required"}),
     profileImage:
         typeof window === "undefined" // this is required if your app rendered in server side, otherwise just remove the ternary condition
             ? z.undefined()
@@ -28,7 +27,7 @@ const schema = z.object({
                         return fileType === "image/png";
                     },
                     {
-                        message: "File must be in .png format",
+                        message: "File must be in .png or .jpeg format",
                     }
                 )
                 .refine(
@@ -77,7 +76,7 @@ const UserForm = () => {
     const handleSave = (formValues, e) => {
         e.preventDefault();
         console.log(formValues);
-        setSuccessMessage(`Thank you ${formValues.name}`);
+        setSuccessMessage(`Thank you for uploading your demo ${formValues.name}`);
         setShowForm(false);
         console.log(formValues.name);
     }
