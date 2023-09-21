@@ -13,11 +13,11 @@ const STextcontainerSquare = styled.div`
   border: solid 1px var(--secondary);
  
   .text-outer-container {
-      .articleName {
+      .articleName h2 {
         display: flex;
         justify-content: center;
-        margin: 1rem;
-        padding: 1rem;
+        margin: 2rem;
+        padding: 2rem;
         color: aqua;
       }
     
@@ -26,6 +26,7 @@ const STextcontainerSquare = styled.div`
         text-align: center;
         margin: 1rem;
         padding: 1rem;
+        color: #eaa733 ;
       }
   }
   `;

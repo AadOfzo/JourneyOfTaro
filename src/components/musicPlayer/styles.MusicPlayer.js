@@ -7,12 +7,9 @@ const SMusicPlayer = styled.div`
   align-items: center;
 
   .music-player-top-container {
-    display: flex;
-    flex-direction: row;
-    align-content: center;
     height: 20px;
-    width: 625px;
-    margin: 10px;
+    margin-top: 20px;
+    width: 100%;
     background-color: var(--secondary);
   }
 
