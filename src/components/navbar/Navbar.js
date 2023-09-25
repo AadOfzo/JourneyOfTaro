@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import './Navbar.css'
 import {NavLink} from "react-router-dom";
 
@@ -8,7 +8,11 @@ import MusicPlayerTop from "../musicPlayer/MusicPlayerTop";
 
 function Navbar() {
     const navRef = useRef();
+    const [isNavOpen, setIsNavOpen] = useState(false);
 
+    const toggleNav = () => {
+        setIsNavOpen(!isNavOpen);
+    };
     return (
         <>
             <header className='navbar-header'>
@@ -48,7 +52,11 @@ function Navbar() {
                         </ul>
                         <MusicPlayerTop/>
                     </div>
-
+                    <div className="hamburger" onClick={toggleNav}>
+                        <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
+                        <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
+                        <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
+                    </div>
                 </nav>
                 {/*Music Player Top*/}
             </header>

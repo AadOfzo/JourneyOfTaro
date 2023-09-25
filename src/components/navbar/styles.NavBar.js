@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-const SnavBar2 = styled.div`
+const SnavBar = styled.div`
   position: sticky;
   top: 0;
   background-color: var(--primary);
-  color: #fff;
+  //color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,12 +37,6 @@ const SnavBar2 = styled.div`
           text-decoration: none;
           color: var(--secondary);
           font-weight: 500;
-
-          a.active-link,
-          a:hover {
-            border-bottom: 1px solid #eaa733;
-            transition: .5s;
-          }
         }
       }
     }
@@ -67,7 +61,6 @@ const SnavBar2 = styled.div`
     .nav-container {
       justify-content: end;
     }
-
     .menu {
       display: none;
       flex-direction: column;
@@ -111,4 +104,4 @@ const SnavBar2 = styled.div`
   }
 `;
 
-export default SnavBar2;
+export default SnavBar;
