@@ -38,6 +38,7 @@ const SnavBar2 = styled.div`
           color: var(--secondary);
           font-weight: 500;
 
+          // Border-bottom not showing
           a.active-link,
           a:hover {
             border-bottom: 1px solid #eaa733;

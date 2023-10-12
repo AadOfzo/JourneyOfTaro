@@ -47,6 +47,7 @@
     border-radius: 3px;
 }
 
+ /*Border-bottom*/
 .navbar-ul a.active-link,
 .navbar-ul a:hover {
     border-bottom: 1px solid #eaa733;
