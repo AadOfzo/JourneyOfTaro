@@ -15,7 +15,7 @@ function NavBar2() {
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>
             <div className="nav-container">
                 <div className={`menu ${isNavOpen ? 'open' : ''}`}>
-                    <ul className='menu-ul'>
+                    <ul>
                         <li><NavLink to="/"
                                      className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
                             Home

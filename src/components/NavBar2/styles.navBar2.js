@@ -39,8 +39,8 @@ const SnavBar2 = styled.div`
           font-weight: 500;
 
           // Border-bottom not showing
-          a.active-link,
-          a:hover {
+          &.active-link,
+          &:hover {
             border-bottom: 1px solid #eaa733;
             transition: .5s;
           }

@@ -1,5 +1,3 @@
-// LoginPopupMainComponent.js
-
 import React, { useState } from 'react';
 import LoginPopup from './LoginPopup';
 
