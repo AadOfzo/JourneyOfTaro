@@ -1,4 +1,4 @@
-import UserForm from "../../components/userForm/UserForm";
+import UserForm from "../../components/forms/userForm/UserForm2";
 
 function UploadPage() {
     return (
