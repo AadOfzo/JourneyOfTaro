@@ -24,7 +24,7 @@ function App() {
             {/*<Router> Routes werken, maar niet met een Router er omheen*/}
 
             <NavBar2/>
-            <Navbar/>
+            {/*<Navbar/>*/}
 
             {/*Page Routes*/}
             {/*<Router>*/}

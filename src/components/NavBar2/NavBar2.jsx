@@ -4,7 +4,6 @@ import {NavLink} from "react-router-dom";
 
 function NavBar2() {
     const navRef = useRef();
-
     const [isNavOpen, setIsNavOpen] = useState(false);
 
     const toggleNav = () => {
@@ -14,6 +13,7 @@ function NavBar2() {
     return (
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>
             <div className="nav-container">
+                <div className="navbar-title">Journey of Taro</div>
                 <div className={`menu ${isNavOpen ? 'open' : ''}`}>
                     <ul>
                         <li><NavLink to="/"

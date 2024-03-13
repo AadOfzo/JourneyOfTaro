@@ -13,9 +13,13 @@ const SnavBar2 = styled.div`
 
   .nav-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     width: 100%;
     justify-content: center;
+    padding: 1rem;
+    color: var(--secondary);
+    border-bottom: solid 1px var(--testColorOne);
   }
 
   .menu {
@@ -66,29 +70,35 @@ const SnavBar2 = styled.div`
   /* Media query for responsive design */
   @media (max-width: 919px) {
     .nav-container {
-      justify-content: end;
+      justify-content: center;
     }
 
     .menu {
       display: none;
       flex-direction: column;
       position: absolute;
-      top: 47px;
+      top: 100%;
       left: 0;
       right: 0;
       background-color: var(--primary);
-      text-align: center;
-
+      border-bottom: solid 1px transparent;
+      transition: transform 0.5s ease-in-out, border-bottom 0.5s ease-in-out;
+      
       ul {
         display: block;
+        list-style: circle;
 
         li {
-          text-align: left;
+          text-align: center;
+          margin: 3px;
+          padding: 3px;
         }
       }
 
       &.open {
         display: flex;
+        transform: translateY(0);
+        border-bottom: solid 1px var(--testColorOne);
       }
     }
 
