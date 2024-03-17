@@ -21,8 +21,8 @@ const AddSongForm = () => {
             formData.append('songTitle', songTitle);
             formData.append('file', songFile);
 
-            // Replace 'http://localhost:8080/songs' with your actual backend endpoint
-            await axios.post('http://localhost:8080/songs', formData);
+            // Connect met de fileUpload endpoint
+            await axios.post('http://localhost:8080/fileUpload', formData);
 
             // Clear the form after successful submission
             setSongTitle('');

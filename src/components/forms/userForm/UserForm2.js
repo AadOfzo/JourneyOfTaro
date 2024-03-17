@@ -97,18 +97,18 @@ const UserForm = () => {
                 <form onSubmit={handleSubmit(handleSave)}>
                     <label>
                         <p>username:</p>
-                        <input {...register("username", {required: true, value: "aadje" })} placeholder="Enter Name"/>
+                        <input {...register("username", {required: true, value: "Test_Admin_1" })} placeholder="Enter Name"/>
                         <div style={{color: 'red'}}>{errors.name?.message}</div>
                     </label>
                     <div>
                         <p>Email:</p>
-                        <input {...register("email", {required: true, value: "aadofzo@mail-a-balls.com"})} placeholder="Enter Email"/>
+                        <input {...register("email", {required: true, value: "admin@testmail.com"})} placeholder="Enter Email"/>
                         <div style={{color: 'red'}}>{errors.email?.message}</div>
                     </div>
                     <div>
                         <p>Password:</p>
                         <input
-                            {...register("password", {required: true, minLength: 6, value: "123456"})}
+                            {...register("password", {required: true, minLength: 6, value: "ExamplePassword2"})}
                             name="password"
                             type="password"
                             placeholder="Enter password of minimum 6 characters"
@@ -123,12 +123,12 @@ const UserForm = () => {
                     </div>
                     <div>
                         <p>Artist Name:</p>
-                        <input {...register("artistName", {value: "Ballzzz"})} placeholder="Enter Artist Name"/>
+                        <input {...register("artistName", {value: "Test ArtistName"})} placeholder="Enter Artist Name"/>
                         <div style={{color: 'red'}}>{errors.name?.message}</div>
                     </div>
                     <div>
                         <p>Track Title:</p>
-                        <input {...register("demoTitle", {value:"DommeDemo"})} placeholder="Demo Title" />
+                        <input {...register("demoTitle", {value:"TestSongTitle"})} placeholder="Demo Title" />
                         <div style={{color: 'red'}}>{errors.name?.message}</div>
                     </div>
 
@@ -146,14 +146,14 @@ const UserForm = () => {
                     {/*    />*/}
                     {/*    <div style={{color: 'red'}}>{errors.profileImage?.message}</div>*/}
                     {/*</div>*/}
-                    {/*<div>*/}
-                    {/*    <p>Upload music:</p>*/}
-                    {/*    <label htmlFor="profileUserDemo"/>*/}
-                    {/*    <input type="file" {...register("profileUserDemo")}*/}
-                    {/*           id="profileUserDemo"*/}
-                    {/*    />*/}
-                    {/*    <div style={{color: 'red'}}>{errors.profileUserDemo?.message}</div>*/}
-                    {/*</div>*/}
+                    <div>
+                        <p>Upload music:</p>
+                        <label htmlFor="profileUserDemo"/>
+                        <input type="file" {...register("profileUserDemo")}
+                               id="profileUserDemo"
+                        />
+                        <div style={{color: 'red'}}>{errors.profileUserDemo?.message}</div>
+                    </div>
 
                     <button type="submit">Save</button>
                 </form>

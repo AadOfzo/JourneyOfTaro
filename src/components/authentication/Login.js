@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import SuccessMessage from "../messaging/SuccessMessage";
 
 const Login = ({ onLoginSuccess }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,47 +19,41 @@ const Login = ({ onLoginSuccess }) => {
                 password
             });
 
-            // Assuming backend returns a JWT token upon successful authentication
-            const token = response.data.token;
+            const token = localStorage.getItem('token');
 
-            // Store the token in local storage
-            localStorage.setItem('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUZXN0QWRtaW5fMiIsImlhdCI6MTcxMDI0NjE5NCwiZXhwIjoxNzExMTEwMTk0fQ.qRH6IybOC4-SDTMja3PcKck3Eh0b8G-IjGGlvcwrJ_A', token);
+            if (!token) {
+                setError('Invalid token received');
+                return;
+            }
 
-            // Call the onLoginSuccess callback function
+            localStorage.setItem('token', token);
+
+            setShowSuccessMessage(true);
             onLoginSuccess();
-
-            // Redirect the user to the dashboard or any other protected route
-            // Example: history.push('/dashboard');
         } catch (error) {
-            setError('Invalid username or password');
+            setError('Error occurred while logging in');
         }
     };
 
     return (
         <div>
-            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username or Email:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <button type="submit">Login</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <div>{error}</div>}
+            {showSuccessMessage && <SuccessMessage message="Thank you for signing in!" />}
         </div>
     );
 };

@@ -1,3 +1,5 @@
+import {useState} from "react";
+
 function AuthContextProvider({ children }) {
     const [authState, setAuthState] = useState({
         user: null,
@@ -9,9 +11,9 @@ function AuthContextProvider({ children }) {
         // ZO JA: haal dan de nieuwe data op en zet deze in de state:
         setAuthState({
             user: {
-                username: 'Piet',
-                email: 'pieter@gmail.com',
-                id: 23,
+                username: 'Test_User_2',
+                email: 'ExamplePassword2',
+                id: 2,
             },
             status: 'done',
         });

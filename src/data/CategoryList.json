@@ -1,10 +1,10 @@
 [
   {
-    "name" : "henk",
+    "name" : "Test_Admin_1",
     "item" : "Item 1"
   },
   {
-    "name" : "piet",
+    "name" : "Test_User_1",
     "item" : "Item 1",
     "secondItem" : "Item 2"
   }
