@@ -6,6 +6,7 @@ import SongCollectionForm from "../../components/forms/musicForm/SongCollectionF
 import AddSongForm from "../../components/forms/musicForm/AddSongForm";
 import FileUploadComponent from "../../components/fileHandling/FileUploadComponent";
 import ImageGallery from "../../components/images/ImageGallery";
+import UploadComponent from "../../components/fileHandling/UploadComponent";
 
 function Samples() {
     return (
@@ -15,7 +16,7 @@ function Samples() {
                 {/*<SongCollectionForm />*/}
                 {/*<AddSongForm />*/}
                 <FileUploadComponent/>
-                <ImageGallery/>
+                {/*<ImageGallery/>*/}
             </main>
     );
 }

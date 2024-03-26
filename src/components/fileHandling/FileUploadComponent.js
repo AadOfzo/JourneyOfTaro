@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import ImageViewer from "./ImageViewer";
 
 function FileUploadComponent() {
     const [file, setFile] = useState(null);
-    const [imageName, setImageName] = useState(''); // Define imageName state
+    const [imageName, setImageName] = useState('');
     const [imageAltName, setImageAltName] = useState('');
     const [songTitle, setSongTitle] = useState('');
-    const [artist, setArtist] = useState('');
-    const [imageUrl, setImageUrl] = useState(null);
-    const [audioUrl, setAudioUrl] = useState(null);
+    const [artistName, setArtistName] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
+    const [audioUrl, setAudioUrl] = useState('');
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
 
-    const handleImageUpload = async () => {
+    const handleFileUpload = async (file, fileType, additionalData, onSuccess, onError) => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('imageName', imageName);
-            formData.append('imageAltName', imageAltName);
+
+            Object.entries(additionalData).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
 
             const response = await axios.post('http://localhost:8080/fileUpload', formData, {
                 headers: {
@@ -28,39 +29,63 @@ function FileUploadComponent() {
                 }
             });
 
-            console.log('Image upload successful:', response.data);
-            setImageUrl(response.data.imageUrl);
-            setFile(null);
-            setImageName('');
-            setImageAltName('');
+            onSuccess(response.data);
         } catch (error) {
-            console.error('Error uploading image:', error);
+            onError(error);
         }
+    };
+
+    const handleImageUpload = async () => {
+        const additionalData = {
+            imageName: imageName,
+            imageAltName: imageAltName,
+            artistName: artistName
+        };
+
+        handleFileUpload(
+            file,
+            'Image',
+            additionalData,
+            (data) => {
+                setImageUrl(data.imageUrl);
+                // Reset state after successful upload
+                setFile(null);
+                setImageName('');
+                setImageAltName('');
+                alert('Image uploaded successfully!');
+            },
+            (error) => {
+                console.error('Error uploading image:', error);
+                alert('Error uploading image: ' + error);
+            }
+        );
     };
 
     const handleSongUpload = async () => {
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('songTitle', songTitle);
-            formData.append('artist', artist);
+        const additionalData = {
+            songTitle: songTitle,
+            artistName: artistName
+        };
 
-            const response = await axios.post('http://localhost:8080/fileUpload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            console.log('Song upload successful:', response.data);
-            setAudioUrl(response.data.audioUrl);
-            // Reset state after successful upload
-            setFile(null);
-            setSongTitle('');
-            setArtist('');
-        } catch (error) {
-            console.error('Error uploading song:', error);
-        }
+        handleFileUpload(
+            file,
+            'Audio',
+            additionalData,
+            (data) => {
+                setAudioUrl(data.audioUrl);
+                // Reset state after successful upload
+                setFile(null);
+                setSongTitle('');
+                setArtistName('');
+                alert('Song uploaded successfully!');
+            },
+            (error) => {
+                console.error('Error uploading song:', error);
+                alert('Error uploading song: ' + error);
+            }
+        );
     };
+
 
     return (
         <div>
@@ -69,11 +94,11 @@ function FileUploadComponent() {
             <input type="text" placeholder="Image Name" value={imageName} onChange={(e) => setImageName(e.target.value)} />
             <input type="text" placeholder="Image Alt Name" value={imageAltName} onChange={(e) => setImageAltName(e.target.value)} />
             <button onClick={handleImageUpload}>Upload Image</button>
-            {imageUrl && <ImageViewer imageUrl={imageUrl} />} {/* Render ImageViewer component */}
+            {imageUrl && <img src={imageUrl} alt="Uploaded" />}
 
             <h2>Upload Song</h2>
             <input type="text" placeholder="Song Title" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} />
-            <input type="text" placeholder="Artist" value={artist} onChange={(e) => setArtist(e.target.value)} />
+            <input type="text" placeholder="Artist" value={artistName} onChange={(e) => setArtistName(e.target.value)} />
             <button onClick={handleSongUpload}>Upload Song</button>
             {audioUrl && (
                 <audio controls>
