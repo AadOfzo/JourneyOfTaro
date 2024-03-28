@@ -14,6 +14,7 @@ import Samples from './pages/samples/Samples';
 import About from './pages/about/About';
 import LoginPage from './pages/login/LoginPage';
 import UploadPage from './pages/uploadpage/UploadPage';
+import ImagePage from "./pages/images/ImagePage";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/about" element={<About/>}/>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/upload" element={<UploadPage/>}/>
+                    <Route path="/images" element={<ImagePage/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </div>
