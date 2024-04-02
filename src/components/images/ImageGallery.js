@@ -9,7 +9,7 @@ const ImageGallery = () => {
     useEffect(() => {
         async function fetchImages() {
             try {
-                const response = await axios.get('http://localhost:8080/images');
+                const response = await axios.get('https://picsum.photos/200/r');
                 setImages(response.data);
             } catch (error) {
                 console.error('Error fetching images:', error);

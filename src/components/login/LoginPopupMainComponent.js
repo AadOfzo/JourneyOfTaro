@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoginPopup from './LoginPopup';
+import Login from "../authentication/Login";
 
 const LoginPopupMainComponent = () => {
     const [showLogin, setShowLogin] = useState(false);
@@ -15,7 +16,7 @@ const LoginPopupMainComponent = () => {
     return (
         <div>
             <button onClick={handleOpenLogin}>Open Login</button>
-            {showLogin && <LoginPopup onClose={handleCloseLogin} />}
+            {showLogin && <Login onClose={handleCloseLogin} />}
         </div>
     );
 };

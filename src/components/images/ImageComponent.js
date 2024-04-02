@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
 
-const ImageHandler = () => {
+const ImageComponent = () => {
     const [imageSrc, setImageSrc] = useState('');
     const [showImage, setShowImage] = useState(false);
 
     useEffect(() => {
         const fetchImage = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/images');
+                const response = await fetch('https://picsum.photos/200');
                 if (response.ok) {
                     const blob = await response.blob();
                     const imageUrl = URL.createObjectURL(blob);
@@ -42,9 +41,9 @@ const ImageHandler = () => {
     return (
         <div>
             <button onClick={handleButtonClick}>{showImage ? 'Close Image' : 'OK'}</button>
-            {showImage && <img src={imageSrc} alt="Random Image"/>}
+            {showImage && <img src={imageSrc} alt="Random Image" />}
         </div>
     );
 };
 
-export default ImageHandler;
+export default ImageComponent;

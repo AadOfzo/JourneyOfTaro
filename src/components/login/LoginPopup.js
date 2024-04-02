@@ -15,13 +15,13 @@ const LoginPopup = ({ onClose, onLogin }) => {
                 password
             });
 
-            // Assuming backend returns a JWT token upon successful authentication
+            // Backend returns JWT token met succesvolle authentication
             const token = response.data.token;
 
-            // Store the token in local storage
+            // Store jwt token in local storage
             localStorage.setItem('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUZXN0QWRtaW5fMiIsImlhdCI6MTcxMDI0NjE5NCwiZXhwIjoxNzExMTEwMTk0fQ.qRH6IybOC4-SDTMja3PcKck3Eh0b8G-IjGGlvcwrJ_A', token);
 
-            // Call the onLogin callback function with true to indicate successful login
+            // onlogin true = succesvolle login
             onLogin(true);
 
             // Close the popup
