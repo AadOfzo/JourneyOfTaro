@@ -1,48 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import SuccessMessage from "../messaging/SuccessMessage";
 
-const Login = ({ onLoginSuccess }) => {
+const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState(''); // State for success message
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await axios.post('http://localhost:8080/authenticate', {
                 username,
-                password
+                password,
             });
-
-            const token = response.data.token;
-
-            if (!token) {
-                setError('Invalid token received');
-                return;
-            }
-
-            localStorage.setItem('token', token);
-            setError('');
-            onLoginSuccess();
-
-            // Request to the authenticated endpoint after successful login
-            const authenticatedResponse = await axios.get('http://localhost:8080/authenticated', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            setSuccessMessage('User authenticated successfully');
-            console.log('Authenticated user:', authenticatedResponse.data);
+            const token = response.data.jwt; // Assuming the server responds with a JWT token
+            localStorage.setItem('token', token); // Store the token in localStorage
+            setSuccessMessage('Login successful'); // Set success message
+            // Redirect the user to another page or update UI to reflect authentication
         } catch (error) {
-            setError('Error occurred while logging in');
+            setError('Invalid username or password'); // Display error message to user
         }
     };
 
     return (
         <div>
+            <h2>Login Form</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -59,9 +43,9 @@ const Login = ({ onLoginSuccess }) => {
                 <button type="submit">Login</button>
             </form>
             {error && <div>{error}</div>}
-            {successMessage && <div>{successMessage}</div>}
+            {successMessage && <SuccessMessage message={successMessage} />} {/* Display success message if exists */}
         </div>
     );
 };
 
-export default Login;
+export default LoginForm;
