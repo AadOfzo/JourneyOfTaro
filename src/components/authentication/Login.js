@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import SuccessMessage from "../messaging/SuccessMessage";
 
 const Login = ({ onLoginSuccess }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const navigate = useNavigate();
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +16,7 @@ const Login = ({ onLoginSuccess }) => {
                 password
             });
 
-            const token = localStorage.getItem('token');
+            const token = response.data.token;
 
             if (!token) {
                 setError('Invalid token received');
@@ -27,9 +24,18 @@ const Login = ({ onLoginSuccess }) => {
             }
 
             localStorage.setItem('token', token);
-
-            setShowSuccessMessage(true);
+            setError('');
             onLoginSuccess();
+
+            // Request to the authenticated endpoint after successful login
+            const authenticatedResponse = await axios.get('http://localhost:8080/authenticated', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setSuccessMessage('User authenticated successfully');
+            console.log('Authenticated user:', authenticatedResponse.data);
         } catch (error) {
             setError('Error occurred while logging in');
         }
@@ -53,7 +59,7 @@ const Login = ({ onLoginSuccess }) => {
                 <button type="submit">Login</button>
             </form>
             {error && <div>{error}</div>}
-            {showSuccessMessage && <SuccessMessage message="Thank you for signing in!" />}
+            {successMessage && <div>{successMessage}</div>}
         </div>
     );
 };

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import LoginPopup from './LoginPopup';
 import Login from "../authentication/Login";
 
 const LoginPopupMainComponent = () => {
@@ -13,10 +12,14 @@ const LoginPopupMainComponent = () => {
         setShowLogin(false);
     };
 
+    const handleLoginSuccess = () => {
+        setShowLogin(false); // Close the popup upon successful login
+    };
+
     return (
         <div>
             <button onClick={handleOpenLogin}>Open Login</button>
-            {showLogin && <Login onClose={handleCloseLogin} />}
+            {showLogin && <Login onLoginSuccess={handleLoginSuccess} />}
         </div>
     );
 };

@@ -4,6 +4,7 @@ import LoginMenu from "../../components/authentication/LoginMenu";
 import LoginPopupMainComponent from "../../components/login/LoginPopupMainComponent";
 import Login from "../../components/authentication/Login";
 import UserForm3 from "../../components/forms/userForm/UserForm3";
+import UserList from "../../components/authentication/UserList";
 
 function LoginPage() {
     return (
@@ -15,6 +16,10 @@ function LoginPage() {
 
             <div>
                 <UserForm3/>
+            </div>
+
+            <div>
+                <UserList/>
             </div>
         </div>
 
