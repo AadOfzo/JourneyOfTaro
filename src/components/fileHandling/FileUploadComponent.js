@@ -74,7 +74,7 @@ function FileUploadComponent() {
             (data) => {
                 setAudioUrl(data.audioUrl);
                 // Reset state after successful upload
-                setFile(null);
+                setFile('');
                 setSongTitle('');
                 setArtistName('');
                 alert('Song uploaded successfully!');

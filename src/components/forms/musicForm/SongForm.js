@@ -36,7 +36,7 @@ const SongForm = () => {
             setLoading(true);
 
             // Add logic to post the song data to your backend
-            await axios.post('http://localhost:8080/songs', { songTitle });
+            await axios.post('http://localhost:8080/fileUpload', { songTitle });
 
             // Update songs after adding a new song
             await fetchSongs();

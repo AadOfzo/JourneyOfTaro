@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Login from "../authentication/Login";
+import Login from "./Login";
 
 const LoginPopupMainComponent = () => {
     const [showLogin, setShowLogin] = useState(false);

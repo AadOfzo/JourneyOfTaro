@@ -1,6 +1,7 @@
 import React from 'react';
 import ContentContainer from "../../components/contentLayout/ContentContainer"
 import OutlineLogo from "../../assets/images/svg/JourneyOfTaro_Logo_CompassOutline_V2.svg";
+import SongList from "../../components/lists/SongList";
 
 function MusicPage() {
     return (
@@ -38,6 +39,10 @@ function MusicPage() {
                     content: 'Bloep'
                 }}
             />
+            <div>
+                <SongList/>
+            </div>
+
         </main>
     )
 }

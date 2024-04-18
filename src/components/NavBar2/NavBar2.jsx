@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import SnavBar2 from './styles.navBar2';
 import { NavLink } from 'react-router-dom';
 import LoginPopupMainComponent from "../login/LoginPopupMainComponent";
@@ -16,6 +16,12 @@ function NavBar2() {
     const handleLogin = () => {
         setIsLoggedIn(!isLoggedIn);
     };
+
+    // Check if user is logged in based on token in local storage
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists, false otherwise
+    }, []);
 
     return (
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>
@@ -35,6 +41,34 @@ function NavBar2() {
                                 to="/about"
                                 className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                 About
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/postRequestPage"
+                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                PostRequest
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/getRequestPage"
+                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                GetRequest
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/imageRequestPage"
+                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                ImageRequest
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/login"
+                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                Login
                             </NavLink>
                         </li>
                         {isLoggedIn && (
