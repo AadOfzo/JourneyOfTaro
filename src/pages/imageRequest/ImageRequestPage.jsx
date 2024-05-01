@@ -2,8 +2,12 @@ import React, {useEffect, useState} from 'react';
 import './ImageRequestPage.css';
 import axios from 'axios';
 import useUsers from "../../hooks/UseUsers";
+import useImages from "../../hooks/UseImages";
+
 function ImageRequestPage() {
     const [file, setFile] = useState([]);
+    const [image, setImage] = useState('');
+    const [previewImage, setPreviewImage] = useState('');
     const [previewUrl, setPreviewUrl] = useState('');
     const [userId, setUserId] = useState(0);
 
@@ -38,12 +42,15 @@ function ImageRequestPage() {
         } catch (e) {
             console.error(e)
         }
+        e.target.reset();
     }
 
-   const {students} = useUsers('http://localhost:8080/users')
+    const {users} = useUsers('http://localhost:8080/users')
+    const {images } = useImages('http://localhost:8080/images')
 
-    function handleStudentNumber(e) {
+    function handleUserId(e) {
         setUserId(e.target.value)
+        console.log()
     }
 
     return (
@@ -51,9 +58,10 @@ function ImageRequestPage() {
             <div className="first-page-container">
                 <h1>Afbeelding uploaden en preview bekijken</h1>
                 <h3>Voor welke User wil je een Image uploaden?</h3>
-                <select name="student" id="student" onChange={handleStudentNumber}>
-                    {students && students.map((userId) => {
-                        return <option value={userId.userId}>{userId.name}</option>
+                <select name="user" id="user" onChange={handleUserId}>
+                    <option disabled value="DEFAULT">- - select an option - -</option>
+                    {users && users.map((userId) => {
+                        return <option value={userId.userId}>{userId.username}</option>
                     })}
                 </select>
                 <form onSubmit={sendImage}>
@@ -67,7 +75,8 @@ function ImageRequestPage() {
                         <label>
                             Preview:
                             <img src={previewUrl} alt="Voorbeeld van de afbeelding die zojuist gekozen is"
-                                 className="image-preview"/>
+                                 className="image-preview"
+                            />
                         </label>
                     }
                     <button type="submit">Uploaden</button>
@@ -76,15 +85,15 @@ function ImageRequestPage() {
             <div className="second-page-container">
                 <h1>Afbeelding uploaden en preview bekijken</h1>
                 <h3>Voor welke student wil je een cijferlijst uploaden?</h3>
-                <select name="student" id="student" onChange={handleStudentNumber}>
-                    {students && students.map((studentNumber) => {
-                        return <option value={studentNumber.studentNumber}>{studentNumber.name}</option>
+                <select name="user" id="user" onChange={handleUserId}>
+                    {users && users.map((userId) => {
+                        return <option value={userId.id}>{userId.username}</option>
                     })}
                 </select>
                 <form onSubmit={sendImage}>
                     <label htmlFor="user-image">
                         Kies afbeelding:
-                        <input type="file" name="image-field" id="student-image" onChange={handleImageChange}/>
+                        <input type="file" name="image-field" id="user-image" onChange={handleImageChange}/>
                     </label>
                     {/*Als er een preview url is, dan willen we deze in een afbeelding tonen*/}
                     {previewUrl &&

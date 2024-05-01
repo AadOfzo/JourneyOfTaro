@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
-// Voorbeeld: https://medium-com.translate.goog/@yahtzeemoomtaz/fetch-from-an-api-and-display-some-pictures-react-4de2a027eda7?_x_tr_sl=en&_x_tr_tl=nl&_x_tr_hl=nl&_x_tr_pto=sc&_x_tr_hist=true
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
 
     useEffect(() => {
         async function fetchImages() {
             try {
-                const response = await axios.get('https://picsum.photos/200/r');
-                setImages(response.data);
+                const response = await axios.get(`http://localhost:8080/image/`);
+                // Convert the object to an array
+                const imagesArray = Object.values(response.data);
+                setImages(imagesArray);
             } catch (error) {
                 console.error('Error fetching images:', error);
             }
@@ -18,18 +18,45 @@ const ImageGallery = () => {
         fetchImages();
     }, []);
 
+    console.log('Images:', images);
+
     return (
-        <div>
+        <div className="image-gallery-container">
+            {console.log(images)}
             <h2>Image Gallery</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', gap: '20px' }}>
-                {images.map((image) => (
-                    <div key={image.id} style={{ width: '300px', border: '1px solid #ccc', padding: '10px' }}>
-                        <img src={image.imageUrl} alt={image.imageAltName} style={{ maxWidth: '100%' }} />
-                        <p>Image Name: {image.imageName}</p>
-                        <p>Alt Name: {image.imageAltName}</p>
+            <table>
+                <thead>
+                <tr>
+                    <td>Image ID</td>
+                    <td>Image</td>
+                    <td>Image Name</td>
+                </tr>
+                </thead>
+                <tbody>
+                {images.map(image => {
+                    <div key={image.id}>
+                        <h3>{image.imageName}</h3>
+                        <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, image.imageData))}`} alt={image.imageName} />
                     </div>
-                ))}
-            </div>
+                })}
+                </tbody>
+            </table>
+
+            {/*<ul>*/}
+            {/*    {images.map((image) => (*/}
+            {/*        <li key={image.id}>*/}
+            {/*            <div>*/}
+            {/*                <img*/}
+            {/*                    src={`http://localhost:8080/images/${images}`}*/}
+            {/*                    alt={image.imageName}*/}
+            {/*                    style={{maxWidth: '100%', maxHeight: '200px'}}*/}
+            {/*                />*/}
+            {/*                <div>{image.imageName}</div>*/}
+            {/*                <button onClick={() => handleDelete(image.id)}>Delete</button>*/}
+            {/*            </div>*/}
+            {/*        </li>*/}
+            {/*    ))}*/}
+            {/*</ul>*/}
         </div>
     );
 };

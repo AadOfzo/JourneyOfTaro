@@ -1,47 +1,46 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 
 const ImageComponent = () => {
-    const [imageSrc, setImageSrc] = useState('');
-    const [showImage, setShowImage] = useState(false);
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchImage = async () => {
+        const fetchImages = async () => {
             try {
-                const response = await fetch('https://picsum.photos/200');
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const imageUrl = URL.createObjectURL(blob);
-                    setImageSrc(imageUrl);
-                } else {
-                    console.error('Failed to fetch image');
-                }
+                const response = await axios.get('http://localhost:8080/images');
+                setImages(response.data);
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching image:', error);
+                console.error('Error fetching images:', error);
+                setLoading(false);
             }
         };
 
-        if (showImage) {
-            fetchImage();
-        } else {
-            setImageSrc('');
-        }
-
-        // Clean up the URL object when the component is unmounted
-        return () => URL.revokeObjectURL(imageSrc);
-    }, [showImage]); // Dependency on showImage ensures the effect runs when showImage changes
-
-    const handleButtonClick = () => {
-        setShowImage(!showImage);
-    };
-
-    const handleCloseClick = () => {
-        setShowImage(false);
-    };
+        fetchImages();
+    }, []);
 
     return (
         <div>
-            <button onClick={handleButtonClick}>{showImage ? 'Close Image' : 'OK'}</button>
-            {showImage && <img src={imageSrc} alt="Random Image" />}
+            <h1>Image Gallery</h1>
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <div>
+                    {images.length === 0 ? (
+                        <p>No images found</p>
+                    ) : (
+                        <div>
+                            {images.map((image) => (
+                                <div key={image.id}>
+                                    <img src={`http://localhost:8080/images/`} alt={image.imageName} />
+                                    <p>{image.imageAltName}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

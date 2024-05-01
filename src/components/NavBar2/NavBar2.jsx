@@ -66,6 +66,13 @@ function NavBar2() {
                         </li>
                         <li>
                             <NavLink
+                                to="/images"
+                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                ImagePage
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
                                 to="/login"
                                 className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
                                 Login
