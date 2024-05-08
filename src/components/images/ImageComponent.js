@@ -33,8 +33,9 @@ const ImageComponent = () => {
                         <div>
                             {images.map((image) => (
                                 <div key={image.id}>
-                                    <img src={`http://localhost:8080/images/`} alt={image.imageName} />
-                                    <p>{image.imageAltName}</p>
+                                    {/* Use the backend endpoint to serve images */}
+                                    <img src={`http://localhost:8080/images/image/${encodeURIComponent(image.imageName)}`} alt={image.imageName} />
+                                    <p>{image.imageUrl}</p>
                                 </div>
                             ))}
                         </div>

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import useImages from "../../hooks/UseImages";
 
 const ImageGallery = () => {
     const [images, setImages] = useState([]);
+    const {imageUrl } = useImages('http://localhost:8080/images')
 
     useEffect(() => {
         async function fetchImages() {
             try {
-                const response = await axios.get(`http://localhost:8080/image/`);
+                const response = await axios.get(imageUrl);
                 // Convert the object to an array
                 const imagesArray = Object.values(response.data);
                 setImages(imagesArray);
@@ -35,8 +37,8 @@ const ImageGallery = () => {
                 <tbody>
                 {images.map(image => {
                     <div key={image.id}>
-                        <h3>{image.imageName}</h3>
-                        <img src={`data:image/jpeg;base64,${btoa(String.fromCharCode.apply(null, image.imageData))}`} alt={image.imageName} />
+                        <h3>{image.getImageData(image)}</h3>
+                        <img src={imageUrl} alt={image.imageName} />
                     </div>
                 })}
                 </tbody>

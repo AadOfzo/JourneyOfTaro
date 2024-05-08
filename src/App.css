@@ -2,7 +2,7 @@
 
 :root {
     --primary: #000000;
-    --secondary: #eaa733;
+    --secondary: rgb(234, 167, 51);
     --textPrimary: rgb(234, 167, 51);
     --textSecondary: #000000;
     --testColorOne: rgb(167, 24, 24);
@@ -51,6 +51,13 @@ p {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: row;
+        /*flex-wrap: wrap;*/
+        /*justify-content: center;*/
+        /*text-align: center;*/
+        /*padding: 1rem;*/
+        /*margin: 1rem;*/
+        /*transition: 500ms;*/
         flex: 1;
         margin: 0 auto;
         /*max-width: 1140px;*/

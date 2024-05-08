@@ -21,9 +21,16 @@ const SnavBar2 = styled.div`
     color: var(--secondary);
     border-bottom: solid 1px var(--testColorOne);
   }
+  
+  .navbar-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    border-bottom: solid 1px var(--secondary);
+  }
 
   .menu {
     display: flex;
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -38,21 +45,41 @@ const SnavBar2 = styled.div`
         margin-right: 20px;
 
         a {
+          font-size: 1.2rem;
           text-decoration: none;
           color: var(--secondary);
           font-weight: 500;
 
-          // Border-bottom not showing
           &.active-link,
           &:hover {
             border-bottom: 1px solid #eaa733;
             transition: .5s;
+            
           }
         }
       }
     }
   }
 
+  //.dropdown-content ul {
+  //  color: aqua;
+  //  font-size: 1rem;
+  //  list-style: none;
+  //  padding: 1.1rem;
+  //  margin: 1.1rem;
+  //}
+  //
+  //.dropdown-content li {
+  //  padding: 10px;
+  //  text-align: center;
+  //}
+  //
+  //.dropdown-content a {
+  //  text-decoration: none;
+  //  display: block;
+  //}
+
+  /* Styling for hamburger menu */
   .hamburger {
     display: none;
     flex-direction: column;
@@ -67,7 +94,7 @@ const SnavBar2 = styled.div`
     }
   }
 
-  /* Media query for responsive design */
+  /* Media queries */
   @media (max-width: 919px) {
     .nav-container {
       justify-content: center;
@@ -104,6 +131,7 @@ const SnavBar2 = styled.div`
 
     .hamburger {
       display: flex;
+      color: var(--testColorTwo);
 
       .bar {
         &.open:nth-child(1) {

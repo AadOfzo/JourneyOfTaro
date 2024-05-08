@@ -140,7 +140,7 @@ const ImageForm = () => {
                     <li key={image.id}>
                         <div>
                             <img
-                                src={`http://localhost:8080/images/${image.id}`}
+                                src={`http://localhost:8080/images/${image.imageName}`}
                                 alt={image.imageName}
                                 style={{ maxWidth: '100%', maxHeight: '200px' }}
                             />

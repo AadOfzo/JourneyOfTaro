@@ -9,7 +9,7 @@ const UseImages = (imageUrl) => {
 
         async function fetchImages() {
             try {
-                const response = await axios.get(`http://localhost:8080/images/`);
+                const response = await axios.get(imageUrl);
 
                 setImages(response.data);
                 console.log(response.data);

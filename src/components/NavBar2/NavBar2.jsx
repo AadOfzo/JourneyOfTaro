@@ -2,11 +2,14 @@ import React, { useRef, useState, useEffect } from 'react';
 import SnavBar2 from './styles.navBar2';
 import { NavLink } from 'react-router-dom';
 import LoginPopupMainComponent from "../login/LoginPopupMainComponent";
+import NavBarDropdown from "./NavBarDropdown";
 
-function NavBar2() {
+function NavBar2({ handleLogout }) {
     const navRef = useRef();
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage user's login status
+    const [loggedOut, setLoggedOut] = useState(true);
+    const [showLogin, setShowLogin] = useState(false); // State to control login popup visibility
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
@@ -17,11 +20,28 @@ function NavBar2() {
         setIsLoggedIn(!isLoggedIn);
     };
 
+    // Function to handle logout
+    const handleLogoutClick = () => {
+        handleLogout(); // Call the handleLogout function passed as a prop
+        setLoggedOut(true); // Set loggedOut state to true to display logout message
+    };
+
     // Check if user is logged in based on token in local storage
     useEffect(() => {
         const token = localStorage.getItem('token');
         setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists, false otherwise
     }, []);
+
+    // Function to open login popup
+    const handleOpenLogin = () => {
+        setShowLogin(true);
+    };
+
+
+    // Function to close login popup
+    const handleCloseLogin = () => {
+        setShowLogin(false);
+    };
 
     return (
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>
@@ -118,6 +138,19 @@ function NavBar2() {
                             <a href="/contact">Contact</a>
                         </li>
                     </ul>
+                    <NavBarDropdown isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+                    {/*<NavLink to="/popup">*/}
+                    {/*    <button>Open Popup</button>*/}
+                    {/*</NavLink>*/}
+                    {/*<LoginPopupMainComponent*/}
+                    {/*    onClick={handleOpenLogin}*/}
+                    {/*    // showLogin={showLogin}*/}
+                    {/*    // onCloseLogin={handleCloseLogin}*/}
+                    {/*    // isLoggedIn={isLoggedIn}*/}
+                    {/*    // loggedOut={loggedOut}*/}
+                    {/*    // handleLogin={handleLogin}*/}
+                    {/*    // handleLogout={handleLogout}*/}
+                    {/*/>*/}
                 </div>
                 <div className="hamburger" onClick={toggleNav}>
                     <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
@@ -125,7 +158,6 @@ function NavBar2() {
                     <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
                 </div>
             </div>
-            <LoginPopupMainComponent isLoggedIn={isLoggedIn} handleLogin={handleLogin} />
         </SnavBar2>
     );
 }
