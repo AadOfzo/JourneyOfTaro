@@ -21,6 +21,15 @@ function UserList() {
         }
     };
 
+    // const fetchImages = async () => {
+    //     try {
+    //         const response = await axios.get(`http://localhost:8080/images`);
+    //         setImages(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching images:', error);
+    //     }
+    // };
+
     const addUserAuthority = async (username, authority) => {
         try {
             await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority }, {

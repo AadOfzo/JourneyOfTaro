@@ -63,6 +63,19 @@ const LoadingWheel = styled.div`
   }
 `;
 
+const SongListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 65vw;
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+`;
+
+const SongListTitle = styled.h2`
+  margin-bottom: 32px;
+  margin-left: 24px;
+`;
+
 export {
     Container,
     Form,
@@ -71,4 +84,6 @@ export {
     PlusIcon,
     PreviewSongs,
     LoadingWheel,
+    SongListContainer,
+    SongListTitle,
 };

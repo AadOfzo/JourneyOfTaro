@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {
     Container,
@@ -8,18 +8,28 @@ import {
     PlusIcon,
     PreviewSongs,
     LoadingWheel,
+    SongListContainer,
+    SongListTitle,
 } from './styles.SongForm';
+import SongList from "../../lists/SongList";
 
 const SongForm = () => {
     const [songs, setSongs] = useState([]);
     const [songTitle, setSongTitle] = useState('');
     const [artistName, setArtistName] = useState(''); // State for artist's name
-    const [formData, setFormData] = useState({ file: null });
+    const [formData, setFormData] = useState({file: null});
     const [loading, setLoading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
 
     useEffect(() => {
-        fetchSongs();
+        const fetchData = async () => {
+            try {
+                await fetchSongs();
+            } catch (error) {
+                console.error('Error fetching songs: ', error);
+            }
+        };
+        fetchData();
     }, []);
 
     const fetchSongs = async () => {
@@ -57,12 +67,12 @@ const SongForm = () => {
             formDataToSend.append('songTitle', songTitle);
             formDataToSend.append('artistName', artistName); // Add artist's name to the form data
 
-            console.log('Form Data:' , formDataToSend);
+            console.log('Form Data:', formDataToSend);
 
             await axios.post('http://localhost:8080/fileUpload', formDataToSend);
 
             await fetchSongs();
-            setFormData({ file: null }); // Clear field after upload
+            setFormData({file: null}); // Clear field after upload
             setSongTitle(''); // Clear song title
             setLoading(false);
             console.log('Song added successfully!');
@@ -91,7 +101,7 @@ const SongForm = () => {
                     e.preventDefault();
                     setDragOver(false);
                     const file = e.dataTransfer.files[0];
-                    setFormData({ ...formData, file });
+                    setFormData({...formData, file});
                 }}
                 dragOver={dragOver}
             >
@@ -111,7 +121,7 @@ const SongForm = () => {
                         </ChooseFileButton>
                     </>
                 )}
-                {loading && <LoadingWheel />}
+                {loading && <LoadingWheel/>}
                 {formData.file && (
                     <>
                         <PreviewSongs
@@ -136,17 +146,20 @@ const SongForm = () => {
                 {formData.file && <button type="submit">Add Song</button>}
             </Form>
 
-            <h2>Song List</h2>
-            <ul>
-                {songs.map((song) => (
-                    <li key={song.id}>
-                        <div>
-                            <div>{song.songTitle}</div>
-                            <button onClick={() => handleDelete(song.id)}>Delete</button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            <SongListContainer>
+                <SongListTitle>Song List</SongListTitle>
+                <SongList>
+                    {songs.map((song) => (
+                        <li key={song.id}>
+                            <div>
+                                <div>{song.songTitle}</div>
+
+                                <button onClick={() => handleDelete(song.id)}>Delete</button>
+                            </div>
+                        </li>
+                    ))}
+                </SongList>
+            </SongListContainer>
         </Container>
     );
 };
