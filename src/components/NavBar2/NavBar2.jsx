@@ -65,20 +65,6 @@ function NavBar2({ handleLogout }) {
                         </li>
                         <li>
                             <NavLink
-                                to="/postRequestPage"
-                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
-                                PostRequest
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                to="/getRequestPage"
-                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
-                                GetRequest
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
                                 to="/imageRequestPage"
                                 className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
                                 ImageRequest

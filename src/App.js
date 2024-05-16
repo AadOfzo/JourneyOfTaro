@@ -21,17 +21,11 @@ import FooterMenu from "./components/footer/FooterMenu";
 import LoginPopupMainComponent from "./components/login/LoginPopupMainComponent";
 import UserForm3 from "./components/forms/userForm/UserForm3";
 import UserList from "./components/lists/UserList";
+import SuccessMessage from "./components/messaging/SuccessMessage";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedOut, setLoggedOut] = useState(true);
-
-    // Handle logout
-    const handleLogout = () => {
-        localStorage.removeItem('token'); // Clear token from local storage
-        setIsLoggedIn(false); // Update login state to false
-        setLoggedOut(true); // Set loggedOut state to true
-    };
 
     // Handle login
     const handleLogin = () => {
@@ -45,6 +39,14 @@ function App() {
         const token = localStorage.getItem('token');
         setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists, false otherwise
     }, []);
+
+    // Handle logout
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Clear token from local storage
+        setIsLoggedIn(false); // Update login state to false
+        setLoggedOut(true); // Set loggedOut state to true
+    };
+
 
     return (
         <div className="main-outer-container">
@@ -67,10 +69,11 @@ function App() {
                     <Route path="/imageRequestPage" element={<ImageRequestPage />} />
                     <Route path="*" element={<NotFound />} />
                     // Components
-                    <Route path="/popup" element={<LoginPopupMainComponent />} />
                     <Route path="/signup" element={<UserForm3 />} />
                     <Route path="/account" element={<UserList/>} />
                     <Route path="/demo-upload" element={<UploadPage/>} />
+                    <Route path="/success" element={<SuccessMessage/>} />
+
                 </Routes>
             </div>
 

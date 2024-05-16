@@ -2,10 +2,20 @@ import React from 'react';
 import ContentContainer from "../../components/contentLayout/ContentContainer"
 import OutlineLogo from "../../assets/images/svg/JourneyOfTaro_Logo_CompassOutline_V2.svg";
 import SongList from "../../components/lists/SongList";
+import MusicPlayerTop from "../../components/musicPlayer/MusicPlayerTop";
+import UploadComponent from "../../components/fileHandling/UploadComponent";
+import SongForm from "../../components/forms/musicForm/SongForm";
+import UploadForm from "../../components/forms/uploadForm/UploadForm";
 
 function MusicPage() {
     return (
         <main className="pages-main-container">
+
+            {/*<Player/>*/}
+            {/*<UploadForm/>*/}
+            <SongForm/>
+            <MusicPlayerTop/>
+
 
             <ContentContainer
                 layout={'text'}
@@ -39,6 +49,8 @@ function MusicPage() {
                     content: 'Bloep'
                 }}
             />
+
+
             <div>
                 <SongList/>
             </div>

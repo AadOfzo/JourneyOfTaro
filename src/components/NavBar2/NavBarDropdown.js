@@ -15,7 +15,7 @@ const NavBarDropdown = ({ isLoggedIn, handleLogout }) => {
                 <img
                     width="24"
                     height="24"
-                    src={isLoggedIn ? "https://img.icons8.com/pastel-glyph/64/person-male--v1.png" : "https://img.icons8.com/pastel-glyph/64/person-male--v3.png"}
+                    src={isLoggedIn ? "https://img.icons8.com/pastel-glyph/64/000000/person-male--v1.png" : "https://img.icons8.com/pastel-glyph/64/000000/person-male--v3.png"}
                     alt="person-icon"
                 />
             </button>

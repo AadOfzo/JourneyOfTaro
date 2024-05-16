@@ -15,8 +15,8 @@ const LoginForm = () => {
                 username,
                 password,
             });
-            const token = response.data.token; // Assuming the server responds with a JWT token
-            localStorage.setItem('token', token); // Store the token in localStorage
+            const { jwt } = response.data; // Assuming the server responds with a JWT token
+            localStorage.setItem('token', jwt); // Store the token in localStorage
             setSuccessMessage('Login successful'); // Set success message
             // Redirect the user to another page or update UI to reflect authentication
         } catch (error) {

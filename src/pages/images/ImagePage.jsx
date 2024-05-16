@@ -10,7 +10,7 @@ function ImagePage() {
     return (<main className="pages-main-container">
         <SImagePage>
             <ImageForm/>
-            <ImageComponent/>
+            {/*<ImageComponent/>*/}
             {/*<ImageGallery/>*/}
             {/*<ImageHandler/>*/}
         </SImagePage>
