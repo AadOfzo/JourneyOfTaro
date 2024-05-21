@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
     Container,
@@ -9,15 +9,14 @@ import {
     PreviewSongs,
     LoadingWheel,
     SongListContainer,
-    SongListTitle,
 } from './styles.SongForm';
 import SongList from "../../lists/SongList";
 
 const SongForm = () => {
     const [songs, setSongs] = useState([]);
     const [songTitle, setSongTitle] = useState('');
-    const [artistName, setArtistName] = useState(''); // State for artist's name
-    const [formData, setFormData] = useState({file: null});
+    const [artistName, setArtistName] = useState('');
+    const [formData, setFormData] = useState({ file: null });
     const [loading, setLoading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
 
@@ -65,15 +64,20 @@ const SongForm = () => {
             const formDataToSend = new FormData();
             formDataToSend.append('file', file);
             formDataToSend.append('songTitle', songTitle);
-            formDataToSend.append('artistName', artistName); // Add artist's name to the form data
+            formDataToSend.append('artistName', artistName);
 
             console.log('Form Data:', formDataToSend);
 
-            await axios.post('http://localhost:8080/fileUpload', formDataToSend);
+            await axios.post('http://localhost:8080/fileUpload', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
             await fetchSongs();
-            setFormData({file: null}); // Clear field after upload
-            setSongTitle(''); // Clear song title
+            setFormData({ file: null });
+            setSongTitle('');
+            setArtistName('');
             setLoading(false);
             console.log('Song added successfully!');
         } catch (error) {
@@ -85,7 +89,7 @@ const SongForm = () => {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:8080/songs/${id}`);
-            await fetchSongs(); // Refresh data list after deletion
+            await fetchSongs();
         } catch (error) {
             console.error('Error deleting song:', error);
         }
@@ -101,7 +105,7 @@ const SongForm = () => {
                     e.preventDefault();
                     setDragOver(false);
                     const file = e.dataTransfer.files[0];
-                    setFormData({...formData, file});
+                    setFormData({ ...formData, file });
                 }}
                 dragOver={dragOver}
             >
@@ -121,7 +125,7 @@ const SongForm = () => {
                         </ChooseFileButton>
                     </>
                 )}
-                {loading && <LoadingWheel/>}
+                {loading && <LoadingWheel />}
                 {formData.file && (
                     <>
                         <PreviewSongs
@@ -147,13 +151,12 @@ const SongForm = () => {
             </Form>
 
             <SongListContainer>
-                <SongListTitle>Song List</SongListTitle>
                 <SongList>
                     {songs.map((song) => (
                         <li key={song.id}>
                             <div>
                                 <div>{song.songTitle}</div>
-
+                                {/*<MusicPlayerTop src={song.songUrl}/>*/}
                                 <button onClick={() => handleDelete(song.id)}>Delete</button>
                             </div>
                         </li>
