@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {
     Container,
@@ -18,7 +18,6 @@ import {
     ImageListItem,
     ImageAddButton,
 } from './styles.ImageForm';
-import styled from "styled-components";
 
 const ImageForm = () => {
     const [images, setImages] = useState([]);
@@ -69,7 +68,7 @@ const ImageForm = () => {
         e.preventDefault();
         setDragOver(false);
         const file = e.dataTransfer.files[0];
-        setFormData({ ...formData, file });
+        setFormData({...formData, file});
     };
 
     const handleSubmit = async (e) => {
@@ -94,10 +93,14 @@ const ImageForm = () => {
             formDataToSend.append('imageAltName', imageAltName);
             formDataToSend.append('file', file);
 
-            await axios.post('http://localhost:8080/fileUpload', formDataToSend);
+            await axios.post('http://localhost:8080/fileUpload', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
             await fetchImages();
-            setFormData({ file: null }); // Clear field after upload
+            setFormData({file: null}); // Clear field after upload
             setLoading(false);
         } catch (error) {
             console.error('Error adding image:', error);
@@ -117,34 +120,36 @@ const ImageForm = () => {
     return (
         <Container>
             <ImageListContainer>
-            <ImageListTitle>Upload Image</ImageListTitle>
-            <Form
-                onSubmit={handleSubmit}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                dragOver={dragOver}
-            >
-                {!formData.file && (
-                    <>
-                        <FileInput
-                            type="file"
-                            name="file"
-                            id="file"
-                            onChange={handleFileChange}
-                        />
-                        <ChooseFileButton
-                            htmlFor="file"
-                            dragOver={dragOver}
-                        >
-                            <PlusIcon>+</PlusIcon> {dragOver ? 'Drop here' : 'Choose File'}
-                        </ChooseFileButton>
-                    </>
-                )}
-                {loading && <LoadingWheel />}
-                {formData.file && <UploadPreviewImage src={URL.createObjectURL(formData.file)} alt="Preview" />}
-                {formData.file && <ImageAddButton type="submit">Upload</ImageAddButton>}
-            </Form>
+                <ImageListTitle>Upload Image</ImageListTitle>
+                <Form
+                    onSubmit={handleSubmit}
+                    onDragEnter={handleDragEnter}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    dragOver={dragOver}
+                >
+                    {!formData.file && (
+                        <>
+                            <FileInput
+                                type="file"
+                                name="file"
+                                id="file"
+                                onChange={handleFileChange}
+                            />
+                            <ChooseFileButton
+                                htmlFor="file"
+                                dragOver={dragOver}
+                            >
+                                <PlusIcon>+</PlusIcon> {dragOver ? 'Drop here' : 'Choose File'}
+                            </ChooseFileButton>
+                        </>
+                    )}
+                    {loading && <LoadingWheel/>}
+                    {formData.file && <UploadPreviewImage
+                        src={URL.createObjectURL(formData.file)}
+                        alt="Preview"/>}
+                    {formData.file && <ImageAddButton type="submit">Upload Image</ImageAddButton>}
+                </Form>
             </ImageListContainer>
 
             <ImageListContainer>

@@ -12,10 +12,13 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 300px;
+  width: 65vw;
   border: 2px solid var(--secondary);
   padding: 20px;
-  margin-top: 20px;
+
+  @media (min-width: 1280px) {
+    width: 45vw;
+  }
 `;
 
 const FileInput = styled.input`
@@ -41,15 +44,28 @@ const PlusIcon = styled.div`
   margin-right: 8px;
 `;
 
-const PreviewSongs = styled.img`
-  max-width: 100%;
-  max-height: 200px;
-  margin-top: 20px;
-  border: 2px solid var(--secondary); /* Add border for consistency */
+
+const UploadPreviewSong = styled.img`
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+  margin-bottom: 36px;
 `;
 
+const PreviewSong = styled.div`
+  max-width: 100px;
+  max-height: 100px;
+  padding-right: 24px;
+  object-fit: contain;
+  border: 2px solid var(--secondary); 
+`;
+
+const SongUploadLabel = styled.p`
+  padding: 1.2rem;
+  font-size: large;
+`
 const LoadingWheel = styled.div`
-  border: 6px solid #f3f3f3;
+  border: 6px solid var(--primary);
   border-top: 6px solid var(--secondary);
   border-radius: 50%;
   width: 50px;
@@ -63,17 +79,122 @@ const LoadingWheel = styled.div`
   }
 `;
 
-const SongListContainer = styled.div`
+const SongListContainer = styled.ul`
   display: flex;
   flex-direction: column;
   width: 65vw;
   margin-top: 4rem;
   margin-bottom: 4rem;
+
+
+  @media (min-width: 1280px) {
+    width: 45vw;
+  }
+`;
+
+const SongList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 2px solid var(--secondary);
+  padding: 24px
 `;
 
 const SongListTitle = styled.h2`
   margin-bottom: 32px;
   margin-left: 24px;
+`;
+
+const SongListItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--secondary)
+`;
+
+const SongLabel = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+const SongTitle = styled.p`
+  font-size: 1.2rem;
+  padding-right: 24px;
+  font-weight: bold;
+`;
+
+const ArtistName = styled.p`
+  font-size: 1.2rem;
+  padding-right: 24px;
+  font-weight: bold;
+`;
+
+const SongAddButton = styled.button`
+    align-items: center;
+    background-color: var(--primary);
+    border: 3px solid var(--testColorTwo);
+    border-radius: 24px;
+    box-sizing: border-box;
+    color: #ededed;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: bold;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    text-decoration: none;
+    user-select: none;
+    width: auto;
+
+  :hover {
+    background-color: var(--testColorTwo);
+  }
+`;
+
+const IconButton = styled.button`
+    border: 1px solid var(--testColorOne);
+    background: var(--secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em;
+    border-radius: 50%;
+
+    &:hover {
+        background-color: var(--secondary);
+    }
+`;
+
+const SongDeleteButton = styled.button`
+    align-items: center;
+    background-color: var(--primary);
+    border: 3px solid var(--testColorOne);
+    border-radius: 24px;
+    box-sizing: border-box;
+    color: #ededed;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: bold;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    text-decoration: none;
+    user-select: none;
+    width: auto;
+
+  :hover {
+    background-color: var(--testColorOne);
+  }
 `;
 
 export {
@@ -82,8 +203,18 @@ export {
     FileInput,
     ChooseFileButton,
     PlusIcon,
-    PreviewSongs,
+    PreviewSong,
     LoadingWheel,
+    UploadPreviewSong,
+    SongUploadLabel,
+    SongTitle,
+    ArtistName,
     SongListContainer,
+    SongList,
     SongListTitle,
+    SongLabel,
+    SongListItem,
+    SongAddButton,
+    IconButton,
+    SongDeleteButton,
 };

@@ -6,14 +6,28 @@ import {
     FileInput,
     ChooseFileButton,
     PlusIcon,
-    PreviewSongs,
     LoadingWheel,
+    UploadPreviewSong,
+    SongUploadLabel,
+    SongTitle,
+    ArtistName,
     SongListContainer,
+    SongList,
+    SongListTitle,
+    SongLabel,
+    SongListItem,
+    SongAddButton,
+    SongDeleteButton,
+    IconButton,
 } from './styles.SongForm';
-import SongList from "../../lists/SongList";
+import { AiFillPlayCircle } from 'react-icons/ai';
+import { IconContext } from 'react-icons';
 
-const SongForm = () => {
-    const [songs, setSongs] = useState([]);
+const SongForm = ({ onPlayPause }) => {
+    const [ songs, setSongs ] = useState([
+        { id: 1, songTitle: 'Song 1', artistName: 'Artist 1', songData: 'base64encodedSongData1' },
+        { id: 2, songTitle: 'Song 2', artistName: 'Artist 2', songData: 'base64encodedSongData2' }
+    ]);
     const [songTitle, setSongTitle] = useState('');
     const [artistName, setArtistName] = useState('');
     const [formData, setFormData] = useState({ file: null });
@@ -45,6 +59,22 @@ const SongForm = () => {
             ...formData,
             file: e.target.files[0],
         });
+    };
+
+    const handleDragEnter = (e) => {
+        e.preventDefault();
+        setDragOver(true);
+    };
+
+    const handleDragLeave = () => {
+        setDragOver(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setDragOver(false);
+        const file = e.dataTransfer.files[0];
+        setFormData({ ...formData, file });
     };
 
     const handleSubmit = async (e) => {
@@ -97,69 +127,68 @@ const SongForm = () => {
 
     return (
         <Container>
-            <Form
-                onSubmit={handleSubmit}
-                onDragEnter={() => setDragOver(true)}
-                onDragLeave={() => setDragOver(false)}
-                onDrop={(e) => {
-                    e.preventDefault();
-                    setDragOver(false);
-                    const file = e.dataTransfer.files[0];
-                    setFormData({ ...formData, file });
-                }}
-                dragOver={dragOver}
-            >
-                {!formData.file && (
-                    <>
-                        <FileInput
-                            type="file"
-                            name="file"
-                            id="file"
-                            onChange={handleFileChange}
-                        />
-                        <ChooseFileButton
-                            htmlFor="file"
-                            dragOver={dragOver}
-                        >
-                            <PlusIcon>+</PlusIcon> {dragOver ? 'Drop here' : 'Choose File'}
-                        </ChooseFileButton>
-                    </>
-                )}
-                {loading && <LoadingWheel />}
-                {formData.file && (
-                    <>
-                        <PreviewSongs
-                            src={URL.createObjectURL(formData.file)}
-                            alt="Preview"
-                        />
-                        <p>Selected song: {formData.file.name}</p>
-                    </>
-                )}
-                <input
-                    type="text"
-                    value={songTitle}
-                    placeholder="Enter song title"
-                    onChange={(e) => setSongTitle(e.target.value)}
-                />
-                <input
-                    type="text"
-                    value={artistName}
-                    placeholder="Enter artist name"
-                    onChange={(e) => setArtistName(e.target.value)}
-                />
-                {formData.file && <button type="submit">Add Song</button>}
-            </Form>
+            <SongListContainer>
+                <SongListTitle>Upload Song</SongListTitle>
+                <Form
+                    onSubmit={handleSubmit}
+                    onDragEnter={handleDragEnter}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    dragOver={dragOver}
+                >
+                    {!formData.file && (
+                        <>
+                            <FileInput
+                                type="file"
+                                name="file"
+                                id="file"
+                                onChange={handleFileChange}
+                            />
+                            <ChooseFileButton
+                                htmlFor="file"
+                                dragOver={dragOver}
+                            >
+                                <PlusIcon>+</PlusIcon> {dragOver ? 'Drop here' : 'Choose File'}
+                            </ChooseFileButton>
+                        </>
+                    )}
+                    {loading && <LoadingWheel />}
+                    {formData.file && <UploadPreviewSong
+                        src={URL.createObjectURL(formData.file)}
+                        alt="Preview" />}
+                    {formData.file && <SongAddButton type="submit">Upload Song</SongAddButton>}
+                    {formData.file && <SongUploadLabel>Selected file: {formData.file.name}</SongUploadLabel>}
+                    <input
+                        type="text"
+                        value={songTitle}
+                        placeholder="Enter song title"
+                        onChange={(e) => setSongTitle(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        value={artistName}
+                        placeholder="Enter artist name"
+                        onChange={(e) => setArtistName(e.target.value)}
+                    />
+                </Form>
+            </SongListContainer>
 
             <SongListContainer>
+                <SongListTitle>Song List</SongListTitle>
                 <SongList>
                     {songs.map((song) => (
-                        <li key={song.id}>
-                            <div>
-                                <div>{song.songTitle}</div>
-                                {/*<MusicPlayerTop src={song.songUrl}/>*/}
-                                <button onClick={() => handleDelete(song.id)}>Delete</button>
-                            </div>
-                        </li>
+                        <SongListItem key={song.id}>
+                            <SongLabel>
+                                <IconContext.Provider value={{ size: '2em', color: 'var(--primary)' }}>
+                                    <IconButton onClick={() => onPlayPause(song)}>
+                                        <AiFillPlayCircle />
+                                    </IconButton>
+                                </IconContext.Provider>
+                                <SongTitle>{song.songTitle}</SongTitle>
+                                <ArtistName>{song.artistName}</ArtistName>
+                            </SongLabel>
+                            <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>
+                        </SongListItem>
                     ))}
                 </SongList>
             </SongListContainer>

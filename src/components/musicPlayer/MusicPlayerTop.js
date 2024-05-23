@@ -1,117 +1,118 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import SMusicPlayer from "./styles.MusicPlayer";
-import useSound from "use-sound";
-import Perahu from "../../assets/audio/08_Perahu.mp3";
-import {IconContext} from "react-icons";
-import {BiSkipNext, BiSkipPrevious} from "react-icons/bi";
-import {AiFillPauseCircle, AiFillPlayCircle} from "react-icons/ai";
+import { IconContext } from "react-icons";
+import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import { AiFillPauseCircle, AiFillPlayCircle } from "react-icons/ai";
 
-function MusicPlayerTop() {
-
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [time, setTime] = useState({
-        min: "",
-        sec: ""
-    });
-
-    const [currTime, setCurrTime] = useState({ min: 0, sec: 0 });
-    const [seconds, setSeconds] = useState(0);
-    const [play, {pause, duration, sound}] = useSound(Perahu);
+const MusicPlayerTop = ({ currentSong, isPlaying, setIsPlaying }) => {
+    const [audio, setAudio] = useState(new Audio());
+    const [duration, setDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
 
     useEffect(() => {
-        if (duration) {
-            const sec = duration / 1000;
-            const min = Math.floor(sec / 60);
-            const secRemain = Math.floor(sec % 60);
-            setTime({
-                min: min,
-                sec: secRemain
-            });
+        if (currentSong && isPlaying) {
+            loadAudio(currentSong.songUrl);
+            playAudio();
+        } else {
+            pauseAudio();
         }
-    }, [isPlaying]);
+    }, [currentSong, isPlaying]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (sound) {
-                const currentTime = Math.floor(sound.seek([]));
-                const min = Math.floor(currentTime / 60);
-                const sec = Math.floor(currentTime % 60);
-                setCurrTime({ min, sec });
-                setSeconds(currentTime); // Update seconds state
-            }
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [sound]);
+        audio.addEventListener('timeupdate', updateTime);
+        return () => {
+            audio.removeEventListener('timeupdate', updateTime);
+        };
+    }, [audio]);
 
+    const loadAudio = (url) => {
+        audio.src = url;
+        audio.load();
+        audio.addEventListener('loadedmetadata', () => {
+            setDuration(audio.duration);
+        });
+    };
+
+    const playAudio = () => {
+        audio.play();
+    };
+
+    const pauseAudio = () => {
+        audio.pause();
+    };
+
+    const updateTime = () => {
+        setCurrentTime(audio.currentTime);
+    };
 
     const playingButton = () => {
         if (isPlaying) {
-            pause();
+            pauseAudio();
             setIsPlaying(false);
         } else {
-            play();
+            playAudio();
             setIsPlaying(true);
         }
     };
 
-
     return (
-            <SMusicPlayer>
-                <div className="music-player-top-container">
-                    <h2>Playing now</h2>
-                    <img className="music-cover" src="https://picsum.photos/200/200"/>
-                    <div className="song-info-container">
-                        <h3 className="song-title">Song Title</h3>
-                        <p className="artist-name">Artist Name</p>
-                    </div>
-                    <div className="time">
-                        <p>
-                            {currTime.min}:{currTime.sec}
-                        </p>
-                        <p>
-                            {time.min}:{time.sec}
-                        </p>
-                    </div>
-                    <input
-                        type="range"
-                        min="0"
-                        max={duration / 1000}
-                        default="0"
-                        value={seconds}
-                        className="timeline"
-                        onChange={(e) => {
-                            sound.seek([e.target.value]);
-                        }}
-                    />
-                    <div className="music-player-icon-container">
-                        <button className="playButton">
-                            <IconContext.Provider value={{size: "3em", color: "var(--primary)"}}>
-                                <BiSkipPrevious/>
-                            </IconContext.Provider>
-                        </button>
-                        {!isPlaying ? (
-                            <button className="playButton" onClick={playingButton}>
-                                <IconContext.Provider value={{size: "3em", color: "var(--primary)"}}>
-                                    <AiFillPlayCircle/>
-                                </IconContext.Provider>
-                            </button>
-                        ) : (
-                            <button className="playButton" onClick={playingButton}>
-                                <IconContext.Provider value={{size: "3em", color: "var(--primary)"}}>
-                                    <AiFillPauseCircle/>
-                                </IconContext.Provider>
-                            </button>
-                        )}
-                        <button className="playButton">
-                            <IconContext.Provider value={{size: "3em", color: "var(--primary)"}}>
-                                <BiSkipNext/>
-                            </IconContext.Provider>
-                        </button>
-                    </div>
+        <SMusicPlayer>
+            <div className="music-player-top-container">
+                <h2>Playing now</h2>
+                <img className="music-cover" src="https://picsum.photos/200/200" alt="Music cover" />
+                <div className="song-info-container">
+                    <h3 className="song-title">{currentSong ? currentSong.songTitle : 'Song Title'}</h3>
+                    <p className="artist-name">{currentSong ? currentSong.artistName : 'Artist Name'}</p>
                 </div>
-
-            </SMusicPlayer>
+                <div className="time">
+                    <p>{formatTime(currentTime)}</p>
+                    <p>{formatTime(duration)}</p>
+                </div>
+                <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    value={currentTime}
+                    className="timeline"
+                    onChange={(e) => {
+                        setCurrentTime(parseInt(e.target.value));
+                        audio.currentTime = e.target.value;
+                    }}
+                />
+                <div className="music-player-icon-container">
+                    <button className="playButton">
+                        <IconContext.Provider value={{ size: "3em", color: "var(--primary)" }}>
+                            <BiSkipPrevious />
+                        </IconContext.Provider>
+                    </button>
+                    {!isPlaying ? (
+                        <button className="playButton" onClick={playingButton}>
+                            <IconContext.Provider value={{ size: "3em", color: "var(--primary)" }}>
+                                <AiFillPlayCircle />
+                            </IconContext.Provider>
+                        </button>
+                    ) : (
+                        <button className="playButton" onClick={playingButton}>
+                            <IconContext.Provider value={{ size: "3em", color: "var(--primary)" }}>
+                                <AiFillPauseCircle />
+                            </IconContext.Provider>
+                        </button>
+                    )}
+                    <button className="playButton">
+                        <IconContext.Provider value={{ size: "3em", color: "var(--primary)" }}>
+                            <BiSkipNext />
+                        </IconContext.Provider>
+                    </button>
+                </div>
+            </div>
+        </SMusicPlayer>
     );
 }
+
+const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
 
 export default MusicPlayerTop;

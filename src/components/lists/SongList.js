@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import './ListsMainStyle.css';
-import {SongListTitle} from "../forms/musicForm/styles.SongForm";
+import { SongListTitle } from "../forms/musicForm/styles.SongForm";
 
 function SongList() {
     const [songs, setSongs] = useState([]);
@@ -30,9 +30,10 @@ function SongList() {
                     <th>Song Title</th>
                     <th>Artist Name</th>
                     <th>File Name</th>
+                    <th>File Size</th>
                     <th>Upload Time</th>
                     <th>Song Collection</th>
-                    <th>Audio URL</th>
+                    <th>Song URL</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -42,10 +43,12 @@ function SongList() {
                         <td>{song.id}</td>
                         <td>{song.songTitle}</td>
                         <td>{song.artistName}</td>
-                        <td>{song.filename}</td>
+                        <td>{song.fileName}</td>
+                        <td>{song.fileSize}</td>
                         <td>{song.uploadTime}</td>
                         <td>{song.songCollection}</td>
-                        <td>{song.audioUrl}</td>
+                        {/* Displaying SongUrl instead of Audio URL */}
+                        <td>{song.songUrl}</td>
                         <td><button>Delete Song</button></td>
                     </tr>
                 ))}
