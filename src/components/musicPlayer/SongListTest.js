@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {SongActionButtons, SongAddButton, SongDeleteButton} from "../forms/musicForm/styles.SongForm";
+import ImageForm from "../forms/imageForm/ImageForm";
+import {ImageListContainer} from "../forms/imageForm/styles.ImageForm";
 
 function SongListTest() {
     const [imageFile, setImageFile] = useState(null);
@@ -116,11 +118,12 @@ function SongListTest() {
                             </SongActionButtons>
                         </td>
                         <td>
-                            <form onSubmit={(e) => handleImageUpload(e, song.id)}>
-                                <input type="file" onChange={handleImageChange}/>
-                                {imagePreviewUrl && <img src={imagePreviewUrl} alt="Preview"/>}
-                                <button type="submit">Upload Image</button>
-                            </form>
+                            <ImageForm/>
+                            {/*<form onSubmit={(e) => handleImageUpload(e, song.id)}>*/}
+                            {/*    <input type="file" onChange={handleImageChange}/>*/}
+                            {/*    {imagePreviewUrl && <img src={imagePreviewUrl} alt="Preview"/>}*/}
+                            {/*    <button type="submit">Upload Image</button>*/}
+                            {/*</form>*/}
                         </td>
                         <td>
                             <select name="song-collection" id="song-collection" onChange={handleAddSongToCollectionId}>

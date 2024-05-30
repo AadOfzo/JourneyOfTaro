@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-    Container,
+    SongContainer,
     Form,
     FileInput,
     ChooseFileButton,
@@ -20,13 +20,11 @@ import {
     SongActionButtons,
     SongAddButton,
     SongDeleteButton,
-    IconButton,
     AudioPlayerContainer,
 } from './styles.SongForm';
-import { AiFillPlayCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 
-const SongForm = ({ onPlayPause }) => {
+const SongForm = () => {
     const [songs, setSongs] = useState([]);
     const [songTitle, setSongTitle] = useState('');
     const [artistName, setArtistName] = useState('');
@@ -132,7 +130,7 @@ const SongForm = ({ onPlayPause }) => {
     };
 
     return (
-        <Container>
+        <SongContainer>
             <SongListContainer>
                 <SongListTitle>Upload Song</SongListTitle>
                 <Form
@@ -204,7 +202,7 @@ const SongForm = ({ onPlayPause }) => {
                     ))}
                 </SongList>
             </SongListContainer>
-        </Container>
+        </SongContainer>
     );
 };
 

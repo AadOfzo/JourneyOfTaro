@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+// ImageForm.js
+import React, { useState } from 'react';
 import axios from 'axios';
 import {
     Container,
@@ -6,169 +7,58 @@ import {
     FileInput,
     ChooseFileButton,
     PlusIcon,
-    PreviewImage,
-    LoadingWheel,
     UploadPreviewImage,
-    ImageName,
-    ImageDeleteButton,
-    ImageListContainer,
-    ImageList,
-    ImageListTitle,
-    ImageLabel,
-    ImageListItem,
     ImageAddButton,
+    LoadingWheel
 } from './styles.ImageForm';
 
-const ImageForm = () => {
-    const [images, setImages] = useState([]);
-    const [formData, setFormData] = useState({
-        file: null,
-    });
+const ImageForm = ({ songId, onImageUploaded }) => {
+    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [dragOver, setDragOver] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await fetchImages();
-            } catch (error) {
-                console.error('Error fetching images:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const fetchImages = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/images`);
-            setImages(response.data);
-        } catch (error) {
-            console.error('Error fetching images:', error);
-        }
-    };
 
     const handleFileChange = (e) => {
-        setFormData({
-            ...formData,
-            file: e.target.files[0],
-        });
-    };
-
-    const handleDragEnter = (e) => {
-        e.preventDefault();
-        setDragOver(true);
-    };
-
-    const handleDragLeave = () => {
-        setDragOver(false);
-    };
-
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setDragOver(false);
-        const file = e.dataTransfer.files[0];
-        setFormData({...formData, file});
+        setFile(e.target.files[0]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            setLoading(true);
-
-            const file = formData.file;
-
-            if (!file) {
-                console.error('No file selected');
-                setLoading(false);
-                return;
-            }
-
-            const imageName = file.name;
-            const imageAltName = imageName.toLowerCase().replace(/\s+/g, '_');
-
-            const formDataToSend = new FormData();
-            formDataToSend.append('imageName', imageName);
-            formDataToSend.append('imageAltName', imageAltName);
-            formDataToSend.append('file', file);
-
-            await axios.post('http://localhost:8080/fileUpload', formDataToSend, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            await fetchImages();
-            setFormData({file: null}); // Clear field after upload
-            setLoading(false);
-        } catch (error) {
-            console.error('Error adding image:', error);
-            setLoading(false);
+        if (!file) {
+            console.error("No file selected");
+            return;
         }
-    };
 
-    const handleDelete = async (id) => {
+        setLoading(true);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
         try {
-            await axios.delete(`http://localhost:8080/images/${id}`);
-            await fetchImages(); // Refresh image list after deletion
+            await axios.post(`http://localhost:8080/songs/${songId}/uploadImage`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            onImageUploaded();
+            setFile(null);
+            setLoading(false);
         } catch (error) {
-            console.error('Error deleting image:', error);
+            console.error('Error uploading image:', error);
+            setLoading(false);
         }
     };
 
     return (
-        <Container>
-            <ImageListContainer>
-                <ImageListTitle>Upload Image</ImageListTitle>
-                <Form
-                    onSubmit={handleSubmit}
-                    onDragEnter={handleDragEnter}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    dragOver={dragOver}
-                >
-                    {!formData.file && (
-                        <>
-                            <FileInput
-                                type="file"
-                                name="file"
-                                id="file"
-                                onChange={handleFileChange}
-                            />
-                            <ChooseFileButton
-                                htmlFor="file"
-                                dragOver={dragOver}
-                            >
-                                <PlusIcon>+</PlusIcon> {dragOver ? 'Drop here' : 'Choose File'}
-                            </ChooseFileButton>
-                        </>
-                    )}
-                    {loading && <LoadingWheel/>}
-                    {formData.file && <UploadPreviewImage
-                        src={URL.createObjectURL(formData.file)}
-                        alt="Preview"/>}
-                    {formData.file && <ImageAddButton type="submit">Upload Image</ImageAddButton>}
-                </Form>
-            </ImageListContainer>
-
-            <ImageListContainer>
-                <ImageListTitle>Image List</ImageListTitle>
-                <ImageList>
-                    {images.map((image) => (
-                        <ImageListItem key={image.id}>
-                            <ImageLabel>
-                                <PreviewImage src={`data:image/png;base64, ${image.imageData}`} alt={image.id}/>
-                                <ImageName>{image.imageName}</ImageName>
-                            </ImageLabel>
-                            <ImageDeleteButton onClick={() => handleDelete(image.id)}>Delete</ImageDeleteButton>
-                        </ImageListItem>
-                    ))}
-                </ImageList>
-            </ImageListContainer>
+        <Container style={{ width: '100%', padding: '10px' }}>
+            <Form onSubmit={handleSubmit} style={{ width: '100%', padding: '10px', border: 'none' }}>
+                <FileInput type="file" onChange={handleFileChange} id={`file-${songId}`} />
+                <ChooseFileButton htmlFor={`file-${songId}`} style={{ height: '50px', fontSize: '12px' }}>
+                    <PlusIcon>+</PlusIcon> Choose File
+                </ChooseFileButton>
+                {file && <UploadPreviewImage src={URL.createObjectURL(file)} alt="Preview" style={{ maxWidth: '50px', maxHeight: '50px' }} />}
+                {file && <ImageAddButton type="submit" style={{ padding: '5px 10px', fontSize: '12px' }}>Upload</ImageAddButton>}
+                {loading && <LoadingWheel />}
+            </Form>
         </Container>
     );
 };
 
 export default ImageForm;
-

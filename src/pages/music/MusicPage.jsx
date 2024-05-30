@@ -15,11 +15,11 @@ function MusicPage() {
 
             {/*<Player/>*/}
             {/*<UploadForm/>*/}
-            {/*<SongForm/>*/}
+            <SongForm/>
             {/*<SongList/>*/}
             <SongListTest/>
             {/*<MusicPlayerTop/>*/}
-            <MusicApp/>
+            {/*<MusicApp/>*/}
 
 
             {/*<ContentContainer*/}

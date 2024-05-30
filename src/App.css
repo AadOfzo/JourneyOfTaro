@@ -31,10 +31,6 @@ a, a:visited {
     text-decoration: none;
 }
 
-/*p {*/
-/*    margin-bottom: 2rem;*/
-/*}*/
-
 .main-outer-container {
     min-height: 100vh;
     display: flex;
@@ -48,20 +44,13 @@ a, a:visited {
 
 @media (min-width: 909px) {
     .main-content-container {
-        /*min-height: 100vh;*/
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: row;
-        /*flex-wrap: wrap;*/
-        /*justify-content: center;*/
-        /*text-align: center;*/
-        /*padding: 1rem;*/
-        /*margin: 1rem;*/
         transition: 500ms;
         flex: 1;
         margin: 0 auto;
-        /*max-width: 1140px;*/
     }
 }
 
@@ -91,9 +80,6 @@ a, a:visited {
 }
 
 .footer-box {
-    /*border: solid 1px var(--testColorOne);*/
-    /*background: rgba(141, 250, 79, 0.6);*/
-    /*padding-top: 1vh;*/
     margin: 1rem;
 }
 
@@ -102,6 +88,7 @@ a, a:visited {
     color: var(--testColorOne);
     transition: 100ms;
 }
+
 .container {
     display: flex;
     gap: 20px;

@@ -1,11 +1,10 @@
-// styles.SongForm.js
 import styled from 'styled-components';
 
-const Container = styled.div`
+const SongContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
 `;
 
 const Form = styled.form`
@@ -97,18 +96,16 @@ const SongList = styled.ul`
   flex-direction: column;
   gap: 1rem;
   border: 2px solid var(--secondary);
-  padding: 24px
 `;
 
 const SongListTitle = styled.h2`
   margin-bottom: 32px;
-  margin-left: 24px;
 `;
 
 const SongListItem = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  //justify-content: space-between;
   align-items: center;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--secondary)
@@ -117,18 +114,16 @@ const SongListItem = styled.div`
 const SongLabel = styled.div`
   display: flex;
   flex-direction: row;
-  //align-items: center;
 `
 
 const SongTitle = styled.p`
+  align-items: center;
   font-size: 1.2rem;
-  padding-right: 24px;
   font-weight: bold;
 `;
 
 const ArtistName = styled.p`
   font-size: 1.2rem;
-  padding-right: 24px;
   font-weight: bold;
 `;
 
@@ -246,7 +241,7 @@ const AudioPlayerContainer = styled.div`
 `;
 
 export {
-    Container,
+    SongContainer,
     Form,
     FileInput,
     ChooseFileButton,
