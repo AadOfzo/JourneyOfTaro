@@ -16,18 +16,18 @@ import {
     SongListTitle,
     SongLabel,
     SongListItem,
+    SongUploadButton,
+    SongActionButtons,
     SongAddButton,
     SongDeleteButton,
     IconButton,
+    AudioPlayerContainer,
 } from './styles.SongForm';
 import { AiFillPlayCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 
 const SongForm = ({ onPlayPause }) => {
-    const [ songs, setSongs ] = useState([
-        { id: 1, songTitle: 'Song 1', artistName: 'Artist 1', songData: 'base64encodedSongData1' },
-        { id: 2, songTitle: 'Song 2', artistName: 'Artist 2', songData: 'base64encodedSongData2' }
-    ]);
+    const [songs, setSongs] = useState([]);
     const [songTitle, setSongTitle] = useState('');
     const [artistName, setArtistName] = useState('');
     const [formData, setFormData] = useState({ file: null });
@@ -96,8 +96,6 @@ const SongForm = ({ onPlayPause }) => {
             formDataToSend.append('songTitle', songTitle);
             formDataToSend.append('artistName', artistName);
 
-            console.log('Form Data:', formDataToSend);
-
             await axios.post('http://localhost:8080/fileUpload', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -109,10 +107,18 @@ const SongForm = ({ onPlayPause }) => {
             setSongTitle('');
             setArtistName('');
             setLoading(false);
-            console.log('Song added successfully!');
         } catch (error) {
             console.error('Error uploading song:', error);
             setLoading(false);
+        }
+    };
+
+    const handleAddSong = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8080/songs/${id}`);
+            await fetchSongs();
+        } catch (error) {
+            console.error('Error Adding song:', error);
         }
     };
 
@@ -156,7 +162,7 @@ const SongForm = ({ onPlayPause }) => {
                     {formData.file && <UploadPreviewSong
                         src={URL.createObjectURL(formData.file)}
                         alt="Preview" />}
-                    {formData.file && <SongAddButton type="submit">Upload Song</SongAddButton>}
+                    {formData.file && <SongUploadButton type="submit">Upload Song</SongUploadButton>}
                     {formData.file && <SongUploadLabel>Selected file: {formData.file.name}</SongUploadLabel>}
                     <input
                         type="text"
@@ -180,14 +186,20 @@ const SongForm = ({ onPlayPause }) => {
                         <SongListItem key={song.id}>
                             <SongLabel>
                                 <IconContext.Provider value={{ size: '2em', color: 'var(--primary)' }}>
-                                    <IconButton onClick={() => onPlayPause(song)}>
-                                        <AiFillPlayCircle />
-                                    </IconButton>
+                                    <AudioPlayerContainer>
+                                            <audio controls>
+                                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3"/>
+                                                Your browser does not support the audio element.
+                                            </audio>
+                                    </AudioPlayerContainer>
                                 </IconContext.Provider>
                                 <SongTitle>{song.songTitle}</SongTitle>
                                 <ArtistName>{song.artistName}</ArtistName>
                             </SongLabel>
+                            <SongActionButtons>
+                            <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>
                             <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>
+                            </SongActionButtons>
                         </SongListItem>
                     ))}
                 </SongList>

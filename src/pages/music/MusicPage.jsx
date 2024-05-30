@@ -7,6 +7,7 @@ import UploadComponent from "../../components/fileHandling/UploadComponent";
 import SongForm from "../../components/forms/musicForm/SongForm";
 import UploadForm from "../../components/forms/uploadForm/UploadForm";
 import MusicApp from "../../components/musicPlayer/MusicApp";
+import SongListTest from "../../components/musicPlayer/SongListTest";
 
 function MusicPage() {
     return (
@@ -15,7 +16,8 @@ function MusicPage() {
             {/*<Player/>*/}
             {/*<UploadForm/>*/}
             {/*<SongForm/>*/}
-            <SongList/>
+            {/*<SongList/>*/}
+            <SongListTest/>
             {/*<MusicPlayerTop/>*/}
             <MusicApp/>
 

@@ -117,7 +117,7 @@ const SongListItem = styled.div`
 const SongLabel = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  //align-items: center;
 `
 
 const SongTitle = styled.p`
@@ -132,7 +132,7 @@ const ArtistName = styled.p`
   font-weight: bold;
 `;
 
-const SongAddButton = styled.button`
+const SongUploadButton = styled.button`
     align-items: center;
     background-color: var(--primary);
     border: 3px solid var(--testColorTwo);
@@ -172,6 +172,37 @@ const IconButton = styled.button`
     }
 `;
 
+const SongActionButtons = styled.div`
+  display: flex;
+  padding: 1.2rem;
+  justify-content: space-evenly;
+  border: solid 2px var(--testColorTwo);
+`
+const SongAddButton = styled.button`
+  //align-items: center;
+  background-color: var(--primary);
+  border: 3px solid var(--testColorTwo);
+  border-radius: 24px;
+  box-sizing: border-box;
+  color: #ededed;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  text-decoration: none;
+  user-select: none;
+  width: auto;
+
+  :hover {
+    background-color: var(--testColorOne);
+  }
+`;
+
 const SongDeleteButton = styled.button`
     align-items: center;
     background-color: var(--primary);
@@ -197,6 +228,23 @@ const SongDeleteButton = styled.button`
   }
 `;
 
+const AudioPlayerContainer = styled.div`
+  padding-right: 2rem;
+
+  audio {
+    outline: solid 2px var(--testColorTwo);
+
+  }
+  
+  .controls {
+    color: #eaa733;
+  }
+  //
+  //audio::-webkit-media-controls-panel {
+  //  background-color: #333;
+  //}
+`;
+
 export {
     Container,
     Form,
@@ -214,7 +262,10 @@ export {
     SongListTitle,
     SongLabel,
     SongListItem,
-    SongAddButton,
+    SongUploadButton,
     IconButton,
+    SongActionButtons,
+    SongAddButton,
     SongDeleteButton,
+    AudioPlayerContainer,
 };
