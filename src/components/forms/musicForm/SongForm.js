@@ -157,9 +157,6 @@ const SongForm = () => {
                         </>
                     )}
                     {loading && <LoadingWheel />}
-                    {formData.file && <UploadPreviewSong
-                        src={URL.createObjectURL(formData.file)}
-                        alt="Preview" />}
                     {formData.file && <SongUploadButton type="submit">Upload Song</SongUploadButton>}
                     {formData.file && <SongUploadLabel>Selected file: {formData.file.name}</SongUploadLabel>}
                     <input

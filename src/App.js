@@ -15,7 +15,6 @@ import LoginPage from './pages/login/LoginPage';
 import UploadPage from './pages/uploadpage/UploadPage';
 import ImagePage from "./pages/images/ImagePage";
 import PostRequestPage from "./pages/requests/PostRequestPage";
-import GetRequestPage from "./pages/requests/GetRequestPage";
 import ImageRequestPage from "./pages/imageRequest/ImageRequestPage";
 import FooterMenu from "./components/footer/FooterMenu";
 import LoginPopupMainComponent from "./components/login/LoginPopupMainComponent";
@@ -65,7 +64,6 @@ function App() {
                     <Route path="/upload" element={<UploadPage />} />
                     <Route path="/images" element={<ImagePage />} />
                     <Route path="/postRequestPage" element={<PostRequestPage />} />
-                    <Route path="/getRequestPage" element={<GetRequestPage />} />
                     <Route path="/imageRequestPage" element={<ImageRequestPage />} />
                     <Route path="*" element={<NotFound />} />
                     // Components

@@ -1,6 +1,12 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {SongActionButtons, SongAddButton, SongDeleteButton} from "../forms/musicForm/styles.SongForm";
+import {
+    SongContainer,
+    SongListContainer,
+    SongActionButtons,
+    SongAddButton,
+    SongDeleteButton
+} from "../forms/musicForm/styles.SongForm";
 import ImageForm from "../forms/imageForm/ImageForm";
 import {ImageListContainer} from "../forms/imageForm/styles.ImageForm";
 
@@ -35,7 +41,7 @@ function SongListTest() {
 
     const handleAddSong = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/songs/${id}`);
+            await axios.post(`http://localhost:8080/songs/${id}`);
             await fetchSongs();
         } catch (error) {
             console.error('Error Adding song:', error);
@@ -55,36 +61,9 @@ function SongListTest() {
         setSongCollectionId(e.target.value);
     };
 
-    const handleImageChange = (e) => {
-        const uploadedFile = e.target.files[0];
-        setImageFile(uploadedFile);
-        setImagePreviewUrl(URL.createObjectURL(uploadedFile));
-    };
-
-    const handleImageUpload = async (e, songId) => {
-        e.preventDefault();
-        if (!imageFile) return;
-
-        const formData = new FormData();
-        formData.append("imagefile", imageFile);
-
-        try {
-            await axios.post(`http://localhost:8080/songs/${songId}/uploadImage`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log('Image uploaded successfully!');
-            setImageFile(null);
-            setImagePreviewUrl('');
-            fetchSongs();
-        } catch (e) {
-            console.error('Error uploading image!', e);
-        }
-    };
-
     return (
-        <div className="song-list-container">
+        <SongContainer>
+        <SongListContainer>
             <h1>Song List</h1>
             <table>
                 <thead>
@@ -144,7 +123,8 @@ function SongListTest() {
                     Your browser does not support the audio element.
                 </audio>
             )}
-        </div>
+        </SongListContainer>
+        </SongContainer>
     );
 }
 

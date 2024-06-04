@@ -1,10 +1,8 @@
-// import Select from "react-select";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z, string} from "zod";
 import SUserForm from "./styles.UserForm";
-// import {getValue} from "@testing-library/user-event/dist/utils";
 
 const schema = z.object({
     name: string().min(2, {message: "Name is required"}),

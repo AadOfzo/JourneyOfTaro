@@ -36,13 +36,16 @@ const ChooseFileButton = styled.label`
   &:hover {
     background: var(--testColorOne);
   }
+  
+  @media (min-width: 100px) {
+    //background-color: var(--secondary);
+  }
 `;
 
 const PlusIcon = styled.div`
   font-size: 24px;
   margin-right: 8px;
 `;
-
 
 const UploadPreviewSong = styled.img`
   max-width: 300px;
@@ -51,18 +54,11 @@ const UploadPreviewSong = styled.img`
   margin-bottom: 36px;
 `;
 
-const PreviewSong = styled.div`
-  max-width: 100px;
-  max-height: 100px;
-  padding-right: 24px;
-  object-fit: contain;
-  border: 2px solid var(--secondary); 
-`;
-
 const SongUploadLabel = styled.p`
   padding: 1.2rem;
   font-size: large;
-`
+`;
+
 const LoadingWheel = styled.div`
   border: 6px solid var(--primary);
   border-top: 6px solid var(--secondary);
@@ -78,16 +74,62 @@ const LoadingWheel = styled.div`
   }
 `;
 
-const SongListContainer = styled.ul`
+const SongListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 65vw;
+  align-items: center;
+  //justify-content: center;
+  width: 100vw;
   margin-top: 4rem;
   margin-bottom: 4rem;
 
-
   @media (min-width: 1280px) {
-    width: 45vw;
+    width: 60vw;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  table {
+    width: 100%;
+    //border-collapse: collapse;
+
+
+    thead {
+      background-color: var(--primary);
+
+      tr {
+        th {
+          padding: 0.75rem;
+          font-size: 1rem;
+          font-weight: bold;
+          //color: #ffffff;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-of-type(odd) {
+          //background-color: rgba(141, 250, 79, 0.6);
+        }
+
+        &:nth-of-type(even) {
+          //background-color: #a71818;
+        }
+
+        td {
+          padding: 0.75rem;
+          font-size: 1.2rem;
+          border: 1px solid var(--secondary);
+        }
+
+        audio {
+        }
+      }
+    }
   }
 `;
 
@@ -105,16 +147,15 @@ const SongListTitle = styled.h2`
 const SongListItem = styled.div`
   display: flex;
   flex-direction: row;
-  //justify-content: space-between;
   align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--secondary)
+  border-bottom: 1px solid var(--secondary);
 `;
 
 const SongLabel = styled.div`
   display: flex;
   flex-direction: row;
-`
+`;
 
 const SongTitle = styled.p`
   align-items: center;
@@ -128,24 +169,24 @@ const ArtistName = styled.p`
 `;
 
 const SongUploadButton = styled.button`
-    align-items: center;
-    background-color: var(--primary);
-    border: 3px solid var(--testColorTwo);
-    border-radius: 24px;
-    box-sizing: border-box;
-    color: #ededed;
-    cursor: pointer;
-    display: inline-flex;
-    font-size: 1rem;
-    font-weight: bold;
-    justify-content: center;
-    line-height: 1.25;
-    margin: 0;
-    min-height: 3rem;
-    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-    text-decoration: none;
-    user-select: none;
-    width: auto;
+  align-items: center;
+  background-color: var(--primary);
+  border: 3px solid var(--testColorTwo);
+  border-radius: 24px;
+  box-sizing: border-box;
+  color: #ededed;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  text-decoration: none;
+  user-select: none;
+  width: auto;
 
   :hover {
     background-color: var(--testColorTwo);
@@ -153,28 +194,27 @@ const SongUploadButton = styled.button`
 `;
 
 const IconButton = styled.button`
-    border: 1px solid var(--testColorOne);
-    background: var(--secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5em;
-    border-radius: 50%;
+  border: 1px solid var(--testColorOne);
+  background: var(--secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em;
+  border-radius: 50%;
 
-    &:hover {
-        background-color: var(--secondary);
-    }
+  &:hover {
+    background-color: var(--secondary);
+  }
 `;
 
 const SongActionButtons = styled.div`
   display: flex;
-  padding: 1.2rem;
-  justify-content: space-evenly;
-  border: solid 2px var(--testColorTwo);
-`
+  padding: 1rem;
+  justify-content: space-between;
+`;
+
 const SongAddButton = styled.button`
-  //align-items: center;
   background-color: var(--primary);
   border: 3px solid var(--testColorTwo);
   border-radius: 24px;
@@ -199,24 +239,24 @@ const SongAddButton = styled.button`
 `;
 
 const SongDeleteButton = styled.button`
-    align-items: center;
-    background-color: var(--primary);
-    border: 3px solid var(--testColorOne);
-    border-radius: 24px;
-    box-sizing: border-box;
-    color: #ededed;
-    cursor: pointer;
-    display: inline-flex;
-    font-size: 1rem;
-    font-weight: bold;
-    justify-content: center;
-    line-height: 1.25;
-    margin: 0;
-    min-height: 3rem;
-    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-    text-decoration: none;
-    user-select: none;
-    width: auto;
+  align-items: center;
+  background-color: var(--primary);
+  border: 3px solid var(--testColorOne);
+  border-radius: 24px;
+  box-sizing: border-box;
+  color: #ededed;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  text-decoration: none;
+  user-select: none;
+  width: auto;
 
   :hover {
     background-color: var(--testColorOne);
@@ -228,16 +268,11 @@ const AudioPlayerContainer = styled.div`
 
   audio {
     outline: solid 2px var(--testColorTwo);
-
   }
-  
+
   .controls {
     color: #eaa733;
   }
-  //
-  //audio::-webkit-media-controls-panel {
-  //  background-color: #333;
-  //}
 `;
 
 export {
@@ -246,7 +281,6 @@ export {
     FileInput,
     ChooseFileButton,
     PlusIcon,
-    PreviewSong,
     LoadingWheel,
     UploadPreviewSong,
     SongUploadLabel,
