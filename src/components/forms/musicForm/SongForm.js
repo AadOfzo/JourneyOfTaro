@@ -6,8 +6,6 @@ import {
     FileInput,
     ChooseFileButton,
     PlusIcon,
-    LoadingWheel,
-    UploadPreviewSong,
     SongUploadLabel,
     SongTitle,
     ArtistName,
@@ -23,6 +21,7 @@ import {
     AudioPlayerContainer,
 } from './styles.SongForm';
 import { IconContext } from 'react-icons';
+import LoadingComponent from "../../loadingWheel/LoadingComponent";
 
 const SongForm = () => {
     const [songs, setSongs] = useState([]);
@@ -156,7 +155,7 @@ const SongForm = () => {
                             </ChooseFileButton>
                         </>
                     )}
-                    {loading && <LoadingWheel />}
+                    {loading && <LoadingComponent />}
                     {formData.file && <SongUploadButton type="submit">Upload Song</SongUploadButton>}
                     {formData.file && <SongUploadLabel>Selected file: {formData.file.name}</SongUploadLabel>}
                     <input
@@ -174,31 +173,31 @@ const SongForm = () => {
                 </Form>
             </SongListContainer>
 
-            <SongListContainer>
-                <SongListTitle>Song List</SongListTitle>
-                <SongList>
-                    {songs.map((song) => (
-                        <SongListItem key={song.id}>
-                            <SongLabel>
-                                <IconContext.Provider value={{ size: '2em', color: 'var(--primary)' }}>
-                                    <AudioPlayerContainer>
-                                            <audio controls>
-                                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3"/>
-                                                Your browser does not support the audio element.
-                                            </audio>
-                                    </AudioPlayerContainer>
-                                </IconContext.Provider>
-                                <SongTitle>{song.songTitle}</SongTitle>
-                                <ArtistName>{song.artistName}</ArtistName>
-                            </SongLabel>
-                            <SongActionButtons>
-                            <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>
-                            <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>
-                            </SongActionButtons>
-                        </SongListItem>
-                    ))}
-                </SongList>
-            </SongListContainer>
+            {/*<SongListContainer>*/}
+            {/*    <SongListTitle>Song List</SongListTitle>*/}
+            {/*    <SongList>*/}
+            {/*        {songs.map((song) => (*/}
+            {/*            <SongListItem key={song.id}>*/}
+            {/*                <SongLabel>*/}
+            {/*                    <IconContext.Provider value={{ size: '2em', color: 'var(--primary)' }}>*/}
+            {/*                        <AudioPlayerContainer>*/}
+            {/*                            <audio controls>*/}
+            {/*                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3"/>*/}
+            {/*                                Your browser does not support the audio element.*/}
+            {/*                            </audio>*/}
+            {/*                        </AudioPlayerContainer>*/}
+            {/*                    </IconContext.Provider>*/}
+            {/*                    <SongTitle>{song.songTitle}</SongTitle>*/}
+            {/*                    <ArtistName>{song.artistName}</ArtistName>*/}
+            {/*                </SongLabel>*/}
+            {/*                <SongActionButtons>*/}
+            {/*                    <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>*/}
+            {/*                    <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>*/}
+            {/*                </SongActionButtons>*/}
+            {/*            </SongListItem>*/}
+            {/*        ))}*/}
+            {/*    </SongList>*/}
+            {/*</SongListContainer>*/}
         </SongContainer>
     );
 };
