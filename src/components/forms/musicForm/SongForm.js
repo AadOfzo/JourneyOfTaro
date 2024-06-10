@@ -9,15 +9,13 @@ import {
     SongUploadLabel,
     SongTitle,
     ArtistName,
-    SongListContainer,
+    SongUploadContainer,
     SongList,
     SongListTitle,
     SongLabel,
     SongListItem,
     SongUploadButton,
     SongActionButtons,
-    SongAddButton,
-    SongDeleteButton,
     AudioPlayerContainer,
 } from './styles.SongForm';
 import { IconContext } from 'react-icons';
@@ -130,7 +128,7 @@ const SongForm = () => {
 
     return (
         <SongContainer>
-            <SongListContainer>
+            <SongUploadContainer>
                 <SongListTitle>Upload Song</SongListTitle>
                 <Form
                     onSubmit={handleSubmit}
@@ -171,7 +169,7 @@ const SongForm = () => {
                         onChange={(e) => setArtistName(e.target.value)}
                     />
                 </Form>
-            </SongListContainer>
+            </SongUploadContainer>
 
             {/*<SongListContainer>*/}
             {/*    <SongListTitle>Song List</SongListTitle>*/}

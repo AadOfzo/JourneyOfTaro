@@ -3,10 +3,12 @@ import axios from "axios";
 import {
     SongContainer,
     SongListContainer,
+} from "../forms/musicForm/styles.SongForm";
+import {
     SongActionButtons,
     SongAddButton,
     SongDeleteButton
-} from "../forms/musicForm/styles.SongForm";
+} from "../buttons/styles.Buttons"
 import ImageForm from "../forms/imageForm/ImageForm";
 import SongCollectionManager from "../forms/musicForm/SongCollectionManager";
 import SongCollection from "../forms/musicForm/SongCollection";

@@ -3,21 +3,23 @@ import axios from "axios";
 import {
     SongContainer,
     SongListContainer,
-    SongActionButtons,
-    SongAddButton,
-    SongDeleteButton,
     SongTitle,
     ArtistName,
     AudioPlayerContainer,
-    SongListItem
-} from "../forms/musicForm/styles.SongForm";
-import ImageForm from "../forms/imageForm/ImageForm";
-import SongCollectionManager from "../forms/musicForm/SongCollectionManager";
+    SongListItem,
+} from "./styles.SongList"; // Adjust the path as necessary
+import {
+    SongActionButtons,
+    SongAddButton,
+    SongDeleteButton,
+} from "../../buttons/styles.Buttons"; // Adjust the path as necessary
+import ImageForm from "../../forms/imageForm/ImageForm";
+import SongCollectionManager from "../../forms/musicForm/SongCollectionManager";
 
 function SongListTest() {
     const [songs, setSongs] = useState([]);
     const [songCollections, setSongCollections] = useState([]);
-    const [expandedSongId, setExpandedSongId] = useState(null); // State to manage expanded song details
+    const [expandedSongId, setExpandedSongId] = useState(null);
     const [message, setMessage] = useState('');
     const [reload, setReload] = useState(false);
 
@@ -54,7 +56,7 @@ function SongListTest() {
     const handleAddSong = async (id) => {
         try {
             await axios.post(`http://localhost:8080/songs/${id}`);
-            setReload(!reload); // Trigger reload
+            setReload(!reload);
         } catch (error) {
             console.error('Error Adding song:', error);
         }
@@ -63,7 +65,7 @@ function SongListTest() {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:8080/songs/${id}`);
-            setReload(!reload); // Trigger reload
+            setReload(!reload);
         } catch (error) {
             console.error('Error deleting song:', error);
         }
@@ -73,7 +75,7 @@ function SongListTest() {
         try {
             await axios.post(`http://localhost:8080/songCollections/${collectionId}/songs`, [songId]);
             setMessage('Song added to collection successfully.');
-            setReload(!reload); // Trigger reload
+            setReload(!reload);
         } catch (error) {
             setMessage('Error adding song to collection.');
             console.error('Error adding song to collection:', error);
@@ -82,7 +84,7 @@ function SongListTest() {
 
     const handleReload = () => {
         setMessage('');
-        setReload(!reload); // Trigger reload
+        setReload(!reload);
     };
 
     const toggleSongDetails = (id) => {
@@ -124,7 +126,7 @@ function SongListTest() {
                                             <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>
                                             <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>
                                         </SongActionButtons>
-                                        <ImageForm />
+                                        {/*<ImageForm />*/}
                                         <SongCollectionManager songs={[song]} />
                                         <h2>Add Song to Existing Collection</h2>
                                         <select onChange={(e) => handleAddSongToCollection(song.id, e.target.value)}>
@@ -133,8 +135,7 @@ function SongListTest() {
                                                 <option key={collection.id} value={collection.id}>{collection.songCollectionTitle}</option>
                                             ))}
                                         </select>
-                                        {message && <div>{message}</div>}
-                                        {message && <button onClick={handleReload}>OK</button>}
+                                        {message && <p>{message}</p>}
                                     </td>
                                 </tr>
                             )}

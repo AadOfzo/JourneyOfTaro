@@ -47,13 +47,6 @@
       margin-right: 8px;
     `;
 
-    const UploadPreviewSong = styled.img`
-      max-width: 300px;
-      max-height: 300px;
-      object-fit: contain;
-      margin-bottom: 36px;
-    `;
-
     const SongUploadLabel = styled.p`
       padding: 1.2rem;
       font-size: large;
@@ -74,7 +67,7 @@
       }
     `;
 
-    const SongListContainer = styled.div`
+    const SongUploadContainer = styled.div`
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -133,6 +126,49 @@
       }
     `;
 
+    const SongListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+
+  @media (min-width: 1280px) {
+    width: 60vw;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  table {
+    width: 100%;
+    thead {
+      background-color: var(--primary);
+
+      tr {
+        th {
+          padding: 0.75rem;
+          font-size: 1rem;
+          font-weight: bold;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          padding: 0.75rem;
+          font-size: 1.2rem;
+          border: 1px solid var(--secondary);
+        }
+      }
+    }
+  }
+`;
+
     const SongList = styled.ul`
       display: flex;
       flex-direction: column;
@@ -147,15 +183,25 @@
     const SongListItem = styled.div`
       display: flex;
       flex-direction: row;
-      align-items: center;
+      justify-content: stretch;
+      align-items: stretch;
       padding-bottom: 1rem;
       border-bottom: 1px solid var(--secondary);
+
+      :hover {
+        cursor: pointer;
+        background-color: var(--testColorTwo);
+      }
     `;
 
     const SongLabel = styled.div`
       display: flex;
       flex-direction: row;
     `;
+
+    // const SongListTitle = styled.h2`
+    //   margin-bottom: 32px;
+    // `;
 
     const SongTitle = styled.p`
       align-items: center;
@@ -214,54 +260,7 @@
       justify-content: space-between;
     `;
 
-    const SongAddButton = styled.button`
-      background-color: var(--primary);
-      border: 3px solid var(--testColorTwo);
-      border-radius: 24px;
-      box-sizing: border-box;
-      color: #ededed;
-      cursor: pointer;
-      display: inline-flex;
-      font-size: 1rem;
-      font-weight: bold;
-      justify-content: center;
-      line-height: 1.25;
-      margin: 0;
-      min-height: 3rem;
-      padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-      text-decoration: none;
-      user-select: none;
-      width: auto;
-    
-      :hover {
-        background-color: var(--testColorOne);
-      }
-    `;
 
-    const SongDeleteButton = styled.button`
-      align-items: center;
-      background-color: var(--primary);
-      border: 3px solid var(--testColorOne);
-      border-radius: 24px;
-      box-sizing: border-box;
-      color: #ededed;
-      cursor: pointer;
-      display: inline-flex;
-      font-size: 1rem;
-      font-weight: bold;
-      justify-content: center;
-      line-height: 1.25;
-      margin: 0;
-      min-height: 3rem;
-      padding: calc(.875rem - 1px) calc(1.5rem - 1px);
-      text-decoration: none;
-      user-select: none;
-      width: auto;
-    
-      :hover {
-        background-color: var(--testColorOne);
-      }
-    `;
 
     const AudioPlayerContainer = styled.div`
       padding-right: 2rem;
@@ -282,10 +281,10 @@
         ChooseFileButton,
         PlusIcon,
         LoadingWheel,
-        UploadPreviewSong,
         SongUploadLabel,
         SongTitle,
         ArtistName,
+        SongUploadContainer,
         SongListContainer,
         SongList,
         SongListTitle,
@@ -294,7 +293,5 @@
         SongUploadButton,
         IconButton,
         SongActionButtons,
-        SongAddButton,
-        SongDeleteButton,
         AudioPlayerContainer,
     };

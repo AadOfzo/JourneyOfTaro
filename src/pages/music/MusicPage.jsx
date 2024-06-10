@@ -7,7 +7,7 @@ import UploadComponent from "../../components/fileHandling/UploadComponent";
 import SongForm from "../../components/forms/musicForm/SongForm";
 import UploadForm from "../../components/forms/uploadForm/UploadForm";
 import MusicApp from "../../components/musicPlayer/MusicApp";
-import SongListTest from "../../components/lists/SongListTest";
+import SongListTest from "../../components/lists/Music/SongListTest";
 import SongCollectionList from "../../components/lists/SongCollectionList";
 import SongListComponent from "../../components/lists/SongList";
 
