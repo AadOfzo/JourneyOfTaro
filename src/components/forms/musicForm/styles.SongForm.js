@@ -126,6 +126,22 @@
       }
     `;
 
+    const StyledInput = styled.input`
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 2px solid var(--secondary);
+      border-radius: 5px;
+      font-size: 1.2rem;
+      color: var(--textSecondary);
+      background-color: var(--secondary);
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+    `;
+
     const SongListContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -286,6 +302,7 @@
         ArtistName,
         SongUploadContainer,
         SongListContainer,
+        StyledInput,
         SongList,
         SongListTitle,
         SongLabel,

@@ -7,12 +7,12 @@ import {
     ArtistName,
     AudioPlayerContainer,
     SongListItem,
-} from "./styles.SongList"; // Adjust the path as necessary
+} from "./styles.SongList";
 import {
     SongActionButtons,
     SongAddButton,
     SongDeleteButton,
-} from "../../buttons/styles.Buttons"; // Adjust the path as necessary
+} from "../../buttons/styles.Buttons";
 import ImageForm from "../../forms/imageForm/ImageForm";
 import SongCollectionManager from "../../forms/musicForm/SongCollectionManager";
 
@@ -102,6 +102,9 @@ function SongListTest() {
                 <table>
                     <thead>
                     <tr>
+                        <th>Please select an uploaded song in the list below to open options!</th>
+                    </tr>
+                    <tr>
                         <th>Song Title</th>
                         <th>Artist Name</th>
                     </tr>
@@ -109,7 +112,7 @@ function SongListTest() {
                     <tbody>
                     {songs.map(song => (
                         <React.Fragment key={song.id}>
-                            <SongListItem onClick={() => toggleSongDetails(song.id)}>
+                            <SongListItem as="tr" onClick={() => toggleSongDetails(song.id)}>
                                 <td><SongTitle>{song.songTitle}</SongTitle></td>
                                 <td><ArtistName>{song.artistName}</ArtistName></td>
                             </SongListItem>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import {
     SongContainer,
@@ -7,18 +7,11 @@ import {
     ChooseFileButton,
     PlusIcon,
     SongUploadLabel,
-    SongTitle,
-    ArtistName,
     SongUploadContainer,
-    SongList,
     SongListTitle,
-    SongLabel,
-    SongListItem,
     SongUploadButton,
-    SongActionButtons,
-    AudioPlayerContainer,
+    StyledInput,
 } from './styles.SongForm';
-import { IconContext } from 'react-icons';
 import LoadingComponent from "../../loadingWheel/LoadingComponent";
 
 const SongForm = () => {
@@ -28,17 +21,6 @@ const SongForm = () => {
     const [formData, setFormData] = useState({ file: null });
     const [loading, setLoading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await fetchSongs();
-            } catch (error) {
-                console.error('Error fetching songs: ', error);
-            }
-        };
-        fetchData();
-    }, []);
 
     const fetchSongs = async () => {
         try {
@@ -108,15 +90,6 @@ const SongForm = () => {
         }
     };
 
-    const handleAddSong = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8080/songs/${id}`);
-            await fetchSongs();
-        } catch (error) {
-            console.error('Error Adding song:', error);
-        }
-    };
-
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:8080/songs/${id}`);
@@ -156,13 +129,13 @@ const SongForm = () => {
                     {loading && <LoadingComponent />}
                     {formData.file && <SongUploadButton type="submit">Upload Song</SongUploadButton>}
                     {formData.file && <SongUploadLabel>Selected file: {formData.file.name}</SongUploadLabel>}
-                    <input
+                    <StyledInput
                         type="text"
                         value={songTitle}
                         placeholder="Enter song title"
                         onChange={(e) => setSongTitle(e.target.value)}
                     />
-                    <input
+                    <StyledInput
                         type="text"
                         value={artistName}
                         placeholder="Enter artist name"
@@ -170,32 +143,6 @@ const SongForm = () => {
                     />
                 </Form>
             </SongUploadContainer>
-
-            {/*<SongListContainer>*/}
-            {/*    <SongListTitle>Song List</SongListTitle>*/}
-            {/*    <SongList>*/}
-            {/*        {songs.map((song) => (*/}
-            {/*            <SongListItem key={song.id}>*/}
-            {/*                <SongLabel>*/}
-            {/*                    <IconContext.Provider value={{ size: '2em', color: 'var(--primary)' }}>*/}
-            {/*                        <AudioPlayerContainer>*/}
-            {/*                            <audio controls>*/}
-            {/*                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3"/>*/}
-            {/*                                Your browser does not support the audio element.*/}
-            {/*                            </audio>*/}
-            {/*                        </AudioPlayerContainer>*/}
-            {/*                    </IconContext.Provider>*/}
-            {/*                    <SongTitle>{song.songTitle}</SongTitle>*/}
-            {/*                    <ArtistName>{song.artistName}</ArtistName>*/}
-            {/*                </SongLabel>*/}
-            {/*                <SongActionButtons>*/}
-            {/*                    <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>*/}
-            {/*                    <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>*/}
-            {/*                </SongActionButtons>*/}
-            {/*            </SongListItem>*/}
-            {/*        ))}*/}
-            {/*    </SongList>*/}
-            {/*</SongListContainer>*/}
         </SongContainer>
     );
 };

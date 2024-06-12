@@ -8,8 +8,8 @@ import SongForm from "../../components/forms/musicForm/SongForm";
 import UploadForm from "../../components/forms/uploadForm/UploadForm";
 import MusicApp from "../../components/musicPlayer/MusicApp";
 import SongListTest from "../../components/lists/Music/SongListTest";
-import SongCollectionList from "../../components/lists/SongCollectionList";
 import SongListComponent from "../../components/lists/SongList";
+import SongCollectionList from "../../components/lists/Music/SongCollectionList";
 
 function MusicPage() {
     return (
@@ -17,52 +17,12 @@ function MusicPage() {
 
             {/*<Player/>*/}
             {/*<UploadForm/>*/}
-            <SongForm/>
+            {/*<SongForm/>*/}
 
             {/*<SongListComponent/>*/}
-            <SongListTest/>
-            {/*<MusicPlayerTop/>*/}
-            {/*<MusicApp/>*/}
-            {/*<SongCollectionList/>*/}
+            {/*<SongListTest/>*/}
+            <SongCollectionList/>
 
-
-            {/*<ContentContainer*/}
-            {/*    layout={'text'}*/}
-            {/*    text={{*/}
-            {/*        title: 'Music',*/}
-            {/*        content:*/}
-            {/*        <>*/}
-            {/*            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut*/}
-            {/*                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco*/}
-            {/*                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in*/}
-            {/*                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat*/}
-            {/*                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut*/}
-            {/*        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco*/}
-            {/*        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in*/}
-            {/*        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat*/}
-            {/*        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>*/}
-            {/*        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut*/}
-            {/*        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco*/}
-            {/*        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in*/}
-            {/*        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat*/}
-            {/*        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>*/}
-            {/*        </>*/}
-
-            {/*    }}*/}
-            {/*    image={{*/}
-            {/*        src: OutlineLogo,*/}
-            {/*        alt: 'Outline logo'*/}
-            {/*    }}*/}
-            {/*    placeholder={{*/}
-            {/*        title: 'Placeholder',*/}
-            {/*        content: 'Bloep'*/}
-            {/*    }}*/}
-            {/*/>*/}
-
-
-            {/*<div>*/}
-            {/*    <SongList/>*/}
-            {/*</div>*/}
 
         </main>
     )

@@ -33,10 +33,11 @@ const ImageForm = ({ songId, onImageUploaded }) => {
         formData.append('file', file);
 
         try {
-            await axios.post(`http://localhost:8080/fileUpload`, formData, {
+            const response = await axios.post(`http://localhost:8080/fileUpload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            onImageUploaded();
+            const uploadedImage = response.data; // Assuming the server returns the uploaded image data
+            onImageUploaded(uploadedImage); // Pass the uploaded image data to the parent component
             setFile(null);
             setLoading(false);
         } catch (error) {
