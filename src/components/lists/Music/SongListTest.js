@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {
     SongContainer,
     SongListContainer,
+    GlowingRow,
     SongTitle,
     ArtistName,
     AudioPlayerContainer,
@@ -117,11 +118,11 @@ function SongListTest() {
                                 <td><ArtistName>{song.artistName}</ArtistName></td>
                             </SongListItem>
                             {expandedSongId === song.id && (
-                                <tr>
+                                <GlowingRow>
                                     <td colSpan="2">
                                         <AudioPlayerContainer>
                                             <audio controls>
-                                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3"/>
+                                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3" />
                                                 Your browser does not support the audio element.
                                             </audio>
                                         </AudioPlayerContainer>
@@ -140,7 +141,7 @@ function SongListTest() {
                                         </select>
                                         {message && <p>{message}</p>}
                                     </td>
-                                </tr>
+                                </GlowingRow>
                             )}
                         </React.Fragment>
                     ))}

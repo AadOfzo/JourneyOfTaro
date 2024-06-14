@@ -9,16 +9,33 @@ const fadeIn = keyframes`
   }
 `;
 
-const smoothOpenGlow = keyframes`
+const expandGlow = keyframes`
   from {
-    height: 0;
     opacity: 0;
+    transform: scaleY(0);
     box-shadow: 0 0 0 0 rgba(234, 167, 51, 0);
   }
   to {
-    height: 100%;
     opacity: 1;
+    transform: scaleY(1);
     box-shadow: inset 0 0 10px rgba(234, 167, 51, 0.5);
+  }
+`;
+
+const GlowingRow = styled.tr`
+  td {
+    padding: 0.75rem;
+    height: 0; 
+    opacity: 0; 
+    transform: scaleY(0); 
+    animation: ${expandGlow} 1.5s forwards; 
+    transition: height 1.5s, opacity 1.5s, transform 1.5s;
+  }
+
+  :hover td {
+    height: auto; 
+    opacity: 1;  
+    transform: scaleY(1); 
   }
 `;
 
@@ -72,23 +89,8 @@ const SongListContainer = styled.div`
       flex-direction: column;
       align-items: center;
 
-      tr {
+      ${GlowingRow} {
         padding: 0.75rem;
-        td {
-          align-items: center;
-          padding: 0.75rem;
-          font-size: 1.2rem;
-          box-shadow: inset 0 0 10px rgba(141, 250, 79, 0.6);
-          //border-radius: 25px;
-          height: 0;  /* Initially hidden */
-          opacity: 0; /* Initially hidden */
-          animation: ${smoothOpenGlow} 1.5s forwards; /* Apply smooth opening and glow animation */
-        }
-
-        :hover td {
-          height: auto; /* Ensure it fills the container on hover */
-          opacity: 1;  /* Ensure it becomes fully visible on hover */
-        }
       }
     }
   }
@@ -130,13 +132,14 @@ const AudioPlayerContainer = styled.div`
 
   audio {
     display: flex;
-    width: 60vw;
+    width: 40vw;
   }
 `;
 
 export {
     SongContainer,
     SongListContainer,
+    GlowingRow,
     SongTitle,
     ArtistName,
     SongListItem,
