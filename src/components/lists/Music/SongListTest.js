@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import ApiServices from "../../../configs/utilities/ApiServices"; // Assuming correct import path
 import {
     SongContainer,
     SongListContainer,
@@ -8,14 +8,12 @@ import {
     ArtistName,
     AudioPlayerContainer,
     SongListItem,
-} from "./styles.SongList";
+} from "./styles.SongList"; // Adjust import path as per your project structure
 import {
     SongActionButtons,
     SongAddButton,
     SongDeleteButton,
-} from "../../buttons/styles.Buttons";
-import ImageForm from "../../forms/imageForm/ImageForm";
-import SongCollectionManager from "../../forms/musicForm/SongCollectionManager";
+} from "../../buttons/styles.Buttons"; // Adjust import path as per your project structure
 
 function SongListTest() {
     const [songs, setSongs] = useState([]);
@@ -27,45 +25,32 @@ function SongListTest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await fetchSongs();
-                await fetchSongCollections();
+                const [songsResponse, collectionsResponse] = await Promise.all([
+                    ApiServices.fetchSongs(),
+                    ApiServices.fetchSongCollections()
+                ]);
+                setSongs(songsResponse);
+                setSongCollections(collectionsResponse);
             } catch (error) {
                 console.error('Error fetching songs or collections: ', error);
             }
         };
+
         fetchData();
     }, [reload]);
 
-    const fetchSongs = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/songs');
-            setSongs(response.data);
-        } catch (e) {
-            console.error('Error fetching Songs!', e);
-        }
-    };
-
-    const fetchSongCollections = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/songCollections');
-            setSongCollections(response.data);
-        } catch (e) {
-            console.error('Error fetching collections!', e);
-        }
-    };
-
     const handleAddSong = async (id) => {
         try {
-            await axios.post(`http://localhost:8080/songs/${id}`);
+            await ApiServices.addSong(id);
             setReload(!reload);
         } catch (error) {
-            console.error('Error Adding song:', error);
+            console.error('Error adding song:', error);
         }
     };
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/songs/${id}`);
+            await ApiServices.deleteSong(id);
             setReload(!reload);
         } catch (error) {
             console.error('Error deleting song:', error);
@@ -74,7 +59,7 @@ function SongListTest() {
 
     const handleAddSongToCollection = async (songId, collectionId) => {
         try {
-            await axios.post(`http://localhost:8080/songCollections/${collectionId}/songs`, [songId]);
+            await ApiServices.addSongToCollection(songId, collectionId);
             setMessage('Song added to collection successfully.');
             setReload(!reload);
         } catch (error) {
@@ -83,17 +68,8 @@ function SongListTest() {
         }
     };
 
-    const handleReload = () => {
-        setMessage('');
-        setReload(!reload);
-    };
-
     const toggleSongDetails = (id) => {
-        if (expandedSongId === id) {
-            setExpandedSongId(null);
-        } else {
-            setExpandedSongId(id);
-        }
+        setExpandedSongId(expandedSongId === id ? null : id);
     };
 
     return (
@@ -103,7 +79,7 @@ function SongListTest() {
                 <table>
                     <thead>
                     <tr>
-                        <th>Please select an uploaded song in the list below to open options!</th>
+                        <th colSpan="2">Please select an uploaded song in the list below to open options!</th>
                     </tr>
                     <tr>
                         <th>Song Title</th>
@@ -122,7 +98,7 @@ function SongListTest() {
                                     <td colSpan="2">
                                         <AudioPlayerContainer>
                                             <audio controls>
-                                                <source src={`data:audio/mp3;base64,${song.songData}`} type="audio/mp3" />
+                                                <source src={song.songUrl} type="audio/mp3" />
                                                 Your browser does not support the audio element.
                                             </audio>
                                         </AudioPlayerContainer>
@@ -130,8 +106,6 @@ function SongListTest() {
                                             <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>
                                             <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>
                                         </SongActionButtons>
-                                        {/*<ImageForm />*/}
-                                        <SongCollectionManager songs={[song]} />
                                         <h2>Add Song to Existing Collection</h2>
                                         <select onChange={(e) => handleAddSongToCollection(song.id, e.target.value)}>
                                             <option disabled value="">- - select a collection - -</option>

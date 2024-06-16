@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import ApiService from "../../../configs/utilities/axios/ApiService";
 import {
     Container,
     Form,
@@ -11,7 +11,7 @@ import {
     LoadingWheel
 } from './styles.ImageForm';
 
-const ImageForm = ({ songId, onImageUploaded }) => {
+const ImageForm = ({ onImageUploaded }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -33,9 +33,7 @@ const ImageForm = ({ songId, onImageUploaded }) => {
         formData.append('file', file);
 
         try {
-            await axios.post(`http://localhost:8080/fileUpload`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+            await ApiService.uploadImage(formData);
             if (onImageUploaded) {
                 onImageUploaded();
             }
@@ -50,8 +48,8 @@ const ImageForm = ({ songId, onImageUploaded }) => {
     return (
         <Container style={{ width: '100%', padding: '10px' }}>
             <Form onSubmit={handleSubmit} style={{ width: '100%', padding: '10px', border: 'none' }}>
-                <FileInput type="file" onChange={handleFileChange} id={`file-${songId}`} />
-                <ChooseFileButton htmlFor={`file-${songId}`} style={{ height: '50px', fontSize: '12px' }}>
+                <FileInput type="file" onChange={handleFileChange} id="file-input" />
+                <ChooseFileButton htmlFor="file-input" style={{ height: '50px', fontSize: '12px' }}>
                     <PlusIcon>+</PlusIcon> Choose File
                 </ChooseFileButton>
                 {file && <UploadPreviewImage src={URL.createObjectURL(file)} alt="Preview" style={{ maxWidth: '50px', maxHeight: '50px' }} />}

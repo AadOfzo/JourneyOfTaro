@@ -215,9 +215,6 @@
       flex-direction: row;
     `;
 
-    // const SongListTitle = styled.h2`
-    //   margin-bottom: 32px;
-    // `;
 
     const SongTitle = styled.p`
       align-items: center;

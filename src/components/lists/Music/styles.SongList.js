@@ -73,7 +73,7 @@ const SongListContainer = styled.div`
       tr {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-evenly;
         box-shadow: inset 0 0 10px rgb(167, 24, 24);
 
         th {

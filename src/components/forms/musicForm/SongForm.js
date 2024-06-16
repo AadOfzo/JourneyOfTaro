@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import ApiService from "../../../configs/utilities/axios/ApiService";
 import {
     SongContainer,
     Form,
@@ -13,53 +13,26 @@ import {
     StyledInput,
 } from './styles.SongForm';
 import LoadingComponent from "../../loadingWheel/LoadingComponent";
+import {
+    fetchSongs,
+    handleDragEnter,
+    handleDragLeave,
+    handleDrop,
+    handleFileChange
+} from "../../../configs/utilities/FileUtilities";
 
 const SongForm = () => {
-    const [songs, setSongs] = useState([]);
     const [songTitle, setSongTitle] = useState('');
     const [artistName, setArtistName] = useState('');
     const [formData, setFormData] = useState({ file: null });
     const [loading, setLoading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
 
-    const fetchSongs = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/songs');
-            setSongs(response.data);
-        } catch (error) {
-            console.error('Error fetching songs:', error);
-        }
-    };
-
-    const handleFileChange = (e) => {
-        setFormData({
-            ...formData,
-            file: e.target.files[0],
-        });
-    };
-
-    const handleDragEnter = (e) => {
-        e.preventDefault();
-        setDragOver(true);
-    };
-
-    const handleDragLeave = () => {
-        setDragOver(false);
-    };
-
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setDragOver(false);
-        const file = e.dataTransfer.files[0];
-        setFormData({ ...formData, file });
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             setLoading(true);
-
             const file = formData.file;
 
             if (!file) {
@@ -73,12 +46,7 @@ const SongForm = () => {
             formDataToSend.append('songTitle', songTitle);
             formDataToSend.append('artistName', artistName);
 
-            await axios.post('http://localhost:8080/fileUpload', formDataToSend, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
+            await ApiService.uploadSong(formDataToSend);
             await fetchSongs();
             setFormData({ file: null });
             setSongTitle('');
@@ -90,24 +58,15 @@ const SongForm = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8080/songs/${id}`);
-            await fetchSongs();
-        } catch (error) {
-            console.error('Error deleting song:', error);
-        }
-    };
-
     return (
         <SongContainer>
             <SongUploadContainer>
                 <SongListTitle>Upload Song</SongListTitle>
                 <Form
                     onSubmit={handleSubmit}
-                    onDragEnter={handleDragEnter}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
+                    onDragEnter={(e) => handleDragEnter(e, setDragOver)}
+                    onDragLeave={(e) => handleDragLeave(e, setDragOver)}
+                    onDrop={(e) => handleDrop(e, setDragOver, setFormData, formData)}
                     dragOver={dragOver}
                 >
                     {!formData.file && (
@@ -116,7 +75,7 @@ const SongForm = () => {
                                 type="file"
                                 name="file"
                                 id="file"
-                                onChange={handleFileChange}
+                                onChange={(e) => handleFileChange(e, setFormData, formData)}
                             />
                             <ChooseFileButton
                                 htmlFor="file"

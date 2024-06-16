@@ -20,7 +20,7 @@ function MusicPage() {
             <SongForm/>
 
             {/*<SongListComponent/>*/}
-            <SongListTest/>
+            <SongList/>
             <SongCollectionList/>
 
 

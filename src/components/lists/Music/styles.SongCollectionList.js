@@ -9,15 +9,15 @@ const fadeIn = keyframes`
   }
 `;
 
-const smoothOpenGlow = keyframes`
+const expandGlow = keyframes`
   from {
-    height: 0;
     opacity: 0;
+    transform: scaleY(0);
     box-shadow: 0 0 0 0 rgba(234, 167, 51, 0);
   }
   to {
-    height: 100%;
     opacity: 1;
+    transform: scaleY(1);
     box-shadow: inset 0 0 10px rgba(234, 167, 51, 0.5);
   }
 `;
@@ -34,16 +34,26 @@ export const SongListContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100vw;
-  margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 
   @media (min-width: 1280px) {
     width: 60vw;
   }
 
   h2 {
-    font-size: 2rem;
+    font-size: 3rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
     margin-bottom: 2rem;
+    padding: 1rem;
+    
+    :hover {
+      cursor: pointer;
+      animation: ${fadeIn} 0.5s forwards;
+    }
   }
 
   ul {
@@ -70,11 +80,10 @@ export const SongListContainer = styled.div`
 export const ImageContainer = styled.div`
   width: 200px;
   height: 200px;
-  //background-color: lightgray; /* Placeholder background color */
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px; /* Adjust as needed */
+  margin-bottom: 20px;
   box-shadow: inset 0 0 10px rgb(167, 24, 24);
 `;
 
@@ -82,4 +91,3 @@ export const Image = styled.img`
   max-width: 100%;
   max-height: 100%;
 `;
-

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import ApiService from "../../configs/utilities/axios/ApiService";
 import {
     Container,
     PreviewImage,
@@ -15,13 +15,9 @@ import {
 const ImageList = () => {
     const [images, setImages] = useState([]);
 
-    useEffect(() => {
-        fetchImages();
-    }, []);
-
     const fetchImages = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/images`);
+            const response = await ApiService.fetchImages();
             setImages(response.data);
         } catch (error) {
             console.error('Error fetching images:', error);
@@ -30,12 +26,16 @@ const ImageList = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/images/${id}`);
-            await fetchImages(); // Refresh image list after deletion
+            await ApiService.deleteImage(id);
+            await fetchImages();
         } catch (error) {
             console.error('Error deleting image:', error);
         }
     };
+
+    useEffect(() => {
+        fetchImages();
+    }, []);
 
     return (
         <Container>

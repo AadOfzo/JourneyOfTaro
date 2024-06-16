@@ -34,23 +34,39 @@ function SongCollectionList() {
         // You can then update the state with the uploaded image if needed
     };
 
+    const toggleSongDetails = (id) => {
+        setCollections(prevCollections => {
+            return prevCollections.map(collection => {
+                if (collection.id === id) {
+                    return { ...collection, expanded: !collection.expanded };
+                } else {
+                    return collection;
+                }
+            });
+        });
+    };
+
     return (
         <SongContainer>
             <h2>Song Collections</h2>
             {collections.map((collection) => (
                 <div key={collection.id}>
                     <SongListContainer>
-                        <h3>{collection.songCollectionTitle}</h3>
-                        <ul>
-                            <ImageContainer>
-                                {renderImage(collection.image)}
-                            </ImageContainer>
-                        </ul>
-                        <ul>
-                            {collection.songIds.map((song) => (
-                                <li key={song.id}>{song.songTitle}</li>
-                            ))}
-                        </ul>
+                        <h3 onClick={() => toggleSongDetails(collection.id)}>{collection.songCollectionTitle}</h3>
+                        {collection.expanded && (
+                            <>
+                                <ul>
+                                    <ImageContainer>
+                                        {renderImage(collection.image)}
+                                    </ImageContainer>
+                                </ul>
+                                <ul>
+                                    {collection.songIds.map((song) => (
+                                        <li key={song.id}>{song.songTitle}</li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
                     </SongListContainer>
                 </div>
             ))}

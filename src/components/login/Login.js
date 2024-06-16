@@ -15,10 +15,10 @@ const LoginForm = () => {
                 username,
                 password,
             });
-            const { jwt } = response.data; // Assuming the server responds with a JWT token
-            localStorage.setItem('token', jwt); // Store the token in localStorage
-            setSuccessMessage('Login successful'); // Set success message
-            // Redirect the user to another page or update UI to reflect authentication
+            const { jwt } = response.data;
+            localStorage.setItem('token', jwt);
+            setSuccessMessage('Login successful');
+
         } catch (error) {
             setError('Invalid username or password'); // Display error message to user
         }

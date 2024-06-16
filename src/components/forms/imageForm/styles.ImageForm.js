@@ -25,8 +25,8 @@ const ChooseFileButton = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 50px;
+  width: 200px;
+  height: 200px;
   border: 2px dashed var(--secondary);
   cursor: pointer;
   font-size: 12px;
@@ -111,7 +111,7 @@ const ImageLabel = styled.div`
 
 const ImageName = styled.p`
   font-size: 1.2rem;
-  padding-right: 24px;
+  padding-left: 24px;
   font-weight: bold;
 `;
 
