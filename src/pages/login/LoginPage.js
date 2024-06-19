@@ -24,7 +24,7 @@ function LoginPage() {
         <div>
             <Login/>
             {/*<LoginMenu/>*/}
-            <LoginPopupMainComponent/>
+            {/*<LoginPopupMainComponent/>*/}
 
             {/*<div>*/}
             {/*    <UserForm3/>*/}

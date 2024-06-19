@@ -8,7 +8,6 @@ function NavBar2({ handleLogout }) {
     const navRef = useRef();
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage user's login status
-    const [loggedOut, setLoggedOut] = useState(true);
     const [showLogin, setShowLogin] = useState(false); // State to control login popup visibility
 
     const toggleNav = () => {
@@ -17,13 +16,13 @@ function NavBar2({ handleLogout }) {
 
     // Function to toggle login status
     const handleLogin = () => {
-        setIsLoggedIn(!isLoggedIn);
+        setIsLoggedIn(true);
     };
 
     // Function to handle logout
     const handleLogoutClick = () => {
         handleLogout(); // Call the handleLogout function passed as a prop
-        setLoggedOut(true); // Set loggedOut state to true to display logout message
+        setIsLoggedIn(false); // Update isLoggedIn state
     };
 
     // Check if user is logged in based on token in local storage
@@ -36,7 +35,6 @@ function NavBar2({ handleLogout }) {
     const handleOpenLogin = () => {
         setShowLogin(true);
     };
-
 
     // Function to close login popup
     const handleCloseLogin = () => {
@@ -66,26 +64,21 @@ function NavBar2({ handleLogout }) {
                         <li>
                             <NavLink
                                 to="/imageRequestPage"
-                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                 ImageRequest
                             </NavLink>
                         </li>
                         <li>
                             <NavLink
                                 to="/images"
-                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
+                                className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                 ImagePage
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink
-                                to="/login"
-                                className={({isActive}) => (isActive ? 'active-link' : 'default-link')}>
-                                Login
-                            </NavLink>
+                            <a href="/contact">Contact</a>
                         </li>
-                        {isLoggedIn && (
-                            // Render these links only if the user is logged in
+                        {isLoggedIn ? (
                             <>
                                 <li>
                                     <NavLink
@@ -108,10 +101,11 @@ function NavBar2({ handleLogout }) {
                                         Demo Upload
                                     </NavLink>
                                 </li>
+                                <li>
+                                    <button onClick={handleLogoutClick}>Logout</button>
+                                </li>
                             </>
-                        )}
-                        {!isLoggedIn && (
-                            // Render login link if the user is not logged in
+                        ) : (
                             <li>
                                 <NavLink
                                     to="/login"
@@ -120,23 +114,8 @@ function NavBar2({ handleLogout }) {
                                 </NavLink>
                             </li>
                         )}
-                        <li>
-                            <a href="/contact">Contact</a>
-                        </li>
                     </ul>
                     <NavBarDropdown isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
-                    {/*<NavLink to="/popup">*/}
-                    {/*    <button>Open Popup</button>*/}
-                    {/*</NavLink>*/}
-                    {/*<LoginPopupMainComponent*/}
-                    {/*    onClick={handleOpenLogin}*/}
-                    {/*    // showLogin={showLogin}*/}
-                    {/*    // onCloseLogin={handleCloseLogin}*/}
-                    {/*    // isLoggedIn={isLoggedIn}*/}
-                    {/*    // loggedOut={loggedOut}*/}
-                    {/*    // handleLogin={handleLogin}*/}
-                    {/*    // handleLogout={handleLogout}*/}
-                    {/*/>*/}
                 </div>
                 <div className="hamburger" onClick={toggleNav}>
                     <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
@@ -144,6 +123,11 @@ function NavBar2({ handleLogout }) {
                     <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>
                 </div>
             </div>
+            {/*<LoginPopupMainComponent*/}
+            {/*    show={showLogin}*/}
+            {/*    onClose={handleCloseLogin}*/}
+            {/*    handleLogin={handleLogin}*/}
+            {/*/>*/}
         </SnavBar2>
     );
 }
