@@ -7,6 +7,8 @@ import { fetchUserDetails, handleLogout } from './configs/utilities/Authorisatio
 import PageRoutes from './configs/routes/PageRoutes';
 import ComponentRoutes from './configs/routes/ComponentRoutes';
 import AppRoutes from './configs/routes/AppRoutes';
+import PopupContainer from "./components/popup/PopupContainer";
+
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,6 +37,10 @@ function App() {
     return (
         <div className="main-outer-container">
             <NavBar2 isLoggedIn={isLoggedIn} handleLogout={() => handleLogout(setIsLoggedIn, setUserName)} />
+            <div className="start-button-container">
+                {/*<StartButtonComponent onClick={handleStartClick} />*/}
+            </div>
+
             <div className="main-content-container">
                 <Routes>
                     <Route path="/*" element={<PageRoutes />} />
@@ -45,6 +51,7 @@ function App() {
             <footer className="main-footer">
                 <FooterMenu isLoggedIn={isLoggedIn} userName={userName} />
             </footer>
+            <PopupContainer />
         </div>
     );
 }

@@ -33,6 +33,7 @@ a, a:visited {
 
 .main-outer-container {
     min-height: 100vh;
+    position: relative;
     display: flex;
     flex-direction: column;
     /*align-content: center;*/

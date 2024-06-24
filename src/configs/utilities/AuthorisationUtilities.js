@@ -1,7 +1,3 @@
-// authUtils.js
-
-import { useState } from 'react'; // Import useState to manage state in utility functions
-
 // Function to fetch user details from the backend
 export const fetchUserDetails = async (token, setUserName) => {
     try {
