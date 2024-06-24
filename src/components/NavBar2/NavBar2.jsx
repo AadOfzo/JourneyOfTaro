@@ -63,20 +63,17 @@ function NavBar2({ handleLogout }) {
                         </li>
                         <li>
                             <NavLink
-                                to="/imageRequestPage"
-                                className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                ImageRequest
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
                                 to="/images"
                                 className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                 ImagePage
                             </NavLink>
                         </li>
                         <li>
-                            <a href="/contact">Contact</a>
+                            <NavLink
+                            to="/signup"
+                            className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                            Start Tour
+                            </NavLink>
                         </li>
                         {isLoggedIn ? (
                             <>
@@ -85,20 +82,6 @@ function NavBar2({ handleLogout }) {
                                         to="/music"
                                         className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                         Music
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink
-                                        to="/samples"
-                                        className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                        Samples
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink
-                                        to="/upload"
-                                        className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                        Demo Upload
                                     </NavLink>
                                 </li>
                                 <li>

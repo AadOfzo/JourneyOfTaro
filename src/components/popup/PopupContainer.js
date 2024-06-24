@@ -10,32 +10,27 @@ import {
 } from './styles.PopUp'; // Import the styled components
 
 const PopupContainer = () => {
-    const [showButton, setShowButton] = useState(true);
     const [showPopup, setShowPopup] = useState(true);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const handleStartClick = () => {
-        setShowButton(false);
         setShowPopup(false);
         navigate('/signup'); // Navigate to UserForm3
     };
 
     const handleBrowseClick = () => {
-        setShowButton(false);
         setShowPopup(false);
         navigate('/'); // Navigate to home page
     };
 
     const handleSuccessClick = () => {
         setSuccessMessage('');
-        setShowButton(true);
     };
 
     const handleErrorClick = () => {
         setErrorMessage('');
-        setShowButton(true);
     };
 
     return (
@@ -43,7 +38,7 @@ const PopupContainer = () => {
             {showPopup && (
                 <Overlay show={showPopup}>
                     <PopupContent>
-                        <p>Welcome! Would you like to start the tour or browse the application?</p>
+                        <h3>Welcome! Would you like to start the tour or browse the application?</h3>
                         <PopupButton onClick={handleStartClick}>Start Tour</PopupButton>
                         <PopupButton onClick={handleBrowseClick}>Browse Application</PopupButton>
                     </PopupContent>

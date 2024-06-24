@@ -1,5 +1,5 @@
 // Function to fetch user details from the backend
-export const fetchUserDetails = async (token, setUserName) => {
+export const fetchUserDetails = async (token, setUserName, setUserRole) => {
     try {
         const response = await fetch(`/users/apikey/${token}`); // Adjust endpoint as per your API
         if (!response.ok) {
@@ -7,6 +7,8 @@ export const fetchUserDetails = async (token, setUserName) => {
         }
         const userData = await response.json();
         setUserName(userData.username); // Update userName from fetched data
+        setUserRole(userData.role); // Update userRole from fetched data
+        return userData;
     } catch (error) {
         console.error('Error fetching user details:', error);
         // Handle error conditionally based on your application's requirements
@@ -21,8 +23,9 @@ export const handleLogin = (setIsLoggedIn) => {
 };
 
 // Function to handle user logout
-export const handleLogout = (setIsLoggedIn, setUserName) => {
+export const handleLogout = (setIsLoggedIn, setUserName, setUserRole) => {
     localStorage.removeItem('token'); // Clear token from local storage
     setIsLoggedIn(false);
     setUserName(''); // Clear userName on logout
+    setUserRole('visitor'); // Reset user role to visitor
 };
