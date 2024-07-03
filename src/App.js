@@ -37,7 +37,11 @@ function App() {
 
     return (
         <div className="main-outer-container">
-            <NavBar2 isLoggedIn={isLoggedIn} handleLogout={() => handleLogout(setIsLoggedIn, setUserName, setUserRole)} />
+            <NavBar2
+                isLoggedIn={isLoggedIn}
+                userRole={userRole}
+                handleLogout={() => handleLogout(setIsLoggedIn, setUserName, setUserRole)}
+            />
             <div className="main-content-container">
                 <Routes>
                     <Route path="/*" element={<PageRoutes />} />

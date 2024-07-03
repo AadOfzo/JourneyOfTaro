@@ -1,6 +1,26 @@
 import api from "./api";
 
 const ApiService = {
+
+    // Users
+
+
+    // Images
+    async uploadImage(formData) {
+        return await api.post('/fileUpload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+    },
+
+
+    async fetchImages() {
+        return await api.get('/images');
+    },
+
+    async deleteImage(id) {
+        return await api.delete(`/images/${id}`);
+    },
+
     // Songs
     async fetchSongs() {
         return await api.get('/songs');
@@ -29,20 +49,6 @@ const ApiService = {
         return await api.post(`/songCollections/${collectionId}/songs`, [songId]);
     },
 
-    // Images
-    async fetchImages() {
-        return await api.get('/images');
-    },
-
-    async uploadImage(formData) {
-        return await api.post('/fileUpload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-    },
-
-    async deleteImage(id) {
-        return await api.delete(`/images/${id}`);
-    },
 };
 
 

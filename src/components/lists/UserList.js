@@ -1,119 +1,120 @@
-/*global user*/
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './ListsMainStyle.css';
+import ImageForm from "../forms/imageForm/ImageForm";
+import ApiService from "../../configs/utilities/axios/ApiService";
+import {
+    GlowingRow,
+    UserImage as StyledUserImage,
+} from './styles.UserList';
 
 function UserList() {
     const [users, setUsers] = useState([]);
-    const [selectedRoles, setSelectedRoles] = useState({}); // Object to store selected roles for each user
+    const [expandedUserId, setExpandedUserId] = useState(null);
+    const [loadingUsers, setLoadingUsers] = useState(false);
+    const [errorUsers, setErrorUsers] = useState(null);
+    const [images, setImages] = useState([]);
+    const [errorImages, setErrorImages] = useState(null);
 
     useEffect(() => {
         fetchUsers();
     }, []);
 
     const fetchUsers = async () => {
+        setLoadingUsers(true);
         try {
             const response = await axios.get('http://localhost:8080/users');
-            console.log(response.data)
             setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
+            setErrorUsers('Error fetching users. Please try again later.');
+        } finally {
+            setLoadingUsers(false);
         }
     };
 
-    // const fetchImages = async () => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:8080/images`);
-    //         setImages(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching images:', error);
-    //     }
-    // };
-
-    const addUserAuthority = async (username, authority) => {
+    const fetchImages = async () => {
         try {
-            await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            // Refresh the user list after adding the authority
-            fetchUsers();
+            const response = await ApiService.fetchImages();
+            setImages(response.data); // Assuming response.data is an array of images
         } catch (error) {
-            console.error('Error adding authority:', error);
+            console.error('Error fetching images:', error);
+            setErrorImages('Error fetching images. Please try again later.');
         }
     };
 
-    const handleRoleChange = (userId, role) => {
-        setSelectedRoles(prevRoles => ({
-            ...prevRoles,
-            [userId]: role // Update selected role for the specific user
-        }));
+    const toggleExpand = (userId) => {
+        setExpandedUserId(prevUserId => (prevUserId === userId ? null : userId));
     };
 
     const grantAdminPrivilege = async (username) => {
         try {
-            await axios.put(`http://localhost:8080/users/${username}/grant-admin`, null, {
+            await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority: 'ROLE_ADMIN' }, {
                 headers: {
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            // Refresh the user list after granting admin privilege
-            fetchUsers();
+            fetchUsers(); // Refresh user list after updating privileges
         } catch (error) {
             console.error('Error granting admin privilege:', error);
         }
     };
 
-    <button onClick={() => grantAdminPrivilege(user.username)}>Add Admin</button>
+    const getUserImage = (userId) => {
+        const user = users.find(user => user.id === userId);
+        if (!user || !user.userimage) {
+            return <ImageForm onImageUploaded={fetchUsers} />;
+        }
+
+        const userImage = images.find(img => img.userId === userId);
+        if (userImage) {
+            return <StyledUserImage src={userImage.url} alt="User Image" />;
+        } else {
+            return <ImageForm onImageUploaded={fetchUsers} />;
+        }
+    };
 
     return (
-        <div className="user-list-container">
+        <div>
             <h2>User List</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>User Image</th>
-                    <th>User Image</th>
-                    <th>API Key</th>
-                    <th>First name</th>
-                    <th>Last name</th>
-                    <th>Country</th>
-                    <th>Email</th>
-                    <th>Artist name</th>
-                    <th>Songs</th>
-                    <th>Role</th>
-                    <th>Add ADMIN rights</th>
-                    <th>Delete User</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users.map(user => (
-                    <tr key={user.id}>
-                        <td>{user.id}</td>
-                        <td>{user.username}</td>
-                        <td>{user.file && <img src={user.image.imageUrl} alt={user.name}/>}</td>
-                        <td>{user.userimage && <img src={user.userimage.url} alt="User Image" />}</td>
-                        <td>{user.apikey}</td>
-                        <td>{user.firstname}</td>
-                        <td>{user.lastname}</td>
-                        <td>{user.country}</td>
-                        <td>{user.email}</td>
-                        <td>{user.artistname}</td>
-                        <td>{user.songTitle}</td>
-                        <td>{user.roles}</td>
-                        <td>
-                            <button onClick={() => grantAdminPrivilege(user.username)}>Add Admin</button>
-                        </td>
-                        <td>
-                            <button>Delete</button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            {loadingUsers ? (
+                <p>Loading...</p>
+            ) : (
+                <table>
+                    <tbody>
+                    {users.map(user => (
+                        <React.Fragment key={user.id}>
+                            <GlowingRow onClick={() => toggleExpand(user.id)}>
+                                <td>
+                                    {getUserImage(user.id)}
+                                </td>
+                                <td>{user.id}</td>
+                                <td>{user.username}</td>
+                            </GlowingRow>
+                            {expandedUserId === user.id && (
+                                <tr>
+                                    <td colSpan="3">
+                                        <div>
+                                            <p>API Key: {user.apikey}</p>
+                                            <p>First Name: {user.firstname}</p>
+                                            <p>Last Name: {user.lastname}</p>
+                                            <p>Country: {user.country}</p>
+                                            <p>Email: {user.email}</p>
+                                            <p>Artist Name: {user.artistname}</p>
+                                            <p>Songs: {user.songTitle}</p>
+                                            <p>Role: {user.roles}</p>
+                                            <button onClick={() => grantAdminPrivilege(user.username)}>Add Admin</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
+                    ))}
+                    </tbody>
+                </table>
+            )}
+            {errorUsers && <p>{errorUsers}</p>}
+            {errorImages && <p>{errorImages}</p>}
         </div>
     );
 }

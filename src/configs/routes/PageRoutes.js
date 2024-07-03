@@ -8,6 +8,7 @@ import LoginPage from '../../pages/login/LoginPage';
 import ImagePage from '../../pages/images/ImagePage';
 import NotFound from '../../pages/notfound/NotFound';
 import UserForm3 from "../../components/forms/userForm/UserForm3";
+import UserList from "../../components/lists/UserList";
 
 const PageRoutes = () => {
     return (
@@ -19,6 +20,7 @@ const PageRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/images" element={<ImagePage />} />
             <Route path="/signup" element={<UserForm3 />} />
+            <Route path="/account" element={<UserList />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );

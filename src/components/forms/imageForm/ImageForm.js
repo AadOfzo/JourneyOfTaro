@@ -14,9 +14,11 @@ import {
 const ImageForm = ({ onImageUploaded }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+        setUploaded(false); // Reset the uploaded state when a new file is selected
     };
 
     const handleSubmit = async (e) => {
@@ -39,6 +41,7 @@ const ImageForm = ({ onImageUploaded }) => {
             }
             setFile(null);
             setLoading(false);
+            setUploaded(true); // Set the uploaded state to true after successful upload
         } catch (error) {
             console.error('Error uploading image:', error);
             setLoading(false);
@@ -46,14 +49,23 @@ const ImageForm = ({ onImageUploaded }) => {
     };
 
     return (
-        <Container style={{ width: '100%', padding: '10px' }}>
-            <Form onSubmit={handleSubmit} style={{ width: '100%', padding: '10px', border: 'none' }}>
+        <Container>
+            <Form onSubmit={handleSubmit}>
                 <FileInput type="file" onChange={handleFileChange} id="file-input" />
-                <ChooseFileButton htmlFor="file-input" style={{ height: '50px', fontSize: '12px' }}>
-                    <PlusIcon>+</PlusIcon> Choose File
-                </ChooseFileButton>
-                {file && <UploadPreviewImage src={URL.createObjectURL(file)} alt="Preview" style={{ maxWidth: '50px', maxHeight: '50px' }} />}
-                {file && <ImageAddButton type="submit" style={{ padding: '5px 10px', fontSize: '12px' }}>Upload</ImageAddButton>}
+                {!file ? (
+                    <ChooseFileButton htmlFor="file-input">
+                        <PlusIcon>+</PlusIcon> Choose File
+                    </ChooseFileButton>
+                ) : (
+                    <>
+                        <UploadPreviewImage
+                            src={URL.createObjectURL(file)}
+                            alt="Preview"
+                            className={uploaded ? 'uploaded' : ''}
+                        />
+                        <ImageAddButton type="submit">Upload</ImageAddButton>
+                    </>
+                )}
                 {loading && <LoadingWheel />}
             </Form>
         </Container>

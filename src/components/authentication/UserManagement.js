@@ -25,7 +25,6 @@ function UserManagement() {
             .then(response => {
                 if (response.ok) {
                     alert('Admin rights granted successfully!');
-                    // Refresh the user list after granting admin rights
                     fetchUsers();
                 } else {
                     alert('Failed to grant admin rights.');

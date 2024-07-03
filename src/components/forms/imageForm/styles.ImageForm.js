@@ -41,11 +41,18 @@ const PlusIcon = styled.div`
   margin-right: 4px;
 `;
 
+
 const UploadPreviewImage = styled.img`
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 200px;
+  max-height: 200px;
   object-fit: contain;
   margin-bottom: 10px;
+  box-shadow: inset 0 0 10px rgb(167, 24, 24);
+  transition: box-shadow 0.5s ease;
+
+  &.uploaded {
+    box-shadow: inset 0 0 10px rgba(141, 250, 79, 0.6);
+  }
 `;
 
 const PreviewImage = styled.img`

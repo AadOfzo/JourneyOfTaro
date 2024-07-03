@@ -14,10 +14,12 @@ import {
 
 const ImageList = () => {
     const [images, setImages] = useState([]);
+    const [failedImages, setFailedImages] = useState({});
 
     const fetchImages = async () => {
         try {
             const response = await ApiService.fetchImages();
+            console.log('Fetched Images:', response.data);
             setImages(response.data);
         } catch (error) {
             console.error('Error fetching images:', error);
@@ -33,6 +35,10 @@ const ImageList = () => {
         }
     };
 
+    const handleImageError = (imageUrl) => {
+        setFailedImages((prev) => ({ ...prev, [imageUrl]: true }));
+    };
+
     useEffect(() => {
         fetchImages();
     }, []);
@@ -45,7 +51,18 @@ const ImageList = () => {
                     {images.map((image) => (
                         <ImageListItem key={image.id}>
                             <ImageLabel>
-                                <PreviewImage src={`data:image/png;base64,${image.imageData}`} alt={image.id} />
+                                {failedImages[image.imageUrl] ? (
+                                    <PreviewImage
+                                        src="/path/to/placeholder-image.jpg"
+                                        alt={image.imageName}
+                                    />
+                                ) : (
+                                    <PreviewImage
+                                        src={image.imageUrl}
+                                        alt={image.imageName}
+                                        onError={(e) => handleImageError(image.imageUrl)}
+                                    />
+                                )}
                                 <ImageName>{image.imageName}</ImageName>
                             </ImageLabel>
                             <ImageDeleteButton onClick={() => handleDelete(image.id)}>Delete</ImageDeleteButton>

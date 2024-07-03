@@ -5,7 +5,7 @@ import Login from '../../components/login/Login';
 import Dashboard from '../../pages/admin/Dashboard';
 import ImageRequestPage from '../../pages/imageRequest/ImageRequestPage';
 
-const AppRoutes = ({ isLoggedIn }) => {
+const AppRoutes = ({ isLoggedIn, userRole }) => {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
@@ -15,7 +15,7 @@ const AppRoutes = ({ isLoggedIn }) => {
             <Route path="/imageRequestPage" element={
                 <PrivateRoutes isLoggedIn={isLoggedIn} element={<ImageRequestPage />} />
             } />
-            <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
+            <Route path="/" element={<Navigate to={isLoggedIn ? (userRole === 'admin' ? "/dashboard" : "/") : "/login"} />} />
         </Routes>
     );
 };

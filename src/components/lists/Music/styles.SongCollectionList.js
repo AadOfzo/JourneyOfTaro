@@ -78,16 +78,17 @@ export const SongListContainer = styled.div`
 `;
 
 export const ImageContainer = styled.div`
-  width: 200px;
-  height: 200px;
+  //width: 200px;
+  //height: 200px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  box-shadow: inset 0 0 10px rgb(167, 24, 24);
+  //align-items: center;
+  //margin-bottom: 20px;
+  box-shadow: inset 0 0 10px rgba(141, 250, 79, 0.6);
 `;
 
 export const Image = styled.img`
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
 `;

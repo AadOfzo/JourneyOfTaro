@@ -20,18 +20,21 @@ function SongCollectionList() {
         }
     };
 
-    const renderImage = (image) => {
-        if (image) {
-            return <Image src={image} alt="Collection Image" />;
+    const renderImage = (collection) => {
+        if (collection.imageUrl) {
+            return <Image src={collection.imageUrl} alt="Collection Image" />;
         } else {
-            return <ImageForm onImageUploaded={handleImageUploaded} />;
+            return <ImageForm onImageUploaded={(uploadedImage) => handleImageUploaded(uploadedImage, collection.id)} />;
         }
     };
 
-    const handleImageUploaded = (uploadedImage) => {
-        // Handle the uploaded image data here
-        console.log("Image uploaded:", uploadedImage);
-        // You can then update the state with the uploaded image if needed
+    const handleImageUploaded = (uploadedImage, collectionId) => {
+        // Update the collection with the new image URL
+        setCollections(prevCollections =>
+            prevCollections.map(collection =>
+                collection.id === collectionId ? { ...collection, imageUrl: uploadedImage } : collection
+            )
+        );
     };
 
     const toggleSongDetails = (id) => {
@@ -57,7 +60,7 @@ function SongCollectionList() {
                             <>
                                 <ul>
                                     <ImageContainer>
-                                        {renderImage(collection.image)}
+                                        {renderImage(collection)}
                                     </ImageContainer>
                                 </ul>
                                 <ul>
