@@ -1,28 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ImageForm from "../forms/imageForm/ImageForm";
+import ApiService from "../../configs/utilities/axios/ApiService";
+import {
+    GlowingRow,
+    UserImage as StyledUserImage,
+} from './styles.UserList';
 
-const UserProfile = ({ userId }) => {
-    const [userData, setUserData] = useState(null);
+const UserProfile = ({ username }) => {
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
+    const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/users/${userId}`);
-                setUserData(response.data); // Assuming the backend returns user data including image URL
+        const fetchUserAndImage = async () => {
+            if (!username) {
+                setError('Username is undefined.');
                 setLoading(false);
+                return;
+            }
+
+            try {
+                const userResponse = await axios.get(`http://localhost:8080/users/${username}`);
+                setUser(userResponse.data);
+
+                const imageResponse = await ApiService.getImageFromUser(userResponse.data.userId);
+                setImage({
+                    imageData: imageResponse.data,
+                    mimeType: imageResponse.headers['content-type']
+                });
             } catch (error) {
+                console.error('Error fetching user data:', error);
                 setError('Failed to fetch user data.');
+            } finally {
                 setLoading(false);
             }
         };
 
-        fetchUserData();
-    }, [userId]);
+        fetchUserAndImage();
+    }, [username]);
 
     if (loading) {
-        return <p>Loading user profile...</p>;
+        return <p>Loading...</p>;
     }
 
     if (error) {
@@ -32,18 +52,23 @@ const UserProfile = ({ userId }) => {
     return (
         <div>
             <h2>User Profile</h2>
-            {userData && (
+            {user && (
                 <div>
-                    <img src={userData.userimage} alt="User" style={{ width: '200px', height: '200px', borderRadius: '50%' }} />
-                    <div>
-                        <p><strong>Username:</strong> {userData.username}</p>
-                        <p><strong>First Name:</strong> {userData.firstname}</p>
-                        <p><strong>Last Name:</strong> {userData.lastname}</p>
-                        <p><strong>Date of Birth:</strong> {userData.dateofbirth}</p>
-                        <p><strong>Country:</strong> {userData.country}</p>
-                        <p><strong>Email:</strong> {userData.email}</p>
-                        <p><strong>Artist Name:</strong> {userData.artistname}</p>
-                    </div>
+                    <p>Username: {user.username}</p>
+                    <p>First Name: {user.firstName}</p>
+                    <p>Last Name: {user.lastName}</p>
+                    <p>Date of Birth: {user.dateOfBirth}</p>
+                    <p>Country: {user.country}</p>
+                    <p>Email: {user.email}</p>
+                    <p>Artist Name: {user.artistName}</p>
+                    {image ? (
+                        <StyledUserImage
+                            src={`data:${image.mimeType};base64,${image.imageData}`}
+                            alt="User Image"
+                        />
+                    ) : (
+                        <ImageForm username={username} onImageUploaded={() => window.location.reload()} />
+                    )}
                 </div>
             )}
         </div>

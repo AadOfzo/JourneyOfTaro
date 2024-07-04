@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './Login.css'
 import Login from "../../components/login/Login";
 import UserList from "../../components/lists/UserList";
+import UserProfile from "../../components/lists/UserProfile";
 
 function LoginPage() {
     const [showLogin, setShowLogin] = useState(false);
@@ -11,6 +12,7 @@ function LoginPage() {
         <div>
             <Login/>
             <UserList/>
+            {/*<UserProfile/>*/}
             {/*<LoginMenu/>*/}
             {/*<LoginPopupMainComponent/>*/}
 

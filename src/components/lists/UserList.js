@@ -5,6 +5,14 @@ import ApiService from "../../configs/utilities/axios/ApiService";
 import {
     GlowingRow,
     UserImage as StyledUserImage,
+    UserInfoContainer,
+    UserInfo,
+    ImageContainer,
+    Image,
+    ExpandableContent,
+    ExpandButton,
+    UserListContainer,
+    UserDetailsContainer
 } from './styles.UserList';
 
 function UserList() {
@@ -49,7 +57,6 @@ function UserList() {
         setExpandedUserId(prevState => (prevState === userId ? null : userId));
     };
 
-
     const grantAdminPrivilege = async (username) => {
         try {
             await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority: 'ROLE_ADMIN' }, {
@@ -74,47 +81,57 @@ function UserList() {
     };
 
     return (
-        <div>
+        <>
             <h2>User List</h2>
-            {loadingUsers ? (
-                <p>Loading...</p>
-            ) : (
-                <table>
-                    <tbody>
+            <UserListContainer>
+                <UserInfoContainer>
+                    {loadingUsers ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <UserInfo>
+                            <table>
+                                <tbody>
+                                {users.slice(0, 10).map(user => (
+                                    <React.Fragment key={user.userId}>
+                                        <GlowingRow onClick={() => toggleExpand(user.userId)}>
+                                            <td>{user.userId}</td>
+                                            <td>{user.username}</td>
+                                        </GlowingRow>
+                                    </React.Fragment>
+                                ))}
+                                </tbody>
+                            </table>
+                        </UserInfo>
+                    )}
+                    {errorUsers && <p>{errorUsers}</p>}
+                    {errorImages && <p>{errorImages}</p>}
+                </UserInfoContainer>
+                <UserDetailsContainer>
                     {users.map(user => (
                         <React.Fragment key={user.userId}>
-                            <GlowingRow onClick={() => toggleExpand(user.userId)}>
-                                <td>
-                                    {getUserImage(user.userId)}
-                                </td>
-                                <td>{user.userId}</td>
-                                <td>{user.username}</td>
-                            </GlowingRow>
                             {expandedUserId === user.userId && (
-                                <tr>
-                                    <td colSpan="3">
-                                        <div>
-                                            <p>Role: {user.roles}</p>
-                                            <p>API Key: {user.apikey}</p>
-                                            <p>First Name: {user.firstName}</p>
-                                            <p>Last Name: {user.lastName}</p>
-                                            <p>Country: {user.country}</p>
-                                            <p>Email: {user.email}</p>
-                                            <p>Artist Name: {user.artistName}</p>
-                                            <p>Songs: {user.songTitle}</p>
-                                            <button onClick={() => grantAdminPrivilege(user.username)}>Add Admin</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <ExpandableContent expanded={expandedUserId === user.userId}>
+                                    <div>
+                                        <ImageContainer>
+                                            {getUserImage(user.userId)}
+                                        </ImageContainer>
+                                        <p>Role: {user.roles}</p>
+                                        <p>API Key: {user.apikey}</p>
+                                        <p>First Name: {user.firstName}</p>
+                                        <p>Last Name: {user.lastName}</p>
+                                        <p>Country: {user.country}</p>
+                                        <p>Email: {user.email}</p>
+                                        <p>Artist Name: {user.artistName}</p>
+                                        <p>Songs: {user.songTitle}</p>
+                                        <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>Add Admin</ExpandButton>
+                                    </div>
+                                </ExpandableContent>
                             )}
                         </React.Fragment>
                     ))}
-                    </tbody>
-                </table>
-            )}
-            {errorUsers && <p>{errorUsers}</p>}
-            {errorImages && <p>{errorImages}</p>}
-        </div>
+                </UserDetailsContainer>
+            </UserListContainer>
+        </>
     );
 }
 
