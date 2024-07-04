@@ -1,6 +1,5 @@
 import React from "react";
 import { TextComponent, ImageComponent, PlaceholderComponent } from "./Content"
-import TextContainerSquare from "./styles.TextContainerSquare";
 
 const ContentContainer= ({ layout, text, image, placeholder }) => {
     if (layout === "text") {

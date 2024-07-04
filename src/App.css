@@ -2,7 +2,7 @@
 
 :root {
     --primary: #000000;
-    --secondary: #eaa733;
+    --secondary: rgb(234, 167, 51);
     --textPrimary: rgb(234, 167, 51);
     --textSecondary: #000000;
     --testColorOne: rgb(167, 24, 24);
@@ -31,15 +31,12 @@ a, a:visited {
     text-decoration: none;
 }
 
-p {
-    margin-bottom: 2rem;
-}
-
 .main-outer-container {
     min-height: 100vh;
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-content: center;
+    /*align-content: center;*/
 }
 
 .main-content-container {
@@ -51,9 +48,10 @@ p {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: row;
+        transition: 500ms;
         flex: 1;
         margin: 0 auto;
-        /*max-width: 1140px;*/
     }
 }
 
@@ -83,9 +81,6 @@ p {
 }
 
 .footer-box {
-    border: solid 1px var(--testColorOne);
-    /*background: rgba(141, 250, 79, 0.6);*/
-    /*padding-top: 1vh;*/
     margin: 1rem;
 }
 
@@ -94,6 +89,7 @@ p {
     color: var(--testColorOne);
     transition: 100ms;
 }
+
 .container {
     display: flex;
     gap: 20px;

@@ -1,14 +1,32 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Login.css'
-import LoginMenu from "../../components/authentication/LoginMenu";
-import LoginPopupMainComponent from "../../components/login/LoginPopupMainComponent";
+import Login from "../../components/login/Login";
+import UserList from "../../components/lists/UserList";
+import UserProfile from "../../components/lists/UserProfile";
 
 function LoginPage() {
+    const [showLogin, setShowLogin] = useState(false);
+
     return (
+
         <div>
-            <LoginMenu/>
-            <LoginPopupMainComponent/>
+            <Login/>
+            <UserList/>
+            {/*<UserProfile/>*/}
+            {/*<LoginMenu/>*/}
+            {/*<LoginPopupMainComponent/>*/}
+
+            {/*<div>*/}
+            {/*    <UserForm3/>*/}
+            {/*</div>*/}
+
+            {/*<div>*/}
+            {/*    <UserList/>*/}
+            {/*</div>*/}
         </div>
+
+
+
     );
 }
 

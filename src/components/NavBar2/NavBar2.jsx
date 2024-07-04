@@ -1,10 +1,10 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import SnavBar2 from './styles.navBar2';
-import {NavLink} from "react-router-dom";
+import { NavLink } from 'react-router-dom';
+import NavBarDropdown from "./NavBarDropdown";
 
-function NavBar2() {
+function NavBar2({ isLoggedIn, userRole, handleLogout }) {
     const navRef = useRef();
-
     const [isNavOpen, setIsNavOpen] = useState(false);
 
     const toggleNav = () => {
@@ -14,40 +14,57 @@ function NavBar2() {
     return (
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>
             <div className="nav-container">
+                <div className="navbar-title">Journey of Taro</div>
                 <div className={`menu ${isNavOpen ? 'open' : ''}`}>
                     <ul>
-                        <li><NavLink to="/"
-                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
-                            Home
-                        </NavLink></li>
-
-                        <li><NavLink to="/music"
-                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
-                            Music
-                        </NavLink></li>
-
-                        <li><NavLink to="/samples"
-                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
-                            Samples
-                        </NavLink></li>
-
-                        <li><NavLink to="/about"
-                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
-                            About
-                        </NavLink></li>
-
-                        <li><NavLink to="/upload"
-                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
-                            Demo Upload
-                        </NavLink></li>
-
-                        <li><NavLink to="/login"
-                                     className={({isActive}) => isActive ? 'active-link' : 'default-link'}>
-                            Login
-                        </NavLink></li>
-
-                        <li><a href="/contact">Contact</a></li>
+                        <li>
+                            <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                Home
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/about" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                About
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/images" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                ImagePage
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/signup" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                Start Tour
+                            </NavLink>
+                        </li>
+                        {isLoggedIn && (
+                            <>
+                                <li>
+                                    <NavLink to="/music" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                        Music
+                                    </NavLink>
+                                </li>
+                                {userRole === 'ADMIN' && (
+                                    <li>
+                                        <NavLink to="/admin" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                            Admin Panel
+                                        </NavLink>
+                                    </li>
+                                )}
+                                <li>
+                                    <button onClick={handleLogout}>Logout</button>
+                                </li>
+                            </>
+                        )}
+                        {!isLoggedIn && (
+                            <li>
+                                <NavLink to="/login" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                    Login
+                                </NavLink>
+                            </li>
+                        )}
                     </ul>
+                    <NavBarDropdown isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
                 </div>
                 <div className="hamburger" onClick={toggleNav}>
                     <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>

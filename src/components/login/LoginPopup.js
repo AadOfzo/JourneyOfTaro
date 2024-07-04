@@ -1,31 +1,48 @@
-// LoginPopup.js
-
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const LoginPopup = ({ onClose }) => {
-    const [email, setEmail] = useState('');
+const LoginPopup = ({ onClose, onLogin }) => {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('user');
+    const [error, setError] = useState('');
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulated authentication logic...
+
+        try {
+            const response = await axios.post('http://localhost:8080/authenticate', {
+                username,
+                password
+            });
+
+            // Backend returns JWT token met succesvolle authentication
+            const token = response.data.token;
+
+            // Store jwt token in local storage
+            localStorage.setItem('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUZXN0QWRtaW5fMiIsImlhdCI6MTcxMDI0NjE5NCwiZXhwIjoxNzExMTEwMTk0fQ.qRH6IybOC4-SDTMja3PcKck3Eh0b8G-IjGGlvcwrJ_A', token);
+
+            // onlogin true = succesvolle login
+            onLogin(true);
+
+            // Close the popup
+            onClose();
+        } catch (error) {
+            setError('Invalid username or password');
+        }
     };
 
     return (
         <div className="popup">
             <div className="popup-content">
-        <span className="close" onClick={onClose}>
-          &times;
-        </span>
+                <span className="close" onClick={onClose}>&times;</span>
                 <h2>Login</h2>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSubmit}>
                     <div>
-                        <label>Email:</label>
+                        <label>Username or Email:</label>
                         <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                     </div>
@@ -38,20 +55,9 @@ const LoginPopup = ({ onClose }) => {
                             required
                         />
                     </div>
-                    {role === 'admin' ? (
-                        <div>
-                            <label>Role:</label>
-                            <select
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                            >
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-                    ) : null}
                     <button type="submit">Login</button>
                 </form>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
         </div>
     );
