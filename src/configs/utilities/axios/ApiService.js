@@ -2,9 +2,6 @@ import api from "./api";
 
 const ApiService = {
 
-    // Users
-
-
     // Images
     async uploadImage(formData) {
         return await api.post('/fileUpload', formData, {
@@ -12,13 +9,29 @@ const ApiService = {
         });
     },
 
-
     async fetchImages() {
         return await api.get('/images');
     },
 
     async deleteImage(id) {
         return await api.delete(`/images/${id}`);
+    },
+
+    async getImageFromUser(userId) {
+        try {
+            const response = await api.get(`/users/${userId}/image`, {
+                responseType: 'arraybuffer' // Ensure response is treated as binary data
+            });
+            if (response.status === 200) {
+                const imageData = Buffer.from(response.data, 'binary').toString('base64');
+                const mimeType = response.headers['content-type'];
+                return { imageData, mimeType };
+            }
+            throw new Error(`Failed to fetch image for user ${userId}. Status: ${response.status}`);
+        } catch (error) {
+            console.error(`Error fetching image for user ${userId}:`, error);
+            throw error; // Rethrow the error to be handled by the caller (e.g., UserList component)
+        }
     },
 
     // Songs
@@ -50,6 +63,5 @@ const ApiService = {
     },
 
 };
-
 
 export default ApiService;

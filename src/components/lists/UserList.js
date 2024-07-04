@@ -16,35 +16,39 @@ function UserList() {
     const [errorImages, setErrorImages] = useState(null);
 
     useEffect(() => {
-        fetchUsers();
+        fetchUsersAndImages();
     }, []);
 
-    const fetchUsers = async () => {
+    const fetchUsersAndImages = async () => {
         setLoadingUsers(true);
         try {
-            const response = await axios.get('http://localhost:8080/users');
-            setUsers(response.data);
+            const usersResponse = await axios.get('http://localhost:8080/users');
+            setUsers(usersResponse.data);
+
+            // Fetch images for each user
+            const imagePromises = usersResponse.data.map(user =>
+                ApiService.getImageFromUser(user.userId)
+                    .then(response => ({
+                        userId: user.userId,
+                        imageData: response.data,
+                        mimeType: response.headers['content-type']
+                    }))
+            );
+            const fetchedImages = await Promise.all(imagePromises);
+            setImages(fetchedImages);
         } catch (error) {
-            console.error('Error fetching users:', error);
+            console.error('Error fetching users and images:', error);
             setErrorUsers('Error fetching users. Please try again later.');
+            setErrorImages('Error fetching images. Please try again later.');
         } finally {
             setLoadingUsers(false);
         }
     };
 
-    const fetchImages = async () => {
-        try {
-            const response = await ApiService.fetchImages();
-            setImages(response.data); // Assuming response.data is an array of images
-        } catch (error) {
-            console.error('Error fetching images:', error);
-            setErrorImages('Error fetching images. Please try again later.');
-        }
+    const toggleExpand = (userId) => {
+        setExpandedUserId(prevState => (prevState === userId ? null : userId));
     };
 
-    const toggleExpand = (userId) => {
-        setExpandedUserId(prevUserId => (prevUserId === userId ? null : userId));
-    };
 
     const grantAdminPrivilege = async (username) => {
         try {
@@ -54,23 +58,18 @@ function UserList() {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            fetchUsers(); // Refresh user list after updating privileges
+            fetchUsersAndImages(); // Refresh user list after updating privileges
         } catch (error) {
             console.error('Error granting admin privilege:', error);
         }
     };
 
     const getUserImage = (userId) => {
-        const user = users.find(user => user.id === userId);
-        if (!user || !user.userimage) {
-            return <ImageForm onImageUploaded={fetchUsers} />;
-        }
-
         const userImage = images.find(img => img.userId === userId);
-        if (userImage) {
-            return <StyledUserImage src={userImage.url} alt="User Image" />;
+        if (userImage && userImage.imageData) {
+            return <StyledUserImage src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />;
         } else {
-            return <ImageForm onImageUploaded={fetchUsers} />;
+            return <ImageForm onImageUploaded={() => fetchUsersAndImages()} />;
         }
     };
 
@@ -83,26 +82,26 @@ function UserList() {
                 <table>
                     <tbody>
                     {users.map(user => (
-                        <React.Fragment key={user.id}>
-                            <GlowingRow onClick={() => toggleExpand(user.id)}>
+                        <React.Fragment key={user.userId}>
+                            <GlowingRow onClick={() => toggleExpand(user.userId)}>
                                 <td>
-                                    {getUserImage(user.id)}
+                                    {getUserImage(user.userId)}
                                 </td>
-                                <td>{user.id}</td>
+                                <td>{user.userId}</td>
                                 <td>{user.username}</td>
                             </GlowingRow>
-                            {expandedUserId === user.id && (
+                            {expandedUserId === user.userId && (
                                 <tr>
                                     <td colSpan="3">
                                         <div>
+                                            <p>Role: {user.roles}</p>
                                             <p>API Key: {user.apikey}</p>
-                                            <p>First Name: {user.firstname}</p>
-                                            <p>Last Name: {user.lastname}</p>
+                                            <p>First Name: {user.firstName}</p>
+                                            <p>Last Name: {user.lastName}</p>
                                             <p>Country: {user.country}</p>
                                             <p>Email: {user.email}</p>
-                                            <p>Artist Name: {user.artistname}</p>
+                                            <p>Artist Name: {user.artistName}</p>
                                             <p>Songs: {user.songTitle}</p>
-                                            <p>Role: {user.roles}</p>
                                             <button onClick={() => grantAdminPrivilege(user.username)}>Add Admin</button>
                                         </div>
                                     </td>

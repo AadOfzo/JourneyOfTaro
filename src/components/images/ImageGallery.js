@@ -35,7 +35,7 @@ const ImageGallery = () => {
                         />
                         <div className="image-info">
                             <h4>{image.imageName}</h4>
-                            {/* Optionally display upload time or other information */}
+                            {/* Opties voor meer informatie zoals imageName, uploadTime, etc */}
                         </div>
                     </div>
                 ))}
