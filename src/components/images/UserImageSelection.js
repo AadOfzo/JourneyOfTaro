@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import ApiService from "../../configs/utilities/axios/ApiService";
-import ImageGallery from './ImageGallery'; // Assuming you have ImageGallery component
+import ImageGallery from "./ImageGallery";
+import api from "../../configs/utilities/axios/api"; // Assuming you have ImageGallery component
 
 const UserImageSelection = ({ userId, onImageSelected }) => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -16,7 +16,7 @@ const UserImageSelection = ({ userId, onImageSelected }) => {
     const fetchUsers = async () => {
         setLoadingUsers(true);
         try {
-            const usersResponse = await axios.get('http://localhost:8080/users');
+            const usersResponse = await api.get('http://localhost:8080/users');
             setUsers(usersResponse.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -37,9 +37,9 @@ const UserImageSelection = ({ userId, onImageSelected }) => {
         }
 
         try {
-            await ApiService.assignImageToUser(userId, selectedImage.id); // Adjust as per your backend API
+            await ApiService.getUserImage(userId, selectedImage.id);
             alert(`Image '${selectedImage.imageName}' assigned to user.`);
-            onImageSelected(); // Callback to notify parent component to refresh data
+            onImageSelected(); // Callback to refresh data
         } catch (error) {
             console.error('Error assigning image to user:', error);
             alert('Error assigning image to user. Please try again.');

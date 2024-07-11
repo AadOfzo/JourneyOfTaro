@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import ImageForm from "../forms/imageForm/ImageForm";
+import UserImageForm from "../forms/imageForm/UserImageForm";
+import UserImageSelection from "../images/UserImageSelection";
 import ApiService from "../../configs/utilities/axios/ApiService";
 import {
     GlowingRow,
@@ -8,159 +9,133 @@ import {
     UserInfoContainer,
     UserInfo,
     ImageContainer,
-    Image,
     ExpandableContent,
-    ExpandButton,
-    UserListContainer,
-    UserDetailsContainer,
-    CenteredH2,
-    UserDetail,
-    UserDetailLabel,
-    UserDetailValue
 } from './styles.UserList';
+import {
+    UploadImageButton,
+    AssignImageButton,
+    ImageCard,
+    ImageTitle,
+    UploadPreviewImage
+} from './styles.UserProfile';
 
-function UserList() {
+const UserList = () => {
     const [users, setUsers] = useState([]);
-    const [expandedUserId, setExpandedUserId] = useState(null);
-    const [loadingUsers, setLoadingUsers] = useState(false);
-    const [errorUsers, setErrorUsers] = useState(null);
-    const [images, setImages] = useState([]);
-    const [errorImages, setErrorImages] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [showUploadForm, setShowUploadForm] = useState(false);
+    const [showAssignForm, setShowAssignForm] = useState(false);
 
-    useEffect(() => {
-        fetchUsersAndImages();
-    }, []);
-
-    const fetchUsersAndImages = async () => {
-        setLoadingUsers(true);
+    const fetchUsers = useCallback(async () => {
+        setLoading(true);
         try {
-            const usersResponse = await axios.get('http://localhost:8080/users/${userId}/image');
-            setUsers(usersResponse.data);
+            const usersResponse = await axios.get('http://localhost:8080/users');
+            const usersData = usersResponse.data;
 
             // Fetch images for each user
-            const imagePromises = usersResponse.data.map(user =>
-                ApiService.getImageFromUser(user.userId)
-                    .then(response => ({
-                        userId: user.userId,
-                        imageData: response.data,
-                        mimeType: response.headers['content-type']
-                    }))
+            const usersWithImages = await Promise.all(
+                usersData.map(async (user) => {
+                    try {
+                        const image = await ApiService.getImageFromUser(user.userId);
+                        return { ...user, image: image.imageData, mimeType: image.mimeType };
+                    } catch (error) {
+                        console.error(`Error fetching image for user ${user.userId}:`, error);
+                        return { ...user, image: null, mimeType: null };
+                    }
+                })
             );
-            const fetchedImages = await Promise.all(imagePromises);
-            setImages(fetchedImages);
+
+            setUsers(usersWithImages);
         } catch (error) {
-            console.error('Error fetching users and images:', error);
-            setErrorUsers('Error fetching users. Please try again later.');
-            setErrorImages('Error fetching images. Please try again later.');
+            console.error('Error fetching users:', error);
+            setError('Error fetching users. Please try again later.');
         } finally {
-            setLoadingUsers(false);
+            setLoading(false);
         }
+    }, []);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
+
+    const handleUploadButtonClick = (userId) => {
+        setSelectedUserId(userId);
+        setShowUploadForm(!showUploadForm);
     };
 
-    const toggleExpand = (userId) => {
-        setExpandedUserId(prevState => (prevState === userId ? null : userId));
+    const handleAssignButtonClick = (userId) => {
+        setSelectedUserId(userId);
+        setShowAssignForm(!showAssignForm);
     };
 
-    const grantAdminPrivilege = async (username) => {
-        try {
-            await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority: 'ROLE_ADMIN' }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            fetchUsersAndImages(); // Refresh user list after updating privileges
-        } catch (error) {
-            console.error('Error granting admin privilege:', error);
-        }
+    const handleImageUploaded = () => {
+        setShowUploadForm(false);
+        fetchUsers();
     };
 
-    const getUserImage = (userId) => {
-        const userImage = images.find(img => img.userId === userId);
-        if (userImage && userImage.imageData) {
-            return <StyledUserImage src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />;
-        } else {
-            return <ImageForm onImageUploaded={() => fetchUsersAndImages()} />;
-        }
+    const handleImageSelected = () => {
+        setShowAssignForm(false);
+        fetchUsers();
     };
 
     return (
-        <>
-            <CenteredH2>User List</CenteredH2>
-            <UserListContainer>
-                <UserInfoContainer>
-                    {loadingUsers ? (
-                        <p>Loading...</p>
-                    ) : (
-                        <UserInfo>
-                            <table>
-                                <tbody>
-                                {users.slice(0, 10).map(user => (
-                                    <React.Fragment key={user.userId}>
-                                        <GlowingRow onClick={() => toggleExpand(user.userId)}>
-                                            <td>{user.userId}</td>
-                                            <td>{user.username}</td>
-                                        </GlowingRow>
-                                    </React.Fragment>
-                                ))}
-                                </tbody>
-                            </table>
-                        </UserInfo>
-                    )}
-                    {errorUsers && <p>{errorUsers}</p>}
-                    {errorImages && <p>{errorImages}</p>}
-                </UserInfoContainer>
-                <UserDetailsContainer>
-                    {users.map(user => (
-                        <React.Fragment key={user.userId}>
-                            {expandedUserId === user.userId && (
-                                <ExpandableContent expanded={expandedUserId === user.userId}>
-                                    <div>
-                                        <ImageContainer>
-                                            {getUserImage(user.userId)}
-                                        </ImageContainer>
-                                        <UserDetail>
-                                            <UserDetailLabel>Role:</UserDetailLabel>
-                                            <UserDetailValue>{user.roles}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>API Key:</UserDetailLabel>
-                                            <UserDetailValue>{user.apikey}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>First Name:</UserDetailLabel>
-                                            <UserDetailValue>{user.firstName}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>Last Name:</UserDetailLabel>
-                                            <UserDetailValue>{user.lastName}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>Country:</UserDetailLabel>
-                                            <UserDetailValue>{user.country}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>Email:</UserDetailLabel>
-                                            <UserDetailValue>{user.email}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>Artist Name:</UserDetailLabel>
-                                            <UserDetailValue>{user.artistName}</UserDetailValue>
-                                        </UserDetail>
-                                        <UserDetail>
-                                            <UserDetailLabel>Songs:</UserDetailLabel>
-                                            <UserDetailValue>{user.songTitle}</UserDetailValue>
-                                        </UserDetail>
-                                        <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>Add Admin</ExpandButton>
-                                    </div>
-                                </ExpandableContent>
+        <div className="user-list">
+            {loading && <p>Loading users...</p>}
+            {error && <p>{error}</p>}
+            {users.map((user) => (
+                <GlowingRow key={user.userId}>
+                    <UserInfoContainer>
+                        <StyledUserImage>
+                            {user.image ? (
+                                <img
+                                    src={`data:${user.mimeType};base64,${user.image}`}
+                                    alt={`Profile of ${user.username}`}
+                                />
+                            ) : (
+                                <span>No Image</span>
                             )}
-                        </React.Fragment>
-                    ))}
-                </UserDetailsContainer>
-            </UserListContainer>
-        </>
+                        </StyledUserImage>
+                        <UserInfo>
+                            <h3>{user.username}</h3>
+                            <p>Email: {user.email}</p>
+                        </UserInfo>
+                    </UserInfoContainer>
+                    <ImageContainer>
+                        <UploadImageButton onClick={() => handleUploadButtonClick(user.userId)}>
+                            Upload Image
+                        </UploadImageButton>
+                        <AssignImageButton onClick={() => handleAssignButtonClick(user.userId)}>
+                            Assign Image
+                        </AssignImageButton>
+                        {selectedUserId === user.userId && showUploadForm && (
+                            <ExpandableContent>
+                                <UserImageForm userId={user.userId} onImageUploaded={handleImageUploaded} />
+                            </ExpandableContent>
+                        )}
+                        {selectedUserId === user.userId && showAssignForm && (
+                            <ExpandableContent>
+                                <UserImageSelection userId={user.userId} onImageSelected={handleImageSelected} />
+                            </ExpandableContent>
+                        )}
+                    </ImageContainer>
+                    {user.images && user.images.length > 0 && (
+                        <div>
+                            <h4>Images:</h4>
+                            <div>
+                                {user.images.map((image) => (
+                                    <ImageCard key={image.id}>
+                                        <UploadPreviewImage src={`data:${image.mimeType};base64,${image.imageData}`} alt={image.imageName} />
+                                        <ImageTitle>{image.imageName}</ImageTitle>
+                                    </ImageCard>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </GlowingRow>
+            ))}
+        </div>
     );
-}
+};
 
 export default UserList;

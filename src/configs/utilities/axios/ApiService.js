@@ -1,67 +1,149 @@
-import api from "./api";
+import api from './api';
 
 const ApiService = {
-
-    // Images
-    async uploadImage(formData) {
-        return await api.post('/fileUpload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-    },
-
-    async fetchImages() {
-        return await api.get('/images');
-    },
-
-    async deleteImage(id) {
-        return await api.delete(`/images/${id}`);
-    },
-
-    async getImageFromUser(userId) {
+    // Users
+    async getUsers() {
         try {
-            const response = await api.get(`/users/${userId}/images`, {
-                responseType: 'arraybuffer' // Ensure response is treated as binary data
-            });
-            if (response.status === 200) {
-                const imageData = Buffer.from(response.data, 'binary').toString('base64');
-                const mimeType = response.headers['content-type'];
-                return { imageData, mimeType };
-            }
-            throw new Error(`Failed to fetch image for user ${userId}. Status: ${response.status}`);
+            const response = await api.get('/users');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    },
+
+    async getUserImage(userId) {
+        try {
+            const response = await api.get(`/users/${userId}/image`);
+            return response.data;
         } catch (error) {
             console.error(`Error fetching image for user ${userId}:`, error);
-            throw error; // Rethrow the error to be handled by the caller (e.g., UserList component)
+            throw error;
+        }
+    },
+
+    async grantAdminPrivilege(userId) {
+        try {
+            await api.post(`/users/${userId}/authorities`, { authority: 'ROLE_ADMIN' });
+        } catch (error) {
+            console.error('Error granting admin privilege:', error);
+            throw error;
         }
     },
 
     // Songs
     async fetchSongs() {
-        return await api.get('/songs');
+        try {
+            const response = await api.get('/songs');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching songs:', error);
+            throw error;
+        }
     },
 
     async uploadSong(formData) {
-        return await api.post('/fileUpload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        try {
+            const response = await api.post('/songs', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading song:', error);
+            throw error;
+        }
     },
 
     async addSong(id) {
-        return await api.post(`/songs/${id}`);
+        try {
+            const response = await api.post(`/songs/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error adding song:', error);
+            throw error;
+        }
     },
 
     async deleteSong(id) {
-        return await api.delete(`/songs/${id}`);
+        try {
+            await api.delete(`/songs/${id}`);
+        } catch (error) {
+            console.error('Error deleting song:', error);
+            throw error;
+        }
     },
 
-    // Song Collections
+    // Image (reusing from ApiServices)
+    async fetchImageData(imageUrl) {
+        const retryFetch = async (url, retries = 3) => {
+            try {
+                const response = await api.get(url);
+                return response.data;
+            } catch (error) {
+                if (retries === 0) {
+                    console.error('Error fetching data:', error);
+                    throw error;
+                }
+                console.warn(`Retrying... (${3 - retries + 1})`);
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                return retryFetch(url, retries - 1);
+            }
+        };
+
+        return retryFetch(imageUrl);
+    },
+
+    async fetchImages() {
+        try {
+            const response = await api.get('/images');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching images:', error);
+            throw error;
+        }
+    },
+
+    async uploadImage(formData) {
+        try {
+            const response = await api.post('/images', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            throw error;
+        }
+    },
+
+    async deleteImage(id) {
+        try {
+            await api.delete(`/images/${id}`);
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            throw error;
+        }
+    },
+
+    // Song Collections (reusing from ApiServices)
     async fetchSongCollections() {
-        return await api.get('/songCollections');
+        try {
+            const response = await api.get('/songCollections');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching song collections:', error);
+            throw error;
+        }
     },
 
     async addSongToCollection(songId, collectionId) {
-        return await api.post(`/songCollections/${collectionId}/songs`, [songId]);
-    },
-
+        try {
+            const response = await api.post(`/songCollections/${collectionId}/songs`, [songId]);
+            return response.data;
+        } catch (error) {
+            console.error('Error adding song to collection:', error);
+            throw error;
+        }
+    }
 };
 
 export default ApiService;

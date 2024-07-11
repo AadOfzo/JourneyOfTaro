@@ -75,6 +75,36 @@ const ApiServices = {
         }
     },
 
+    async getImageFromUser(userId) {
+        try {
+            const response = await api.get(`/users/${userId}/images`, { responseType: 'arraybuffer' });
+            const imageData = Buffer.from(response.data, 'binary').toString('base64');
+            return {
+                imageData,
+                mimeType: response.headers['content-type']
+            };
+        } catch (error) {
+            console.error(`Error fetching image for user ${userId}:`, error);
+            throw error;
+        }
+    },
+
+    async uploadUserImage(userId, file) {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await api.post(`/users/${userId}/image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading user image:', error.response ? error.response.data : error.message);
+            throw error;
+        }
+    },
+
     async uploadImage(formData) {
         try {
             const response = await api.post('/fileUpload', formData, {

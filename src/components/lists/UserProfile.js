@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ImageForm from "../forms/imageForm/ImageForm";
 import ApiService from "../../configs/utilities/axios/ApiService";
+import { fetchUserDetails } from "../../configs/utilities/AuthorisationUtilities";
 import {
-    GlowingRow,
     UserImage as StyledUserImage,
 } from './styles.UserList';
 
-const UserProfile = ({ username }) => {
+const UserProfile = ({ userId }) => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
@@ -15,21 +13,19 @@ const UserProfile = ({ username }) => {
 
     useEffect(() => {
         const fetchUserAndImage = async () => {
-            if (!username) {
-                setError('Username is undefined.');
+            if (!userId) {
+                setError('User ID is undefined.');
                 setLoading(false);
                 return;
             }
 
             try {
-                const userResponse = await axios.get(`http://localhost:8080/users/${username}`);
-                setUser(userResponse.data);
+                const token = localStorage.getItem('token'); // Replace with your actual token handling logic
+                const userData = await fetchUserDetails(userId, token, setUserDetails);
+                setUser(userData);
 
-                const imageResponse = await ApiService.getImageFromUser(userResponse.data.userId);
-                setImage({
-                    imageData: imageResponse.data,
-                    mimeType: imageResponse.headers['content-type']
-                });
+                const { imageData, mimeType } = await ApiService.getImageFromUser(userId);
+                setImage({ imageData, mimeType });
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setError('Failed to fetch user data.');
@@ -40,6 +36,10 @@ const UserProfile = ({ username }) => {
 
         fetchUserAndImage();
     }, [userId]);
+
+    const setUserDetails = (username, role) => {
+        console.log(`Setting username: ${username}, role: ${role}`);
+    };
 
     if (loading) {
         return <p>Loading...</p>;
@@ -62,12 +62,9 @@ const UserProfile = ({ username }) => {
                     <p>Email: {user.email}</p>
                     <p>Artist Name: {user.artistName}</p>
                     {image ? (
-                        <StyledUserImage
-                            src={`data:${image.mimeType};base64,${image.imageData}`}
-                            alt="User Image"
-                        />
+                        <StyledUserImage src={`data:${image.mimeType};base64,${image.imageData}`} alt="User Image" />
                     ) : (
-                        <ImageForm username={username} onImageUploaded={() => window.location.reload()} />
+                        <p>No image available</p>
                     )}
                 </div>
             )}
