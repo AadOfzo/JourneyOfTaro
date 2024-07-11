@@ -1,8 +1,7 @@
-// Function to fetch user details from the backend
-// Function to fetch user details from the backend
+// Fetch user details from the backend
 export const fetchUserDetails = async (token, setUserName, setUserRole) => {
     try {
-        const response = await fetch(`/users/apikey/${token}`);
+        const response = await fetch(`/users/userId/${token}`);
         if (!response.ok) {
             throw new Error('User details not found');
         }
@@ -16,13 +15,16 @@ export const fetchUserDetails = async (token, setUserName, setUserRole) => {
     }
 };
 
-// Function to handle user login
-export const handleLogin = (setIsLoggedIn) => {
+// Handle user login
+export const handleLogin = (setIsLoggedIn, setUserName, setUserRole) => {
+    // Here, you would normally get a token from your backend or a login form
+    const token = 'your_token_value';
+    localStorage.setItem('token', token);
     setIsLoggedIn(true);
-    localStorage.setItem('token', 'your_token_value');
+    fetchUserDetails(token, setUserName, setUserRole);
 };
 
-// Function to handle user logout
+// Handle user logout
 export const handleLogout = (setIsLoggedIn, setUserName, setUserRole) => {
     localStorage.removeItem('token'); // Clear token from local storage
     setIsLoggedIn(false);

@@ -12,7 +12,11 @@ import {
     ExpandableContent,
     ExpandButton,
     UserListContainer,
-    UserDetailsContainer
+    UserDetailsContainer,
+    CenteredH2,
+    UserDetail,
+    UserDetailLabel,
+    UserDetailValue
 } from './styles.UserList';
 
 function UserList() {
@@ -30,7 +34,7 @@ function UserList() {
     const fetchUsersAndImages = async () => {
         setLoadingUsers(true);
         try {
-            const usersResponse = await axios.get('http://localhost:8080/users');
+            const usersResponse = await axios.get('http://localhost:8080/users/${userId}/image');
             setUsers(usersResponse.data);
 
             // Fetch images for each user
@@ -82,7 +86,7 @@ function UserList() {
 
     return (
         <>
-            <h2>User List</h2>
+            <CenteredH2>User List</CenteredH2>
             <UserListContainer>
                 <UserInfoContainer>
                     {loadingUsers ? (
@@ -115,14 +119,38 @@ function UserList() {
                                         <ImageContainer>
                                             {getUserImage(user.userId)}
                                         </ImageContainer>
-                                        <p>Role: {user.roles}</p>
-                                        <p>API Key: {user.apikey}</p>
-                                        <p>First Name: {user.firstName}</p>
-                                        <p>Last Name: {user.lastName}</p>
-                                        <p>Country: {user.country}</p>
-                                        <p>Email: {user.email}</p>
-                                        <p>Artist Name: {user.artistName}</p>
-                                        <p>Songs: {user.songTitle}</p>
+                                        <UserDetail>
+                                            <UserDetailLabel>Role:</UserDetailLabel>
+                                            <UserDetailValue>{user.roles}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>API Key:</UserDetailLabel>
+                                            <UserDetailValue>{user.apikey}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>First Name:</UserDetailLabel>
+                                            <UserDetailValue>{user.firstName}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>Last Name:</UserDetailLabel>
+                                            <UserDetailValue>{user.lastName}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>Country:</UserDetailLabel>
+                                            <UserDetailValue>{user.country}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>Email:</UserDetailLabel>
+                                            <UserDetailValue>{user.email}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>Artist Name:</UserDetailLabel>
+                                            <UserDetailValue>{user.artistName}</UserDetailValue>
+                                        </UserDetail>
+                                        <UserDetail>
+                                            <UserDetailLabel>Songs:</UserDetailLabel>
+                                            <UserDetailValue>{user.songTitle}</UserDetailValue>
+                                        </UserDetail>
                                         <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>Add Admin</ExpandButton>
                                     </div>
                                 </ExpandableContent>

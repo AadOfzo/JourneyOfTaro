@@ -19,7 +19,7 @@ const ApiService = {
 
     async getImageFromUser(userId) {
         try {
-            const response = await api.get(`/users/${userId}/image`, {
+            const response = await api.get(`/users/${userId}/images`, {
                 responseType: 'arraybuffer' // Ensure response is treated as binary data
             });
             if (response.status === 200) {

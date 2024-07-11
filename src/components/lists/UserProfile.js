@@ -39,7 +39,7 @@ const UserProfile = ({ username }) => {
         };
 
         fetchUserAndImage();
-    }, [username]);
+    }, [userId]);
 
     if (loading) {
         return <p>Loading...</p>;
