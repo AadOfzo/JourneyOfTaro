@@ -1,26 +1,8 @@
+import React, { useState } from 'react';
+import UseUsers from "../../hooks/UseUsers";
+
 const UserManagement = ({ userRole }) => {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = () => {
-        setLoading(true);
-        fetch(`${process.env.REACT_APP_API_URL}/users`)
-            .then(response => response.json())
-            .then(users => {
-                setUsers(users);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching users:', error);
-                setError('Failed to fetch users.');
-                setLoading(false);
-            });
-    };
+    const { users, loading, error } = UseUsers(`${process.env.REACT_APP_API_URL}/users`);
 
     const grantAdminRights = (username) => {
         if (!window.confirm(`Are you sure you want to grant admin rights to ${username}?`)) {
@@ -37,7 +19,7 @@ const UserManagement = ({ userRole }) => {
             .then(response => {
                 if (response.ok) {
                     alert('Admin rights granted successfully!');
-                    fetchUsers();
+                    // Refetch users after granting admin rights
                 } else {
                     alert('Failed to grant admin rights.');
                 }
@@ -72,3 +54,5 @@ const UserManagement = ({ userRole }) => {
         </div>
     );
 };
+
+export default UserManagement;
