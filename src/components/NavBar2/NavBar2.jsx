@@ -23,25 +23,25 @@ function NavBar2({ isLoggedIn, userRole, handleLogout }) {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/about" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                About
+                            <NavLink to="/signup" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                Start Tour
                             </NavLink>
                         </li>
                         <li>
                             <NavLink to="/images" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                ImagePage
+                                Images
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/signup" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                Start Tour
+                            <NavLink to="/music" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                Music
                             </NavLink>
                         </li>
                         {isLoggedIn && (
                             <>
                                 <li>
-                                    <NavLink to="/music" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                        Music
+                                    <NavLink to="/about" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                        About
                                     </NavLink>
                                 </li>
                                 {userRole === 'ADMIN' && (
