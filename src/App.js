@@ -52,7 +52,7 @@ function App() {
             <footer className="main-footer">
                 <FooterMenu isLoggedIn={isLoggedIn} userName={userName} />
             </footer>
-            {!isLoggedIn && <PopupContainer />}
+            {/*{!isLoggedIn && <PopupContainer />}*/}
         </div>
     );
 }
