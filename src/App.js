@@ -7,7 +7,6 @@ import { fetchUserDetails, handleLogout } from './configs/utilities/Authorisatio
 import PageRoutes from './configs/routes/PageRoutes';
 import ComponentRoutes from './configs/routes/ComponentRoutes';
 import AppRoutes from './configs/routes/AppRoutes';
-import PopupContainer from './components/popup/PopupContainer';
 import ErrorBoundary from "./errors/ErrorBoundary";
 
 function App() {
@@ -58,7 +57,7 @@ function App() {
             <footer className="main-footer">
                 <FooterMenu isLoggedIn={isLoggedIn} userName={userName} />
             </footer>
-            {!isLoggedIn && <PopupContainer />}
+            {/*{!isLoggedIn && <PopupContainer />}*/}
         </div>
     );
 }
