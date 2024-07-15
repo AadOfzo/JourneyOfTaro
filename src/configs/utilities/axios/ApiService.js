@@ -71,6 +71,7 @@ const ApiService = {
             const response = await api.get(`/users/${userId}/image`, {
                 responseType: 'arraybuffer'
             });
+            console.log(response);
             if (response.status === 200) {
                 const imageData = Buffer.from(response.data, 'binary').toString('base64');
                 const mimeType = response.headers['content-type'];

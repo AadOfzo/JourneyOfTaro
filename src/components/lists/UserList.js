@@ -65,6 +65,7 @@ function UserList() {
 
     const getUserImage = (userId) => {
         const userImage = images.find(img => img.userId === userId);
+        console.log(userImage);
         if (userImage && userImage.imageData) {
             return <StyledUserImage src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />;
         } else {
@@ -84,7 +85,7 @@ function UserList() {
                         <React.Fragment key={user.userId}>
                             <GlowingRow onClick={() => toggleExpand(user.userId)}>
                                 <td>
-                                    {getUserImage(user.userId)}
+                                    <ImageForm onImageUploaded={() => fetchUsersAndImages()} />;
                                 </td>
                                 <td>{user.userId}</td>
                                 <td>{user.username}</td>

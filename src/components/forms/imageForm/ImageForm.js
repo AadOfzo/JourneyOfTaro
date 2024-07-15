@@ -39,7 +39,7 @@ const ImageForm = ({ onImageUploaded }) => {
             if (onImageUploaded) {
                 onImageUploaded();
             }
-            setFile(null);
+            // setFile(null);
             setLoading(false);
             setUploaded(true); // Set the uploaded state to true after successful upload
         } catch (error) {
