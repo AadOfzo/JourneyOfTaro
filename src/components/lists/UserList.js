@@ -49,7 +49,6 @@ function UserList() {
         setExpandedUserId(prevState => (prevState === userId ? null : userId));
     };
 
-
     const grantAdminPrivilege = async (username) => {
         try {
             await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority: 'ROLE_ADMIN' }, {

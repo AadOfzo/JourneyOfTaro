@@ -8,7 +8,7 @@ function LoginPage() {
 
     return (
 
-        <div>
+        <div className="page-menus-container">
             <Login/>
             <UserList/>
             {/*<LoginMenu/>*/}
