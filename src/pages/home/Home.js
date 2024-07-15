@@ -14,26 +14,27 @@ function Home() {
             <main className="pages-main-container">
 
                 <div className="page-menus-container">
+
                     <PageMenu
                         pageImage={OutlineLogo}
-                        pageName="Music"
-                        pageItemOne="Releases"
-                        pageItemTwo="Demo Upload"
+                        pageName="Images"
+                        // pageItemOne="Global Elements"
+                        // pageItemTwo="Javanese Gamelan"
+                        // pageItemThree="DigiGam"
                     />
 
                     <PageMenu
                         pageImage={GongLogo}
-                        pageName="Samples"
-                        pageItemOne="Global Elements"
-                        pageItemTwo="Javanese Gamelan"
-                        pageItemThree="DigiGam"
+                        pageName="Music"
+                        // pageItemOne="Releases"
+                        // pageItemTwo="Demo Upload"
                     />
 
                     <PageMenu
                         pageImage={FaceLogo}
                         pageName="About"
-                        pageItemOne="Projects"
-                        pageItemTwo="Work"
+                        pageItemOne="Unused components"
+                        // pageItemTwo="Work"
                     />
 
                 </div>
