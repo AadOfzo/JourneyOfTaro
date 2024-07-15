@@ -1,31 +1,31 @@
+// App.js
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { AuthProvider, useAuth } from "./components/authentication/Auth";
 import NavBar2 from './components/NavBar2/NavBar2';
 import FooterMenu from './components/footer/FooterMenu';
-import { fetchUserDetails, handleLogout } from './configs/utilities/AuthorisationUtilities';
 import PageRoutes from './configs/routes/PageRoutes';
 import ComponentRoutes from './configs/routes/ComponentRoutes';
 import AppRoutes from './configs/routes/AppRoutes';
-import PopupContainer from "./components/popup/PopupContainer";
+import { handleLogout } from "./configs/utilities/AuthorisationUtilities";
+import ApiService from "./configs/utilities/axios/ApiService";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user, token, login, logout } = useAuth(); // Access user, token, login, and logout from useAuth
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('visitor'); // Default role is visitor
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-
         const fetchUserData = async () => {
             try {
                 if (token) {
-                    const userDetails = await fetchUserDetails(token, setUserName, setUserRole);
-                    setIsLoggedIn(true);
+                    const userDetails = await ApiService.fetchUserDetails();
+                    setUserName(userDetails.username);
+                    setUserRole(userDetails.role);
                 } else {
                     setUserName('');
                     setUserRole('visitor');
-                    setIsLoggedIn(false);
                 }
             } catch (error) {
                 console.error('Error fetching user details:', error);
@@ -33,28 +33,31 @@ function App() {
         };
 
         fetchUserData();
-    }, []);
+    }, [token]);
 
     return (
         <div className="main-outer-container">
             <NavBar2
-                isLoggedIn={isLoggedIn}
+                isLoggedIn={!!token}
                 userRole={userRole}
-                handleLogout={() => handleLogout(setIsLoggedIn, setUserName, setUserRole)}
+                handleLogout={() => handleLogout(setUserName, setUserRole)}
             />
             <div className="main-content-container">
                 <Routes>
                     <Route path="/*" element={<PageRoutes />} />
                     <Route path="/*" element={<ComponentRoutes />} />
-                    <Route path="/*" element={<AppRoutes isLoggedIn={isLoggedIn} userRole={userRole} />} />
+                    <Route path="/*" element={<AppRoutes isLoggedIn={!!token} userRole={userRole} />} />
                 </Routes>
             </div>
             <footer className="main-footer">
-                <FooterMenu isLoggedIn={isLoggedIn} userName={userName} />
+                <FooterMenu isLoggedIn={!!token} userName={userName} />
             </footer>
-            {/*{!isLoggedIn && <PopupContainer />}*/}
         </div>
     );
 }
 
-export default App;
+export default () => (
+    <AuthProvider>
+        <App />
+    </AuthProvider>
+);

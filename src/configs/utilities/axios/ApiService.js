@@ -7,7 +7,6 @@ const api = axios.create({
     }
 });
 
-// Include the token in the headers
 api.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token'); // Get the token from localStorage
@@ -22,6 +21,15 @@ api.interceptors.request.use(
 );
 
 const ApiService = {
+    async authenticate(username, password) {
+        try {
+            const response = await api.post('/authenticate', { username, password });
+            return response.data; // Assuming your backend returns a token
+        } catch (error) {
+            throw error;
+        }
+    },
+
     async fetchUserDetails() {
         try {
             const apiKey = await this.fetchApiKey(); // Fetch API key from user
