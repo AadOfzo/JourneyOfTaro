@@ -1,16 +1,57 @@
-import api from "./api";
+import axios from "axios";
+
+const api = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+// Include the token in the headers
+api.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token'); // Get the token from localStorage
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
 const ApiService = {
+    async fetchUserDetails() {
+        try {
+            const apiKey = await this.fetchApiKey(); // Fetch API key from user
+            const response = await axios.get(`/users/apikey/${apiKey}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + apiKey
+                }
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
 
-    // Images
+    async fetchApiKey() {
+        const apiKey = localStorage.getItem('apiKey'); // Get API key from localStorage
+        if (!apiKey) {
+            throw new Error('API key not found in localStorage');
+        }
+        return apiKey;
+    },
+
     async uploadImage(formData) {
         return await api.post('/fileUpload', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
     },
 
-    async fetchImages() {
-        return await api.get('/images');
+    fetchImages: async () => {
+        return api.get('/images');
     },
 
     async deleteImage(id) {
@@ -20,7 +61,7 @@ const ApiService = {
     async getImageFromUser(userId) {
         try {
             const response = await api.get(`/users/${userId}/image`, {
-                responseType: 'arraybuffer' // Ensure response is treated as binary data
+                responseType: 'arraybuffer'
             });
             if (response.status === 200) {
                 const imageData = Buffer.from(response.data, 'binary').toString('base64');
@@ -30,11 +71,10 @@ const ApiService = {
             throw new Error(`Failed to fetch image for user ${userId}. Status: ${response.status}`);
         } catch (error) {
             console.error(`Error fetching image for user ${userId}:`, error);
-            throw error; // Rethrow the error to be handled by the caller (e.g., UserList component)
+            throw error;
         }
     },
 
-    // Songs
     async fetchSongs() {
         return await api.get('/songs');
     },
@@ -53,7 +93,6 @@ const ApiService = {
         return await api.delete(`/songs/${id}`);
     },
 
-    // Song Collections
     async fetchSongCollections() {
         return await api.get('/songCollections');
     },
@@ -61,7 +100,6 @@ const ApiService = {
     async addSongToCollection(songId, collectionId) {
         return await api.post(`/songCollections/${collectionId}/songs`, [songId]);
     },
-
 };
 
 export default ApiService;

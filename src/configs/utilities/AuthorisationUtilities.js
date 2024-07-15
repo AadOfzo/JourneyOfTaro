@@ -1,8 +1,9 @@
 // Function to fetch user details from the backend
-// Function to fetch user details from the backend
+import ApiService from "./axios/ApiService";
+
 export const fetchUserDetails = async (token, setUserName, setUserRole) => {
     try {
-        const response = await fetch(`/users/apikey/${token}`);
+        const response = await ApiService.fetchUserDetails(token);
         if (!response.ok) {
             throw new Error('User details not found');
         }
@@ -18,8 +19,9 @@ export const fetchUserDetails = async (token, setUserName, setUserRole) => {
 
 // Function to handle user login
 export const handleLogin = (setIsLoggedIn) => {
+    const token = 'your_token_value'; // Replace with actual token value
+    localStorage.setItem('token', token);
     setIsLoggedIn(true);
-    localStorage.setItem('token', 'your_token_value');
 };
 
 // Function to handle user logout
