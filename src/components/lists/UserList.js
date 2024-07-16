@@ -4,7 +4,18 @@ import ImageForm from "../forms/imageForm/ImageForm";
 import ApiService from "../../configs/utilities/axios/ApiService";
 import {
     GlowingRow,
-    UserImage as StyledUserImage,
+    UserInfoContainer,
+    UserInfo,
+    ExpandableContent,
+    ExpandButton,
+    CenteredH2,
+    UserListContainer,
+    UserDetailsContainer,
+    UserDetail,
+    UserDetailLabel,
+    UserDetailValue,
+    ImageContainer,
+    Image
 } from './styles.UserList';
 
 function UserList() {
@@ -65,17 +76,20 @@ function UserList() {
 
     const getUserImage = (userId) => {
         const userImage = images.find(img => img.userId === userId);
-        console.log(userImage);
         if (userImage && userImage.imageData) {
-            return <StyledUserImage src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />;
+            return (
+                <ImageContainer>
+                    <Image src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />
+                </ImageContainer>
+            );
         } else {
-            return <ImageForm onImageUploaded={() => fetchUsersAndImages()} />;
+            return null; // No need to render ImageForm here
         }
     };
 
     return (
-        <div>
-            <h2>User List</h2>
+        <UserListContainer>
+            <CenteredH2>User List</CenteredH2>
             {loadingUsers ? (
                 <p>Loading...</p>
             ) : (
@@ -84,26 +98,57 @@ function UserList() {
                     {users.map(user => (
                         <React.Fragment key={user.userId}>
                             <GlowingRow onClick={() => toggleExpand(user.userId)}>
-                                <td>
-                                    <ImageForm onImageUploaded={() => fetchUsersAndImages()} />;
-                                </td>
+                                <td>{getUserImage(user.userId)}</td>
                                 <td>{user.userId}</td>
                                 <td>{user.username}</td>
                             </GlowingRow>
                             {expandedUserId === user.userId && (
                                 <tr>
                                     <td colSpan="3">
-                                        <div>
-                                            <p>Role: {user.roles}</p>
-                                            <p>API Key: {user.apikey}</p>
-                                            <p>First Name: {user.firstName}</p>
-                                            <p>Last Name: {user.lastName}</p>
-                                            <p>Country: {user.country}</p>
-                                            <p>Email: {user.email}</p>
-                                            <p>Artist Name: {user.artistName}</p>
-                                            <p>Songs: {user.songTitle}</p>
-                                            <button onClick={() => grantAdminPrivilege(user.username)}>Add Admin</button>
-                                        </div>
+                                        <UserDetailsContainer>
+                                            <ImageContainer>
+                                                <ImageForm onImageUploaded={() => fetchUsersAndImages()} />
+                                            </ImageContainer>
+                                            <UserInfoContainer>
+                                                <UserInfo>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>Role:</UserDetailLabel>
+                                                        <UserDetailValue>{user.roles}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>API Key:</UserDetailLabel>
+                                                        <UserDetailValue>{user.apikey}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>First Name:</UserDetailLabel>
+                                                        <UserDetailValue>{user.firstName}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>Last Name:</UserDetailLabel>
+                                                        <UserDetailValue>{user.lastName}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>Country:</UserDetailLabel>
+                                                        <UserDetailValue>{user.country}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>Email:</UserDetailLabel>
+                                                        <UserDetailValue>{user.email}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>Artist Name:</UserDetailLabel>
+                                                        <UserDetailValue>{user.artistName}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <UserDetail>
+                                                        <UserDetailLabel>Songs:</UserDetailLabel>
+                                                        <UserDetailValue>{user.songTitle}</UserDetailValue>
+                                                    </UserDetail>
+                                                    <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>
+                                                        Add Admin
+                                                    </ExpandButton>
+                                                </UserInfo>
+                                            </UserInfoContainer>
+                                        </UserDetailsContainer>
                                     </td>
                                 </tr>
                             )}
@@ -112,7 +157,7 @@ function UserList() {
                     </tbody>
                 </table>
             )}
-        </div>
+        </UserListContainer>
     );
 }
 

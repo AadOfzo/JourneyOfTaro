@@ -31,6 +31,15 @@ const ApiService = {
         }
     },
 
+    async createUser(formData) {
+        try {
+            const response = await api.post('/users', formData);
+            return response.data; // Assuming backend returns the created user object
+        } catch (error) {
+            throw error;
+        }
+    },
+
     async fetchUserDetails() {
         try {
             const response = await api.get('/user/details');
