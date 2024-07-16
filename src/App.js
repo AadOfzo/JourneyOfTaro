@@ -1,19 +1,19 @@
+// App.js
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AuthProvider, useAuth } from "./components/authentication/Auth";
+import { AuthProvider, useAuth, handleLogout } from "./components/authentication/Auth"; // Import handleLogout
 import NavBar2 from './components/NavBar2/NavBar2';
 import FooterMenu from './components/footer/FooterMenu';
 import PageRoutes from './configs/routes/PageRoutes';
 import ComponentRoutes from './configs/routes/ComponentRoutes';
 import AppRoutes from './configs/routes/AppRoutes';
-import { handleLogout } from "./configs/utilities/AuthorisationUtilities";
 import ApiService from "./configs/utilities/axios/ApiService";
 
 function App() {
-    const { user, token, login, logout } = useAuth(); // Access user, token, login, and logout from useAuth
+    const { user, token, login, logout } = useAuth();
     const [userName, setUserName] = useState('');
-    const [userRole, setUserRole] = useState('visitor'); // Default role is visitor
+    const [userRole, setUserRole] = useState('visitor');
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -39,7 +39,7 @@ function App() {
             <NavBar2
                 isLoggedIn={!!token}
                 userRole={userRole}
-                handleLogout={() => handleLogout(setUserName, setUserRole)}
+                handleLogout={() => handleLogout(setUserName, setUserRole)} // Use handleLogout from useAuth context
             />
             <div className="main-content-container">
                 <Routes>

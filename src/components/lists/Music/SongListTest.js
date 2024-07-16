@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ApiServices from "../../../configs/utilities/ApiServices"; // Assuming correct import path
+import ApiService from "../../../configs/utilities/axios/ApiService";
 import {
     SongContainer,
     SongListContainer,
@@ -8,12 +8,12 @@ import {
     ArtistName,
     AudioPlayerContainer,
     SongListItem,
-} from "./styles.SongList"; // Adjust import path as per your project structure
+} from "./styles.SongList";
 import {
     SongActionButtons,
     SongAddButton,
     SongDeleteButton,
-} from "../../buttons/styles.Buttons"; // Adjust import path as per your project structure
+} from "../../buttons/styles.Buttons";
 
 function SongListTest() {
     const [songs, setSongs] = useState([]);
@@ -26,8 +26,8 @@ function SongListTest() {
         const fetchData = async () => {
             try {
                 const [songsResponse, collectionsResponse] = await Promise.all([
-                    ApiServices.fetchSongs(),
-                    ApiServices.fetchSongCollections()
+                    ApiService.fetchSongs(),
+                    ApiService.fetchSongCollections()
                 ]);
                 setSongs(songsResponse);
                 setSongCollections(collectionsResponse);
@@ -41,7 +41,7 @@ function SongListTest() {
 
     const handleAddSong = async (id) => {
         try {
-            await ApiServices.addSong(id);
+            await ApiService.addSong(id);
             setReload(!reload);
         } catch (error) {
             console.error('Error adding song:', error);
@@ -50,7 +50,7 @@ function SongListTest() {
 
     const handleDelete = async (id) => {
         try {
-            await ApiServices.deleteSong(id);
+            await ApiService.deleteSong(id);
             setReload(!reload);
         } catch (error) {
             console.error('Error deleting song:', error);
@@ -59,7 +59,7 @@ function SongListTest() {
 
     const handleAddSongToCollection = async (songId, collectionId) => {
         try {
-            await ApiServices.addSongToCollection(songId, collectionId);
+            await ApiService.addSongToCollection(songId, collectionId);
             setMessage('Song added to collection successfully.');
             setReload(!reload);
         } catch (error) {

@@ -21,6 +21,7 @@ api.interceptors.request.use(
 );
 
 const ApiService = {
+    // Users endpoint api calls
     async authenticate(username, password) {
         try {
             const response = await api.post('/authenticate', { username, password });
@@ -30,29 +31,28 @@ const ApiService = {
         }
     },
 
-    async fetchUserId() {
-        const userId = localStorage.getItem('userId'); // Get userId key from localStorage
-        if (!userId) {
-            throw new Error('API key not found in localStorage');
-        }
-        return userId;
-    },
-
-    async fetchApiKey() {
-        const apiKey = localStorage.getItem('apiKey'); // Get API key from localStorage
-        if (!apiKey) {
-            throw new Error('API key not found in localStorage');
-        }
-        return apiKey;
-    },
-
     async fetchUserDetails() {
         try {
-            const userId = await this.fetchUserId(); // Fetch API key from user
-            const response = await axios.get(`/users/${userId}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + userId
-                }
+            const response = await api.get('/user/details');
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    async grantAdminPrivilege(username) {
+        try {
+            const response = await api.put(`/users/${username}/grant-admin`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    async updateArtistName(userId, artistName) {
+        try {
+            const response = await api.put(`/users/${userId}/artistName`, null, {
+                params: { artistName }
             });
             return response.data;
         } catch (error) {
@@ -60,6 +60,16 @@ const ApiService = {
         }
     },
 
+    async deleteUser(username) {
+        try {
+            const response = await api.delete(`/users/${username}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Images endpoint api calls
     async uploadImage(formData) {
         return await api.post('/fileUpload', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -72,6 +82,22 @@ const ApiService = {
 
     async deleteImage(id) {
         return await api.delete(`/images/${id}`);
+    },
+
+    async addImageToUser(userId, file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('userName', 'yourUserName'); // Adjust based on your controller
+        try {
+            const response = await api.post(`/fileUpload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     async getImageFromUser(userId) {
@@ -92,6 +118,7 @@ const ApiService = {
         }
     },
 
+    // Songs endpoint api calls
     async fetchSongs() {
         return await api.get('/songs');
     },

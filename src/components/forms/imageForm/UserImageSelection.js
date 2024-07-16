@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ApiService from "../../../configs/utilities/axios/ApiService";
 import ImageGallery from "../../images/ImageGallery";
-import api from "../../../configs/utilities/axios/api";
 
 const UserImageSelection = ({ userId, onImageSelected }) => {
     const [selectedImage, setSelectedImage] = useState(null);

@@ -112,8 +112,6 @@ function UserList() {
                     </tbody>
                 </table>
             )}
-            {errorUsers && <p>{errorUsers}</p>}
-            {errorImages && <p>{errorImages}</p>}
         </div>
     );
 }

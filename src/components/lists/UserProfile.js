@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import ApiService from "../../configs/utilities/axios/ApiService";
+import {
+    UserInfoContainer,
+    UserInfo,
+    UserDetailLabel,
+    UserDetailValue,
+    ImageContainer,
+    Image,
+} from './styles.UserList'; // Import appropriate styles
 
 const UserProfile = ({ userId }) => {
     const [userData, setUserData] = useState(null);
@@ -8,11 +16,13 @@ const UserProfile = ({ userId }) => {
 
     useEffect(() => {
         const fetchUserData = async () => {
+            setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:8080/users/${userId}`);
-                setUserData(response.data); // Assuming the backend returns user data including image URL
+                const user = await ApiService.getUserById(userId);
+                setUserData(user);
                 setLoading(false);
             } catch (error) {
+                console.error('Error fetching user data:', error);
                 setError('Failed to fetch user data.');
                 setLoading(false);
             }
@@ -30,23 +40,39 @@ const UserProfile = ({ userId }) => {
     }
 
     return (
-        <div>
+        <UserInfoContainer>
             <h2>User Profile</h2>
             {userData && (
-                <div>
-                    <img src={userData.userimage} alt="User" style={{ width: '200px', height: '200px', borderRadius: '50%' }} />
+                <UserInfo>
+                    <ImageContainer>
+                        {userData.userimage && (
+                            <Image
+                                src={`data:${userData.userimage.mimeType};base64,${userData.userimage.imageData}`}
+                                alt="User"
+                            />
+                        )}
+                    </ImageContainer>
                     <div>
-                        <p><strong>Username:</strong> {userData.username}</p>
-                        <p><strong>First Name:</strong> {userData.firstname}</p>
-                        <p><strong>Last Name:</strong> {userData.lastname}</p>
-                        <p><strong>Date of Birth:</strong> {userData.dateofbirth}</p>
-                        <p><strong>Country:</strong> {userData.country}</p>
-                        <p><strong>Email:</strong> {userData.email}</p>
-                        <p><strong>Artist Name:</strong> {userData.artistname}</p>
+                        <UserDetailLabel>Username:</UserDetailLabel>
+                        <UserDetailValue>{userData.username}</UserDetailValue>
+                        <UserDetailLabel>First Name:</UserDetailLabel>
+                        <UserDetailValue>{userData.firstName}</UserDetailValue>
+                        <UserDetailLabel>Last Name:</UserDetailLabel>
+                        <UserDetailValue>{userData.lastName}</UserDetailValue>
+                        <UserDetailLabel>Date of Birth:</UserDetailLabel>
+                        <UserDetailValue>{userData.dateOfBirth}</UserDetailValue>
+                        <UserDetailLabel>Country:</UserDetailLabel>
+                        <UserDetailValue>{userData.country}</UserDetailValue>
+                        <UserDetailLabel>Email:</UserDetailLabel>
+                        <UserDetailValue>{userData.email}</UserDetailValue>
+                        <UserDetailLabel>Artist Name:</UserDetailLabel>
+                        <UserDetailValue>{userData.artistName}</UserDetailValue>
+                        <UserDetailLabel>Songs:</UserDetailLabel>
+                        <UserDetailValue>{userData.songTitle}</UserDetailValue>
                     </div>
-                </div>
+                </UserInfo>
             )}
-        </div>
+        </UserInfoContainer>
     );
 };
 
