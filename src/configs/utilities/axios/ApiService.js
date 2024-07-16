@@ -30,18 +30,12 @@ const ApiService = {
         }
     },
 
-    async fetchUserDetails() {
-        try {
-            const apiKey = await this.fetchApiKey(); // Fetch API key from user
-            const response = await axios.get(`/users/apikey/${apiKey}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + apiKey
-                }
-            });
-            return response.data;
-        } catch (error) {
-            throw error;
+    async fetchUserId() {
+        const userId = localStorage.getItem('userId'); // Get userId key from localStorage
+        if (!userId) {
+            throw new Error('API key not found in localStorage');
         }
+        return userId;
     },
 
     async fetchApiKey() {
@@ -50,6 +44,20 @@ const ApiService = {
             throw new Error('API key not found in localStorage');
         }
         return apiKey;
+    },
+
+    async fetchUserDetails() {
+        try {
+            const userId = await this.fetchUserId(); // Fetch API key from user
+            const response = await axios.get(`/users/${userId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + userId
+                }
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     async uploadImage(formData) {

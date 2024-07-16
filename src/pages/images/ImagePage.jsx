@@ -9,7 +9,8 @@ import ImageListBase64 from "../../components/images/ImageListBase64";
 import ImageGalleryWithUrls from "../../components/images/ImageGalleryWithUrls";
 
 function ImagePage() {
-    return (<main className="pages-main-container">
+    return (
+        <div className="pages-main-container">
         <SImagePage>
             <ImageForm/>
             {/*<ImageListBase64/>*/}
@@ -18,7 +19,7 @@ function ImagePage() {
             {/*<ImageGalleryWithUrls/>*/}
             {/*<ImageHandler/>*/}
         </SImagePage>
-    </main>);
+    </div>);
 }
 
 export default ImagePage;
