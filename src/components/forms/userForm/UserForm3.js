@@ -5,6 +5,7 @@ import SUserForm from './styles.UserForm';
 import ImageForm from "../imageForm/ImageForm";
 import UserProfile from "../../lists/UserProfile";
 import ApiService from "../../../configs/utilities/axios/ApiService";
+import CountryMenu from "../../countryMenu/CountryMenu";
 
 const UserForm3 = () => {
     const navigate = useNavigate();
@@ -23,7 +24,6 @@ const UserForm3 = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [showImageForm, setShowImageForm] = useState(false);
-    const [userCreated, setUserCreated] = useState(false);
     const [createdUsername, setCreatedUsername] = useState('');
     const [createdUserId, setCreatedUserId] = useState(null);
 
@@ -35,23 +35,43 @@ const UserForm3 = () => {
         e.preventDefault();
         try {
             const response = await ApiService.createUser(formData);
-            setSuccessMessage('User created successfully.');
-            setShowPopup(true);
-            setCreatedUsername(formData.username);
-            setCreatedUserId(response.data.id); // Store the user ID from the backend response
-            setFormData({
-                username: '',
-                password: '',
-                firstname: '',
-                lastname: '',
-                dateofbirth: '',
-                country: '',
-                email: '',
-                artistname: '',
-            });
-            setUserCreated(true);
+            console.log('User creation response:', response); // Log the response
+
+            if (response && response.data && response.data.id) {
+                setSuccessMessage('User created successfully.');
+                setShowPopup(true);
+                setCreatedUsername(formData.username);
+                setCreatedUserId(response.data.id); // Store the user ID from the backend response
+                setFormData({
+                    username: '',
+                    password: '',
+                    firstname: '',
+                    lastname: '',
+                    dateofbirth: '',
+                    country: '',
+                    email: '',
+                    artistname: '',
+                });
+                // Remove setUserCreated(true); if not needed
+            } else {
+                setErrorMessage('Failed to create user. Unexpected response format.');
+            }
         } catch (error) {
-            setErrorMessage('Failed to create user. Please try again.');
+            // Handle error appropriately
+            console.error('Error creating user:', error);
+            if (error.response) {
+                // Handle server response error
+                console.error('Server responded with:', error.response.data);
+                setErrorMessage(`Failed to create user. ${error.response.data.message || 'Please try again.'}`);
+            } else if (error.request) {
+                // Handle no response from server
+                console.error('No response from server:', error.request);
+                setErrorMessage('Failed to create user. No response from server.');
+            } else {
+                // Handle other errors
+                console.error('Error creating user:', error.message);
+                setErrorMessage(`Failed to create user. ${error.message}`);
+            }
         }
     };
 
@@ -74,7 +94,6 @@ const UserForm3 = () => {
     const handleImageUploaded = () => {
         console.log("Image uploaded: Showing user profile");
         setShowImageForm(false); // Hide the image form after upload
-        setUserCreated(true); // Show the user profile
     };
 
     return (
@@ -85,13 +104,13 @@ const UserForm3 = () => {
                     onYes={handleYes} // Show image upload form on 'Yes'
                     onNo={handleNo}
                 />
-            ) : showImageForm ? (
-                createdUserId && <ImageForm userId={createdUserId} onImageUploaded={handleImageUploaded} /> // Pass user ID to ImageForm only if it's defined
-            ) : userCreated ? (
+            ) : showImageForm && createdUserId ? ( // Ensure createdUserId is truthy before rendering ImageForm
+                <ImageForm userId={createdUserId} onImageUploaded={handleImageUploaded} />
+            ) : createdUserId ? ( // Show user profile if createdUserId is set and image form is not displayed
                 <UserProfile username={createdUsername} />
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <div>
+                    <div className="form-group">
                         <label>Username:</label>
                         <input
                             type="text"
@@ -102,17 +121,18 @@ const UserForm3 = () => {
                             autoComplete="username"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Password:</label>
                         <input
                             type="password"
                             name="password"
+                            value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                             placeholder="Password"
                             autoComplete="current-password"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>First name:</label>
                         <input
                             type="text"
@@ -123,7 +143,7 @@ const UserForm3 = () => {
                             autoComplete="given-name"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Last name:</label>
                         <input
                             type="text"
@@ -134,7 +154,7 @@ const UserForm3 = () => {
                             autoComplete="family-name"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Date of birth:</label>
                         <input
                             type="date"
@@ -144,18 +164,11 @@ const UserForm3 = () => {
                             autoComplete="birthday"
                         />
                     </div>
-                    <div>
-                        <label>Country:</label>
-                        <input
-                            type="text"
-                            name="country"
-                            value={formData.country}
-                            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                            placeholder="Enter country"
-                            autoComplete="country"
-                        />
-                    </div>
-                    <div>
+                    <CountryMenu
+                        selectedCountry={formData.country}
+                        onCountryChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                    />
+                    <div className="form-group">
                         <label>Email:</label>
                         <input
                             type="email"
@@ -166,7 +179,7 @@ const UserForm3 = () => {
                             autoComplete="email"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Artist name:</label>
                         <input
                             type="text"

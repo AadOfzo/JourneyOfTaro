@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
 const SUserForm = styled.div`
-  //display: flex;
-  //flex-direction: column;
-
-
   *, *::before, *::after {
     box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
   }
 
   .success-message {
@@ -29,48 +27,55 @@ const SUserForm = styled.div`
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-evenly;
-    align-items: ;
     padding: 0.2rem;
-    //margin: 0.2rem;
 
     p {
-      font-size: 1.5rem;
+      margin: 1.2rem;
+      font-size: 1.2rem;
+      border-bottom: solid 2px var(--testColorOne);
     }
 
     label {
-      font-family: 'Poppins', 'Arial', sans-serif;
-      padding-right: 1.5rem;
+      //padding-right: 1.5rem;
       text-align: left;
       margin-right: auto;
     }
 
-    input {
+    input, select {
       margin: 12px;
       width: 300px;
       appearance: auto;
       padding: 12px;
       border-radius: 3px;
-      box-shadow: inset 0 0 10px rgb(167, 24, 24);
+      //box-shadow: inset 0 0 10px rgb(167, 24, 24);
 
-      input:focus::placeholder {
+      &:focus::placeholder {
         color: transparent;
       }
 
-      input::placeholder {
-        color: var(--testColorOne);
+      &::placeholder {
+        color: gray;
       }
-      
     }
 
     button {
       height: 2rem;
-      width: 100%;
+      width: 360px;
       font-family: 'Julius Sans One', sans-serif;
       font-size: 1.5rem;
       background-color: var(--secondary);
     }
-  }
 
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+
+      label {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
 `;
 
 export default SUserForm;
