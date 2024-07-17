@@ -47,7 +47,6 @@ const SUserForm = styled.div`
       appearance: auto;
       padding: 12px;
       border-radius: 3px;
-      //box-shadow: inset 0 0 10px rgb(167, 24, 24);
 
       &:focus::placeholder {
         color: transparent;
