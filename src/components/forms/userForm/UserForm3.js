@@ -25,23 +25,22 @@ const UserForm3 = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [showImageForm, setShowImageForm] = useState(false);
     const [createdUsername, setCreatedUsername] = useState('');
-    const [createdUserId, setCreatedUserId] = useState(null);
+    const [jwtToken, setJwtToken] = useState('');
 
     useEffect(() => {
-        console.log("createdUserId updated:", createdUserId);
-    }, [createdUserId]);
+        console.log("JWT token:", jwtToken);
+    }, [jwtToken]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await ApiService.createUser(formData);
-            console.log('User creation response:', response); // Log the response
+            console.log('User creation response:', response);
 
-            if (response && response.data && response.data.id) {
+            if (response && response.status === 201) {
                 setSuccessMessage('User created successfully.');
                 setShowPopup(true);
                 setCreatedUsername(formData.username);
-                setCreatedUserId(response.data.id); // Store the user ID from the backend response
                 setFormData({
                     username: '',
                     password: '',
@@ -52,23 +51,18 @@ const UserForm3 = () => {
                     email: '',
                     artistname: '',
                 });
-                // Remove setUserCreated(true); if not needed
             } else {
                 setErrorMessage('Failed to create user. Unexpected response format.');
             }
         } catch (error) {
-            // Handle error appropriately
             console.error('Error creating user:', error);
             if (error.response) {
-                // Handle server response error
                 console.error('Server responded with:', error.response.data);
                 setErrorMessage(`Failed to create user. ${error.response.data.message || 'Please try again.'}`);
             } else if (error.request) {
-                // Handle no response from server
                 console.error('No response from server:', error.request);
                 setErrorMessage('Failed to create user. No response from server.');
             } else {
-                // Handle other errors
                 console.error('Error creating user:', error.message);
                 setErrorMessage(`Failed to create user. ${error.message}`);
             }
@@ -79,21 +73,41 @@ const UserForm3 = () => {
         navigate('/');
     };
 
-    const handleYes = () => {
-        console.log("Yes clicked: Showing Image Form");
+    const handleYes = async () => {
         setShowPopup(false);
-        setShowImageForm(true);
+        try {
+            const tokenResponse = await ApiService.obtainJwtToken(createdUsername, formData.password);
+            console.log('JWT Token response:', tokenResponse);
+
+            if (tokenResponse && tokenResponse.data && tokenResponse.data.jwtToken) {
+                setJwtToken(tokenResponse.data.jwtToken);
+                setShowImageForm(true);
+            } else {
+                setErrorMessage('Failed to obtain JWT token.');
+            }
+        } catch (error) {
+            console.error('Error obtaining JWT token:', error);
+            if (error.response) {
+                console.error('Server responded with:', error.response.data);
+                setErrorMessage(`Failed to obtain JWT token. ${error.response.data.message || 'Please try again.'}`);
+            } else if (error.request) {
+                console.error('No response from server:', error.request);
+                setErrorMessage('Failed to obtain JWT token. No response from server.');
+            } else {
+                console.error('Error obtaining JWT token:', error.message);
+                setErrorMessage(`Failed to obtain JWT token. ${error.message}`);
+            }
+        }
     };
 
     const handleNo = () => {
-        console.log("No clicked: Navigating to login");
         setShowPopup(false);
         handleLogin();
     };
 
     const handleImageUploaded = () => {
-        console.log("Image uploaded: Showing user profile");
-        setShowImageForm(false); // Hide the image form after upload
+        setShowImageForm(false);
+        // Optionally, redirect or show user profile after image upload
     };
 
     return (
@@ -101,13 +115,15 @@ const UserForm3 = () => {
             {showPopup ? (
                 <PopUp1
                     message="Thank you for signing up! Would you like to login or upload a profile image?"
-                    onYes={handleYes} // Show image upload form on 'Yes'
+                    onYes={handleYes}
                     onNo={handleNo}
                 />
-            ) : showImageForm && createdUserId ? ( // Ensure createdUserId is truthy before rendering ImageForm
-                <ImageForm userId={createdUserId} onImageUploaded={handleImageUploaded} />
-            ) : createdUserId ? ( // Show user profile if createdUserId is set and image form is not displayed
-                <UserProfile username={createdUsername} />
+            ) : showImageForm ? (
+                <ImageForm
+                    jwtToken={jwtToken}
+                    userId={createdUsername} // Assuming userId can be used to identify user for image upload
+                    onImageUploaded={handleImageUploaded}
+                />
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">

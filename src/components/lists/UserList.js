@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ImageForm from "../forms/imageForm/ImageForm";
 import ApiService from "../../configs/utilities/axios/ApiService";
+import ImageForm from "../forms/imageForm/ImageForm";
 import {
     GlowingRow,
     UserInfoContainer,
     UserInfo,
-    ExpandableContent,
     ExpandButton,
     CenteredH2,
     UserListContainer,
@@ -15,44 +13,50 @@ import {
     UserDetailLabel,
     UserDetailValue,
     ImageContainer,
-    Image
-} from './styles.UserList';
+    Image,
+} from './styles.UserList'; // Adjust import based on your project structure
 
 function UserList() {
     const [users, setUsers] = useState([]);
     const [expandedUserId, setExpandedUserId] = useState(null);
-    const [loadingUsers, setLoadingUsers] = useState(false);
-    const [errorUsers, setErrorUsers] = useState(null);
+    const [loadingUsers, setLoadingUsers] = useState(false); // Correct state setter for loadingUsers
     const [images, setImages] = useState([]);
-    const [errorImages, setErrorImages] = useState(null);
 
     useEffect(() => {
-        fetchUsersAndImages();
+        fetchUsers();
     }, []);
 
-    const fetchUsersAndImages = async () => {
-        setLoadingUsers(true);
+    const fetchUsers = async () => {
+        setLoadingUsers(true); // Start loading indicator
         try {
-            const usersResponse = await axios.get('http://localhost:8080/users');
-            setUsers(usersResponse.data);
+            const usersResponse = await ApiService.fetchUsers();
+            setUsers(usersResponse.data || []); // Set users data
 
             // Fetch images for each user
-            const imagePromises = usersResponse.data.map(user =>
-                ApiService.getImageFromUser(user.userId)
-                    .then(response => ({
-                        userId: user.userId,
-                        imageData: response.data,
-                        mimeType: response.headers['content-type']
-                    }))
-            );
+            const imagePromises = usersResponse.data.map(user => fetchUserImage(user.userId));
             const fetchedImages = await Promise.all(imagePromises);
             setImages(fetchedImages);
         } catch (error) {
             console.error('Error fetching users and images:', error);
-            setErrorUsers('Error fetching users. Please try again later.');
-            setErrorImages('Error fetching images. Please try again later.');
         } finally {
-            setLoadingUsers(false);
+            setLoadingUsers(false); // Stop loading indicator
+        }
+    };
+
+    const fetchUserImage = async (userId) => {
+        try {
+            const imageData = await ApiService.getUserImage(userId);
+            return {
+                userId: userId,
+                imageData: imageData.imageData,
+                mimeType: imageData.mimeType
+            };
+        } catch (error) {
+            console.error(`Error fetching image for user ${userId}:`, error);
+            return {
+                userId: userId,
+                error: error.message
+            };
         }
     };
 
@@ -62,28 +66,39 @@ function UserList() {
 
     const grantAdminPrivilege = async (username) => {
         try {
-            await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority: 'ROLE_ADMIN' }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            fetchUsersAndImages(); // Refresh user list after updating privileges
+            await ApiService.grantAdminPrivilege(username);
+            fetchUsers(); // Refresh user list after updating privileges
         } catch (error) {
             console.error('Error granting admin privilege:', error);
         }
+    };
+
+    const handleImageUploaded = () => {
+        fetchUsers(); // Refresh user list after image upload
     };
 
     const getUserImage = (userId) => {
         const userImage = images.find(img => img.userId === userId);
         if (userImage && userImage.imageData) {
             return (
-                <ImageContainer>
+                <ImageContainer key={`image-${userId}`}>
                     <Image src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />
                 </ImageContainer>
             );
+        } else if (userImage && userImage.error) {
+            return (
+                <ImageContainer key={`image-${userId}`}>
+                    <p>Error loading image: {userImage.error}</p>
+                    {expandedUserId === userId && <ImageForm userId={userId} onImageUploaded={handleImageUploaded} />}
+                </ImageContainer>
+            );
         } else {
-            return null; // No need to render ImageForm here
+            return (
+                <ImageContainer key={`image-${userId}`}>
+                    <p>No image available</p>
+                    {expandedUserId === userId && <ImageForm userId={userId} onImageUploaded={handleImageUploaded} />}
+                </ImageContainer>
+            );
         }
     };
 
@@ -106,14 +121,11 @@ function UserList() {
                                 <tr>
                                     <td colSpan="3">
                                         <UserDetailsContainer>
-                                            <ImageContainer>
-                                                <ImageForm onImageUploaded={() => fetchUsersAndImages()} />
-                                            </ImageContainer>
                                             <UserInfoContainer>
                                                 <UserInfo>
                                                     <UserDetail>
                                                         <UserDetailLabel>Role:</UserDetailLabel>
-                                                        <UserDetailValue>{user.roles}</UserDetailValue>
+                                                        <UserDetailValue>{user.roles.join(', ')}</UserDetailValue>
                                                     </UserDetail>
                                                     <UserDetail>
                                                         <UserDetailLabel>API Key:</UserDetailLabel>
@@ -121,11 +133,11 @@ function UserList() {
                                                     </UserDetail>
                                                     <UserDetail>
                                                         <UserDetailLabel>First Name:</UserDetailLabel>
-                                                        <UserDetailValue>{user.firstName}</UserDetailValue>
+                                                        <UserDetailValue>{user.firstname}</UserDetailValue>
                                                     </UserDetail>
                                                     <UserDetail>
                                                         <UserDetailLabel>Last Name:</UserDetailLabel>
-                                                        <UserDetailValue>{user.lastName}</UserDetailValue>
+                                                        <UserDetailValue>{user.lastname}</UserDetailValue>
                                                     </UserDetail>
                                                     <UserDetail>
                                                         <UserDetailLabel>Country:</UserDetailLabel>
@@ -137,11 +149,7 @@ function UserList() {
                                                     </UserDetail>
                                                     <UserDetail>
                                                         <UserDetailLabel>Artist Name:</UserDetailLabel>
-                                                        <UserDetailValue>{user.artistName}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>Songs:</UserDetailLabel>
-                                                        <UserDetailValue>{user.songTitle}</UserDetailValue>
+                                                        <UserDetailValue>{user.artistname}</UserDetailValue>
                                                     </UserDetail>
                                                     <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>
                                                         Add Admin
