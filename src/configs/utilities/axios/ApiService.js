@@ -113,6 +113,37 @@ const ApiService = {
 
 
     // Image endpoints
+    async fetchImages() {
+        try {
+            const response = await api.get('/images');
+            return response.data || [];
+        } catch (error) {
+            console.error('Error fetching images:', error);
+            throw new Error('Failed to fetch images.');
+        }
+    },
+
+    async uploadImage(formData) {
+        try {
+            const response = await api.post('/fileUpload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            throw error;
+        }
+    },
+
+    async deleteImage(id) {
+        try {
+            await api.delete(`/images/${id}`);
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            throw error;
+        }
+    },
+
     async getUserImage(userId) {
         try {
             const response = await api.get(`/users/${userId}/images`, { responseType: 'arraybuffer' });

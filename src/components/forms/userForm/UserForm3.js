@@ -5,7 +5,6 @@ import SUserForm from './styles.UserForm';
 import ImageForm from "../imageForm/ImageForm";
 import UserProfile from "../../lists/UserProfile";
 import ApiService from "../../../configs/utilities/axios/ApiService";
-import CountryMenu from "../../countryMenu/CountryMenu";
 
 const UserForm3 = () => {
     const navigate = useNavigate();
@@ -25,47 +24,32 @@ const UserForm3 = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [showImageForm, setShowImageForm] = useState(false);
     const [createdUsername, setCreatedUsername] = useState('');
-    const [jwtToken, setJwtToken] = useState('');
+    const [createdUserId, setCreatedUserId] = useState(null);
 
     useEffect(() => {
-        console.log("JWT token:", jwtToken);
-    }, [jwtToken]);
+        console.log("createdUserId updated:", createdUserId);
+    }, [createdUserId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await ApiService.createUser(formData);
-            console.log('User creation response:', response);
-
-            if (response && response.status === 201) {
-                setSuccessMessage('User created successfully.');
-                setShowPopup(true);
-                setCreatedUsername(formData.username);
-                setFormData({
-                    username: '',
-                    password: '',
-                    firstname: '',
-                    lastname: '',
-                    dateofbirth: '',
-                    country: '',
-                    email: '',
-                    artistname: '',
-                });
-            } else {
-                setErrorMessage('Failed to create user. Unexpected response format.');
-            }
+            setSuccessMessage('User created successfully.');
+            setShowPopup(true);
+            setCreatedUsername(formData.username);
+            setCreatedUserId(response.data.id); // Store the user ID from the backend response
+            setFormData({
+                username: '',
+                password: '',
+                firstname: '',
+                lastname: '',
+                dateofbirth: '',
+                country: '',
+                email: '',
+                artistname: '',
+            });
         } catch (error) {
-            console.error('Error creating user:', error);
-            if (error.response) {
-                console.error('Server responded with:', error.response.data);
-                setErrorMessage(`Failed to create user. ${error.response.data.message || 'Please try again.'}`);
-            } else if (error.request) {
-                console.error('No response from server:', error.request);
-                setErrorMessage('Failed to create user. No response from server.');
-            } else {
-                console.error('Error creating user:', error.message);
-                setErrorMessage(`Failed to create user. ${error.message}`);
-            }
+            setErrorMessage('Failed to create user. Please try again.');
         }
     };
 
@@ -73,41 +57,21 @@ const UserForm3 = () => {
         navigate('/');
     };
 
-    const handleYes = async () => {
+    const handleYes = () => {
+        console.log("Yes clicked: Showing Image Form");
         setShowPopup(false);
-        try {
-            const tokenResponse = await ApiService.obtainJwtToken(createdUsername, formData.password);
-            console.log('JWT Token response:', tokenResponse);
-
-            if (tokenResponse && tokenResponse.data && tokenResponse.data.jwtToken) {
-                setJwtToken(tokenResponse.data.jwtToken);
-                setShowImageForm(true);
-            } else {
-                setErrorMessage('Failed to obtain JWT token.');
-            }
-        } catch (error) {
-            console.error('Error obtaining JWT token:', error);
-            if (error.response) {
-                console.error('Server responded with:', error.response.data);
-                setErrorMessage(`Failed to obtain JWT token. ${error.response.data.message || 'Please try again.'}`);
-            } else if (error.request) {
-                console.error('No response from server:', error.request);
-                setErrorMessage('Failed to obtain JWT token. No response from server.');
-            } else {
-                console.error('Error obtaining JWT token:', error.message);
-                setErrorMessage(`Failed to obtain JWT token. ${error.message}`);
-            }
-        }
+        setShowImageForm(true);
     };
 
     const handleNo = () => {
+        console.log("No clicked: Navigating to login");
         setShowPopup(false);
         handleLogin();
     };
 
     const handleImageUploaded = () => {
-        setShowImageForm(false);
-        // Optionally, redirect or show user profile after image upload
+        console.log("Image uploaded: Showing user profile");
+        setShowImageForm(false); // Hide the image form after upload
     };
 
     return (
@@ -115,18 +79,16 @@ const UserForm3 = () => {
             {showPopup ? (
                 <PopUp1
                     message="Thank you for signing up! Would you like to login or upload a profile image?"
-                    onYes={handleYes}
+                    onYes={handleYes} // Show image upload form on 'Yes'
                     onNo={handleNo}
                 />
-            ) : showImageForm ? (
-                <ImageForm
-                    jwtToken={jwtToken}
-                    userId={createdUsername} // Assuming userId can be used to identify user for image upload
-                    onImageUploaded={handleImageUploaded}
-                />
+            ) : showImageForm && createdUserId ? ( // Ensure createdUserId is truthy before rendering ImageForm
+                <ImageForm userId={createdUserId} onImageUploaded={handleImageUploaded} />
+            ) : createdUserId ? ( // Show user profile if createdUserId is set and image form is not displayed
+                <UserProfile username={createdUsername} />
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
+                    <div>
                         <label>Username:</label>
                         <input
                             type="text"
@@ -137,7 +99,7 @@ const UserForm3 = () => {
                             autoComplete="username"
                         />
                     </div>
-                    <div className="form-group">
+                    <div>
                         <label>Password:</label>
                         <input
                             type="password"
@@ -148,7 +110,7 @@ const UserForm3 = () => {
                             autoComplete="current-password"
                         />
                     </div>
-                    <div className="form-group">
+                    <div>
                         <label>First name:</label>
                         <input
                             type="text"
@@ -159,7 +121,7 @@ const UserForm3 = () => {
                             autoComplete="given-name"
                         />
                     </div>
-                    <div className="form-group">
+                    <div>
                         <label>Last name:</label>
                         <input
                             type="text"
@@ -170,7 +132,7 @@ const UserForm3 = () => {
                             autoComplete="family-name"
                         />
                     </div>
-                    <div className="form-group">
+                    <div>
                         <label>Date of birth:</label>
                         <input
                             type="date"
@@ -180,11 +142,18 @@ const UserForm3 = () => {
                             autoComplete="birthday"
                         />
                     </div>
-                    <CountryMenu
-                        selectedCountry={formData.country}
-                        onCountryChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    />
-                    <div className="form-group">
+                    <div>
+                        <label>Country:</label>
+                        <input
+                            type="text"
+                            name="country"
+                            value={formData.country}
+                            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                            placeholder="Enter country"
+                            autoComplete="country"
+                        />
+                    </div>
+                    <div>
                         <label>Email:</label>
                         <input
                             type="email"
@@ -195,7 +164,7 @@ const UserForm3 = () => {
                             autoComplete="email"
                         />
                     </div>
-                    <div className="form-group">
+                    <div>
                         <label>Artist name:</label>
                         <input
                             type="text"

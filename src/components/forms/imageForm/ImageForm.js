@@ -11,36 +11,40 @@ import {
     LoadingWheel
 } from './styles.ImageForm';
 
-const ImageForm = ({ userId, onImageUploaded }) => {
+const ImageForm = ({ onImageUploaded }) => {
     const [file, setFile] = useState(null);
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [uploaded, setUploaded] = useState(false);  // Define uploaded state
-    const [loading, setLoading] = useState(false);    // Define loading state
+    const [loading, setLoading] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+        setUploaded(false); // Reset the uploaded state when a new file is selected
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!file) {
-            setErrorMessage('Please select a file first.');
+            console.error("No file selected");
             return;
         }
 
-        setLoading(true); // Set loading to true before starting the upload
+        setLoading(true);
+
+        const formData = new FormData();
+        formData.append('file', file);
 
         try {
-            const response = await ApiService.addImageToUser(userId, file);
-            setSuccessMessage('Image uploaded successfully.');
-            setErrorMessage('');
-            setUploaded(true); // Set uploaded to true after successful upload
-            onImageUploaded(); // Notify parent component
+            await ApiService.uploadImage(formData);
+            if (onImageUploaded) {
+                onImageUploaded();
+            }
+            setFile(null);
+            setLoading(false);
+            setUploaded(true); // Set the uploaded state to true after successful upload
         } catch (error) {
-            setErrorMessage('Error uploading image: ' + error.message);
-        } finally {
-            setLoading(false); // Set loading to false after the upload is done
+            console.error('Error uploading image:', error);
+            setLoading(false);
         }
     };
 
