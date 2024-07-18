@@ -22,10 +22,10 @@ api.interceptors.request.use(
 
 const ApiService = {
     // Authentication endpoint
-    async authenticate(userid, username, password) {
+    async authenticate(username, password) {
         try {
-            const response = await api.post('/authenticate', { userid, username, password });
-            return response.data.token; // Assuming backend returns a token
+            const response = await api.post('/authenticate', { username, password });
+            return response.data;
         } catch (error) {
             throw new Error(`Error authenticating: ${error.message}`);
         }

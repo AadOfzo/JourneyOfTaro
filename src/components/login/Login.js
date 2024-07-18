@@ -15,8 +15,9 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { jwt } = await ApiService.authenticate(username, password);
-            login({ username }, jwt);
+            const response = await ApiService.authenticate(username, password);
+            const { token } = response;
+            login({ username }, token);
             setSuccessMessage('Login successful');
             navigate('/dashboard');
         } catch (error) {
