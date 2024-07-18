@@ -1,14 +1,20 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import SnavBar2 from './styles.navBar2';
 import { NavLink } from 'react-router-dom';
 import NavBarDropdown from "./NavBarDropdown";
+import { useAuth } from '../authentication/Auth';
 
-function NavBar2({ isLoggedIn, userRole, handleLogout }) {
+function NavBar2({ isLoggedIn, userRole }) {
     const navRef = useRef();
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const { logout } = useAuth();
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
+    };
+
+    const handleLogout = () => {
+        logout();
     };
 
     return (
@@ -46,7 +52,7 @@ function NavBar2({ isLoggedIn, userRole, handleLogout }) {
                                 </li>
                                 {userRole === 'ADMIN' && (
                                     <li>
-                                        <NavLink to="/admin" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                        <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                             Admin Panel
                                         </NavLink>
                                     </li>

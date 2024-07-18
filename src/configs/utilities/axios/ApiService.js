@@ -31,14 +31,6 @@ const ApiService = {
         }
     },
 
-    async getJwtToken(userid, username, password){
-        try {
-            const response = await api.post('/authenticate/token', {userid, username, password});
-            return response.data;
-        } catch (error) {
-            throw error
-        }
-    },
 
     // Users endpoints
     async fetchUsers() {
@@ -66,6 +58,20 @@ const ApiService = {
             return response.data;
         } catch (error) {
             throw new Error(`Error fetching user ${userId}: ${error.message}`);
+        }
+    },
+
+    fetchUserDetails: async (token) => {
+        try {
+            const response = await api.get('/users/${userId}', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+            throw error;
         }
     },
 

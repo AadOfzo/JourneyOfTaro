@@ -1,8 +1,7 @@
-// App.js
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AuthProvider, useAuth, handleLogout } from "./components/authentication/Auth"; // Import handleLogout
+import { AuthProvider, useAuth } from "./components/authentication/Auth";
 import NavBar2 from './components/NavBar2/NavBar2';
 import FooterMenu from './components/footer/FooterMenu';
 import PageRoutes from './configs/routes/PageRoutes';
@@ -11,7 +10,7 @@ import AppRoutes from './configs/routes/AppRoutes';
 import ApiService from "./configs/utilities/axios/ApiService";
 
 function App() {
-    const { user, token, login, logout } = useAuth();
+    const { user, token, logout } = useAuth();
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('visitor');
 
@@ -39,7 +38,7 @@ function App() {
             <NavBar2
                 isLoggedIn={!!token}
                 userRole={userRole}
-                handleLogout={() => handleLogout(setUserName, setUserRole)} // Use handleLogout from useAuth context
+                handleLogout={logout}
             />
             <div className="main-content-container">
                 <Routes>
