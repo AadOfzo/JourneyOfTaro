@@ -15,7 +15,7 @@ const UserImageSelection = ({ userId, onImageSelected }) => {
     const fetchUsers = async () => {
         setLoadingUsers(true);
         try {
-            const usersResponse = await api.get('http://localhost:8080/users');
+            const usersResponse = await ApiService.get('http://localhost:8080/users');
             setUsers(usersResponse.data);
         } catch (error) {
             console.error('Error fetching users:', error);

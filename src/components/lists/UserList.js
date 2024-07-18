@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import ApiService from "../../configs/utilities/axios/ApiService";
-import ImageForm from "../forms/imageForm/ImageForm";
 import {
     GlowingRow,
     UserInfoContainer,
     UserInfo,
+    ExpandableContent,
     ExpandButton,
     CenteredH2,
     UserListContainer,
@@ -14,49 +15,46 @@ import {
     UserDetailValue,
     ImageContainer,
     Image,
-} from './styles.UserList'; // Adjust import based on your project structure
+} from './styles.UserList';
+import ImageForm from "../forms/imageForm/ImageForm";
 
 function UserList() {
     const [users, setUsers] = useState([]);
     const [expandedUserId, setExpandedUserId] = useState(null);
-    const [loadingUsers, setLoadingUsers] = useState(false); // Correct state setter for loadingUsers
+    const [loadingUsers, setLoadingUsers] = useState(false);
+    const [errorUsers, setErrorUsers] = useState(null);
     const [images, setImages] = useState([]);
 
     useEffect(() => {
-        fetchUsers();
+        fetchUsersAndImages();
     }, []);
 
-    const fetchUsers = async () => {
-        setLoadingUsers(true); // Start loading indicator
+    const fetchUsersAndImages = async () => {
+        setLoadingUsers(true);
         try {
-            const usersResponse = await ApiService.fetchUsers();
-            setUsers(usersResponse.data || []); // Set users data
+            const usersResponse = await axios.get('http://localhost:8080/users');
+            setUsers(usersResponse.data);
 
             // Fetch images for each user
-            const imagePromises = usersResponse.data.map(user => fetchUserImage(user.userId));
+            const imagePromises = usersResponse.data.map(user =>
+                ApiService.getImageFromUser(user.userId)
+                    .then(response => ({
+                        userId: user.userId,
+                        imageData: response.data,
+                        mimeType: response.mimeType // Assuming you adjust the response structure
+                    }))
+                    .catch(error => ({
+                        userId: user.userId,
+                        error: error.message // Capture error if image fetch fails
+                    }))
+            );
             const fetchedImages = await Promise.all(imagePromises);
             setImages(fetchedImages);
         } catch (error) {
             console.error('Error fetching users and images:', error);
+            setErrorUsers('Error fetching users. Please try again later.');
         } finally {
-            setLoadingUsers(false); // Stop loading indicator
-        }
-    };
-
-    const fetchUserImage = async (userId) => {
-        try {
-            const imageData = await ApiService.getUserImage(userId);
-            return {
-                userId: userId,
-                imageData: imageData.imageData,
-                mimeType: imageData.mimeType
-            };
-        } catch (error) {
-            console.error(`Error fetching image for user ${userId}:`, error);
-            return {
-                userId: userId,
-                error: error.message
-            };
+            setLoadingUsers(false);
         }
     };
 
@@ -67,14 +65,10 @@ function UserList() {
     const grantAdminPrivilege = async (username) => {
         try {
             await ApiService.grantAdminPrivilege(username);
-            fetchUsers(); // Refresh user list after updating privileges
+            fetchUsersAndImages(); // Refresh user list after updating privileges
         } catch (error) {
             console.error('Error granting admin privilege:', error);
         }
-    };
-
-    const handleImageUploaded = () => {
-        fetchUsers(); // Refresh user list after image upload
     };
 
     const getUserImage = (userId) => {
@@ -89,14 +83,14 @@ function UserList() {
             return (
                 <ImageContainer key={`image-${userId}`}>
                     <p>Error loading image: {userImage.error}</p>
-                    {expandedUserId === userId && <ImageForm userId={userId} onImageUploaded={handleImageUploaded} />}
+                    <ImageForm userId={userId} /> {/* Render ImageForm if image fetch failed */}
                 </ImageContainer>
             );
         } else {
             return (
                 <ImageContainer key={`image-${userId}`}>
                     <p>No image available</p>
-                    {expandedUserId === userId && <ImageForm userId={userId} onImageUploaded={handleImageUploaded} />}
+                    <ImageForm userId={userId} /> {/* Render ImageForm if no image found */}
                 </ImageContainer>
             );
         }
