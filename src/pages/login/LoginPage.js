@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './Login.css'
 import Login from "../../components/login/Login";
 import UserList from "../../components/lists/UserList";
+import UserProfile from "../../components/lists/UserProfile";
 
 function LoginPage() {
     const [showLogin, setShowLogin] = useState(false);
@@ -9,20 +10,22 @@ function LoginPage() {
     return (
 
         <div className="page-menus-container">
-            <Login/>
-            <UserList/>
-            {/*<LoginMenu/>*/}
-            {/*<LoginPopupMainComponent/>*/}
+            <div className="login-page-container">
+                <Login/>
+                <UserProfile/>
+                <UserList/>
+                {/*<LoginMenu/>*/}
+                {/*<LoginPopupMainComponent/>*/}
 
-            {/*<div>*/}
-            {/*    <UserForm3/>*/}
-            {/*</div>*/}
+                {/*<div>*/}
+                {/*    <UserForm3/>*/}
+                {/*</div>*/}
 
-            {/*<div>*/}
-            {/*    <UserList/>*/}
-            {/*</div>*/}
+                {/*<div>*/}
+                {/*    <UserList/>*/}
+                {/*</div>*/}
+            </div>
         </div>
-
 
 
     );

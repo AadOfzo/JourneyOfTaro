@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import ApiService from "../../configs/utilities/axios/ApiService";
-import {
-    UserInfoContainer,
-    UserInfo,
-    UserDetailLabel,
-    UserDetailValue,
-    ImageContainer,
-    Image,
-} from './styles.UserList'; // Import appropriate styles
+import UserDetails from "../../configs/users/UserDetails";
+import ImageHandler from "../../configs/utilities/handlers/ImageHandler";
 
-const UserProfile = ({ userId }) => {
+const UserProfile = ({ grantAdminPrivilege }) => {
+    const { userId } = useParams(); // Get userId from route params
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -40,39 +36,14 @@ const UserProfile = ({ userId }) => {
     }
 
     return (
-        <UserInfoContainer>
-            <h2>User Profile</h2>
+        <div>
             {userData && (
-                <UserInfo>
-                    <ImageContainer>
-                        {userData.userimage && (
-                            <Image
-                                src={`data:${userData.userimage.mimeType};base64,${userData.userimage.imageData}`}
-                                alt="User"
-                            />
-                        )}
-                    </ImageContainer>
-                    <div>
-                        <UserDetailLabel>Username:</UserDetailLabel>
-                        <UserDetailValue>{userData.username}</UserDetailValue>
-                        <UserDetailLabel>First Name:</UserDetailLabel>
-                        <UserDetailValue>{userData.firstName}</UserDetailValue>
-                        <UserDetailLabel>Last Name:</UserDetailLabel>
-                        <UserDetailValue>{userData.lastName}</UserDetailValue>
-                        <UserDetailLabel>Date of Birth:</UserDetailLabel>
-                        <UserDetailValue>{userData.dateOfBirth}</UserDetailValue>
-                        <UserDetailLabel>Country:</UserDetailLabel>
-                        <UserDetailValue>{userData.country}</UserDetailValue>
-                        <UserDetailLabel>Email:</UserDetailLabel>
-                        <UserDetailValue>{userData.email}</UserDetailValue>
-                        <UserDetailLabel>Artist Name:</UserDetailLabel>
-                        <UserDetailValue>{userData.artistName}</UserDetailValue>
-                        <UserDetailLabel>Songs:</UserDetailLabel>
-                        <UserDetailValue>{userData.songTitle}</UserDetailValue>
-                    </div>
-                </UserInfo>
+                <>
+                    <UserDetails user={userData} grantAdminPrivilege={grantAdminPrivilege} />
+                    <ImageHandler userId={userId} />
+                </>
             )}
-        </UserInfoContainer>
+        </div>
     );
 };
 

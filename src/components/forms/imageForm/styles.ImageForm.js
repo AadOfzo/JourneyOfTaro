@@ -1,4 +1,3 @@
-// styles.ImageForm.js
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -40,7 +39,6 @@ const PlusIcon = styled.div`
   font-size: 16px;
   margin-right: 4px;
 `;
-
 
 const UploadPreviewImage = styled.img`
   max-width: 200px;
@@ -171,6 +169,27 @@ const ImageAddButton = styled.button`
   }
 `;
 
+// New Styled Components for ImageHandler
+const ImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const Image = styled.img`
+  max-width: 300px;
+  max-height: 300px;
+  border: 2px solid var(--secondary);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
 export {
     Container,
     Form,
@@ -187,5 +206,7 @@ export {
     ImageLabel,
     ImageName,
     ImageDeleteButton,
-    ImageAddButton
+    ImageAddButton,
+    ImageContainer,
+    Image
 };

@@ -1,97 +1,168 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z, string } from "zod";
-import SUserForm from "./styles.UserForm";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SUserForm from './styles.UserForm';
+import ApiService from "../../../configs/utilities/axios/ApiService";
+import CountryMenu from "../../countryMenu/CountryMenu";
+import UserProfile from "../../lists/UserProfile";
+import Login from "../../login/Login";
 
-
-const schema = z.object({
-    username: string().min(2, { message: "Name is required" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-    firstname: string().min(6, { message: "Please fill in your first name"}),
-    lastname: string().min(6, { message: "Please fill in your last name"}),
-    dateofbirth: string(),
-    country: string().min(6,),
-    email: string().email({ message: "Invalid email address" }),
-    artistname: string().min(1, { message: "Artist name is required" }),
-});
-
-const UserForm = () => {
-    const { register, handleSubmit, formState } = useForm({
-        resolver: zodResolver(schema)
+const UserForm2 = () => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        username: '',
+        password: '',
+        firstname: '',
+        lastname: '',
+        dateofbirth: '',
+        country: '',
+        email: '',
+        artistname: ''
     });
-    const { errors } = formState;
 
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [showForm, setShowForm] = useState(true);
+    const [createdUserId, setCreatedUserId] = useState(null);
 
-    const handleSave = (formValues, e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formValues);
-        axios.post("http://localhost:8080/users", formValues).then(() => {
-            setSuccessMessage(`Thank you for subscribing ${formValues.username}`);
-            setShowForm(false);
-            console.log(formValues);
-        }).catch((error) => {
-            console.error(error)
-        });
+        const userPayload = {
+            ...formData,
+            authorities: 'USER', // Assigning the user authority
+        };
+
+        try {
+            const response = await ApiService.createUser(userPayload);
+            console.log(response);
+            // const { id, jwt } = response.data; // Expecting the backend to return JWT and user ID
+            //
+            // // Save JWT token in local storage or state
+            // localStorage.setItem('token', jwt);
+            //
+            setSuccessMessage('Your account has been created successfully. Please Login');
+            // setErrorMessage(''); // Clear error message
+            // setCreatedUserId(id); // Store the user ID from the backend response
+            // setFormData({
+            //     username: '',
+            //     password: '',
+            //     firstname: '',
+            //     lastname: '',
+            //     dateofbirth: '',
+            //     country: '',
+            //     email: '',
+            //     artistname: '',
+            // });
+        } catch (error) {
+            console.log(error);
+            setSuccessMessage(''); // Clear success message
+            setErrorMessage('Failed to create user. Please try again.');
+        }
     };
+
+    const handleCountryChange = (e) => {
+        setFormData({ ...formData, country: e.target.value });
+    };
+
+    if (createdUserId) {
+        return <UserProfile userId={createdUserId} />;
+    }
 
     return (
         <SUserForm>
-            <h2>Demo Upload</h2>
-            {successMessage && (
-                <div className="success-message">{successMessage}</div>
-            )}
-            {showForm && (
-                <form onSubmit={handleSubmit(handleSave)}>
-                    <label>
-                        <p>Username:</p>
-                        <input {...register("username", { required: true, value: "Test_Admin_1" })} placeholder="Enter Name"/>
-                        <div style={{ color: 'red' }}>{errors.name?.message}</div>
-                    </label>
-                    <div>
-                        <p>Password:</p>
-                        <input {...register("password", { required: true, minLength: 6, value: "ExamplePassword2" })} name="password" type="password" placeholder="Enter password of minimum 6 characters" />
-                        <div style={{ color: 'red' }}>{errors.password?.message && <span>{errors.password?.message}</span>}</div>
+            {successMessage ? (
+                <>
+                    <p>{successMessage}</p>
+                    <Login/>
+                </>
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Username:</label>
+                        <input
+                            type="text"
+                            name="username"
+                            value={formData.username}
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            placeholder="Enter username"
+                            autoComplete="username"
+                        />
                     </div>
-                    <div>
-                        <p>First name:</p>
-                        <input {...register("firstname", { value: "Test FirstName" })} placeholder="Enter first Name" />
-                        <div style={{ color: 'red' }}>{errors.firstname?.message}</div>
+                    <div className="form-group">
+                        <label>Password:</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            placeholder="Password"
+                            autoComplete="current-password"
+                        />
                     </div>
-                    <div>
-                        <p>Last name:</p>
-                        <input {...register("lastname", { value: "Test LastName" })} placeholder="Enter first Name" />
-                        <div style={{ color: 'red' }}>{errors.lastname?.message}</div>
+                    <div className="form-group">
+                        <label>First name:</label>
+                        <input
+                            type="text"
+                            name="firstname"
+                            value={formData.firstname}
+                            onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
+                            placeholder="Enter first name"
+                            autoComplete="given-name"
+                        />
                     </div>
-                    <div>
-                        <p>Date of birth:</p>
-                        <input {...register("dateofbirth", { value: "18-01-1986" })} placeholder="Enter Country" />
-                        <div style={{ color: 'red' }}>{errors.dateofbirth?.message}</div>
+                    <div className="form-group">
+                        <label>Last name:</label>
+                        <input
+                            type="text"
+                            name="lastname"
+                            value={formData.lastname}
+                            onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+                            placeholder="Enter last name"
+                            autoComplete="family-name"
+                        />
                     </div>
-                    <div>
-                        <p>Country:</p>
-                        <input {...register("country", { value: "Netherlands" })} placeholder="Enter Country" />
-                        <div style={{ color: 'red' }}>{errors.country?.message}</div>
+                    <div className="form-group">
+                        <label>Date of birth:</label>
+                        <input
+                            type="date"
+                            name="dateofbirth"
+                            value={formData.dateofbirth}
+                            onChange={(e) => setFormData({ ...formData, dateofbirth: e.target.value })}
+                            autoComplete="birthday"
+                        />
                     </div>
-                    <div>
-                        <p>Email:</p>
-                        <input {...register("email", { required: true, value: "admin@testmail.com" })} placeholder="Enter Email"/>
-                        <div style={{ color: 'red' }}>{errors.email?.message}</div>
+                    <div className="form-group">
+                        <CountryMenu
+                            selectedCountry={formData.country}
+                            onCountryChange={handleCountryChange}
+                        />
                     </div>
-                    <div>
-                        <p>Artist name:</p>
-                        <input {...register("artistName", { value: "Test ArtistName" })} placeholder="Enter Artist Name" />
-                        <div style={{ color: 'red' }}>{errors.artistname?.message}</div>
+                    <div className="form-group">
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="Enter email"
+                            autoComplete="email"
+                        />
                     </div>
-                    <button type="submit">Save</button>
+                    <div className="form-group">
+                        <label>Artist name:</label>
+                        <input
+                            type="text"
+                            name="artistname"
+                            value={formData.artistname}
+                            onChange={(e) => setFormData({ ...formData, artistname: e.target.value })}
+                            placeholder="Enter artist name"
+                            autoComplete="artist-name"
+                        />
+                    </div>
+                    <button type="submit">Submit</button>
+                    {errorMessage && <p>{errorMessage}</p>}
                 </form>
             )}
         </SUserForm>
     );
 };
 
-export default UserForm;
+export default UserForm2;

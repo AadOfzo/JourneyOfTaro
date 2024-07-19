@@ -5,6 +5,7 @@ import Login from '../../components/login/Login';
 import Dashboard from '../../pages/admin/Dashboard';
 import ImageRequestPage from '../../pages/imageRequest/ImageRequestPage';
 import { useAuth } from '../../components/authentication/Auth';
+import UserProfile from "../../components/lists/UserProfile";
 
 const AppRoutes = () => {
     const { token } = useAuth();
@@ -13,6 +14,10 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+            <Route
+                path="/user-profile/:userId"
+                element={<PrivateRoutes isLoggedIn={isLoggedIn} element={<UserProfile />} />}
+            />
             <Route
                 path="/dashboard"
                 element={<PrivateRoutes isLoggedIn={isLoggedIn} element={<Dashboard />} />}
