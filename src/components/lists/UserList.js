@@ -21,7 +21,7 @@ function UserList() {
     const [users, setUsers] = useState([]);
     const [expandedUserId, setExpandedUserId] = useState(null);
     const [loadingUsers, setLoadingUsers] = useState(false);
-    const [ setErrorUsers ] = useState(null);
+    const [errorUsers, setErrorUsers] = useState(null);
     const [images, setImages] = useState([]);
 
     useEffect(() => {
