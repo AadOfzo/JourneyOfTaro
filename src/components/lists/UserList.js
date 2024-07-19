@@ -5,7 +5,6 @@ import {
     GlowingRow,
     UserInfoContainer,
     UserInfo,
-    ExpandableContent,
     ExpandButton,
     CenteredH2,
     UserListContainer,
@@ -22,7 +21,7 @@ function UserList() {
     const [users, setUsers] = useState([]);
     const [expandedUserId, setExpandedUserId] = useState(null);
     const [loadingUsers, setLoadingUsers] = useState(false);
-    const [errorUsers, setErrorUsers] = useState(null);
+    const [ setErrorUsers ] = useState(null);
     const [images, setImages] = useState([]);
 
     useEffect(() => {
@@ -97,69 +96,72 @@ function UserList() {
     };
 
     return (
-        <UserListContainer>
-            <CenteredH2>User List</CenteredH2>
-            {loadingUsers ? (
-                <p>Loading...</p>
-            ) : (
-                <table>
-                    <tbody>
-                    {users.map(user => (
-                        <React.Fragment key={user.userId}>
-                            <GlowingRow onClick={() => toggleExpand(user.userId)}>
-                                <td>{getUserImage(user.userId)}</td>
-                                <td>{user.userId}</td>
-                                <td>{user.username}</td>
-                            </GlowingRow>
-                            {expandedUserId === user.userId && (
-                                <tr>
-                                    <td colSpan="3">
-                                        <UserDetailsContainer>
-                                            <UserInfoContainer>
-                                                <UserInfo>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>Role:</UserDetailLabel>
-                                                        <UserDetailValue>{user.roles.join(', ')}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>API Key:</UserDetailLabel>
-                                                        <UserDetailValue>{user.apikey}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>First Name:</UserDetailLabel>
-                                                        <UserDetailValue>{user.firstname}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>Last Name:</UserDetailLabel>
-                                                        <UserDetailValue>{user.lastname}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>Country:</UserDetailLabel>
-                                                        <UserDetailValue>{user.country}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>Email:</UserDetailLabel>
-                                                        <UserDetailValue>{user.email}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <UserDetail>
-                                                        <UserDetailLabel>Artist Name:</UserDetailLabel>
-                                                        <UserDetailValue>{user.artistname}</UserDetailValue>
-                                                    </UserDetail>
-                                                    <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>
-                                                        Add Admin
-                                                    </ExpandButton>
-                                                </UserInfo>
-                                            </UserInfoContainer>
-                                        </UserDetailsContainer>
-                                    </td>
-                                </tr>
-                            )}
-                        </React.Fragment>
-                    ))}
-                    </tbody>
-                </table>
-            )}
-        </UserListContainer>
+        <>
+
+            <UserListContainer>
+                <CenteredH2>User List</CenteredH2>
+                {loadingUsers ? (
+                    <p>Loading...</p>
+                ) : (
+                    <table>
+                        <tbody>
+                        {users.map(user => (
+                            <React.Fragment key={user.userId}>
+                                <GlowingRow onClick={() => toggleExpand(user.userId)}>
+                                    <td>{getUserImage(user.userId)}</td>
+                                    <td>{user.userId}</td>
+                                    <td>{user.username}</td>
+                                </GlowingRow>
+                                {expandedUserId === user.userId && (
+                                    <tr>
+                                        <td colSpan="3">
+                                            <UserDetailsContainer>
+                                                <UserInfoContainer>
+                                                    <UserInfo>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>Role:</UserDetailLabel>
+                                                            <UserDetailValue>{user.roles.join(', ')}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>API Key:</UserDetailLabel>
+                                                            <UserDetailValue>{user.apikey}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>First Name:</UserDetailLabel>
+                                                            <UserDetailValue>{user.firstname}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>Last Name:</UserDetailLabel>
+                                                            <UserDetailValue>{user.lastname}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>Country:</UserDetailLabel>
+                                                            <UserDetailValue>{user.country}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>Email:</UserDetailLabel>
+                                                            <UserDetailValue>{user.email}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <UserDetail>
+                                                            <UserDetailLabel>Artist Name:</UserDetailLabel>
+                                                            <UserDetailValue>{user.artistname}</UserDetailValue>
+                                                        </UserDetail>
+                                                        <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>
+                                                            Add Admin
+                                                        </ExpandButton>
+                                                    </UserInfo>
+                                                </UserInfoContainer>
+                                            </UserDetailsContainer>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))}
+                        </tbody>
+                    </table>
+                )}
+            </UserListContainer>
+        </>
     );
 }
 

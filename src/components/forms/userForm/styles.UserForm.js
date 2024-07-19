@@ -36,9 +36,9 @@ const SUserForm = styled.div`
     }
 
     label {
-      //padding-right: 1.5rem;
       text-align: left;
       margin-right: auto;
+      margin-bottom: 0.5rem;
     }
 
     input, select {
@@ -72,6 +72,14 @@ const SUserForm = styled.div`
 
       label {
         margin-bottom: 0.5rem;
+      }
+
+      select {
+        margin: 12px;
+        width: 300px;
+        appearance: auto;
+        padding: 12px;
+        border-radius: 3px;
       }
     }
   }

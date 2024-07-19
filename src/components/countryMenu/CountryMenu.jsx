@@ -12,10 +12,10 @@ const SCountryMenu = styled.div`
     }
 
     select {
-      margin: 12px;
+      margin: 1.2rem;
       width: 300px;
       appearance: auto;
-      padding: 12px;
+      padding: 10px;
       border-radius: 3px;
       //box-shadow: inset 0 0 10px rgb(167, 24, 24);
     }

@@ -161,9 +161,10 @@ export const ExpandButton = styled.button`
 
 export const UserListContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 20px;
-  margin-top: 50px;
+  margin-top: 20px; /* Reduce the margin-top */
 `;
 
 export const UserDetailsContainer = styled.div`

@@ -5,6 +5,7 @@ import SUserForm from './styles.UserForm';
 import ImageForm from "../imageForm/ImageForm";
 import UserProfile from "../../lists/UserProfile";
 import ApiService from "../../../configs/utilities/axios/ApiService";
+import CountryMenu from "../../countryMenu/CountryMenu";
 
 const UserForm3 = () => {
     const navigate = useNavigate();
@@ -57,14 +58,12 @@ const UserForm3 = () => {
         navigate('/');
     };
 
-    const handleYes = () => {
-        console.log("Yes clicked: Showing Image Form");
+    const handleYes = async () => {
         setShowPopup(false);
         setShowImageForm(true);
     };
 
     const handleNo = () => {
-        console.log("No clicked: Navigating to login");
         setShowPopup(false);
         handleLogin();
     };
@@ -72,6 +71,10 @@ const UserForm3 = () => {
     const handleImageUploaded = () => {
         console.log("Image uploaded: Showing user profile");
         setShowImageForm(false); // Hide the image form after upload
+    };
+
+    const handleCountryChange = (e) => {
+        setFormData({ ...formData, country: e.target.value });
     };
 
     return (
@@ -82,13 +85,13 @@ const UserForm3 = () => {
                     onYes={handleYes} // Show image upload form on 'Yes'
                     onNo={handleNo}
                 />
-            ) : showImageForm && createdUserId ? ( // Ensure createdUserId is truthy before rendering ImageForm
+            ) : showImageForm && createdUserId ? (
                 <ImageForm userId={createdUserId} onImageUploaded={handleImageUploaded} />
-            ) : createdUserId ? ( // Show user profile if createdUserId is set and image form is not displayed
+            ) : createdUserId ? (
                 <UserProfile username={createdUsername} />
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <div>
+                    <div className="form-group">
                         <label>Username:</label>
                         <input
                             type="text"
@@ -99,7 +102,7 @@ const UserForm3 = () => {
                             autoComplete="username"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Password:</label>
                         <input
                             type="password"
@@ -110,7 +113,7 @@ const UserForm3 = () => {
                             autoComplete="current-password"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>First name:</label>
                         <input
                             type="text"
@@ -121,7 +124,7 @@ const UserForm3 = () => {
                             autoComplete="given-name"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Last name:</label>
                         <input
                             type="text"
@@ -132,7 +135,7 @@ const UserForm3 = () => {
                             autoComplete="family-name"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Date of birth:</label>
                         <input
                             type="date"
@@ -142,18 +145,13 @@ const UserForm3 = () => {
                             autoComplete="birthday"
                         />
                     </div>
-                    <div>
-                        <label>Country:</label>
-                        <input
-                            type="text"
-                            name="country"
-                            value={formData.country}
-                            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                            placeholder="Enter country"
-                            autoComplete="country"
+                    <div className="form-group">
+                        <CountryMenu
+                            selectedCountry={formData.country}
+                            onCountryChange={handleCountryChange}
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Email:</label>
                         <input
                             type="email"
@@ -164,7 +162,7 @@ const UserForm3 = () => {
                             autoComplete="email"
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Artist name:</label>
                         <input
                             type="text"
