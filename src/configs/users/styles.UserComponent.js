@@ -1,65 +1,49 @@
-import styled, { keyframes } from 'styled-components';
-
-const fadeIn = keyframes`
-  from {
-    box-shadow: 0 0 0 0 rgba(234, 167, 51, 0);
-  }
-  to {
-    box-shadow: inset 0 0 10px rgba(234, 167, 51, 0.5);
-  }
-`;
-
-const expandGlow = keyframes`
-  from {
-    opacity: 0;
-    transform: scaleX(0);
-  }
-  to {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-`;
+import styled from 'styled-components';
+import { FaUserCircle } from 'react-icons/fa'; // Import FaUserCircle
 
 export const UserImage = styled.img`
   width: 100px;
   height: 100px;
+  border-radius: 50%; /* Make the image circular */
+  margin-right: 20px; /* Space between image and details */
 `;
 
-export const GlowingRow = styled.tr`
-  td {
-    padding: 0.75rem;
-    height: 0;
-    opacity: 0;
-    transform: scaleX(0);
-    animation: ${expandGlow} 1s forwards;
-    transition: height 1s, opacity 1s, transform 1s;
-    position: relative;
-  }
+export const NoImageContainer = styled.div`
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--secondary);
+  border-radius: 50%;
+  margin-right: 20px;
+  text-align: center;
+  font-size: 1rem;
+  color: #999;
+  position: relative;
+  cursor: pointer;
+`;
 
-  :hover td {
-    cursor: pointer;
-    height: auto;
-    opacity: 1;
-    transform: scaleX(1);
-  }
+export const NoImageIcon = styled(FaUserCircle)`
+  font-size: 3rem;
+  color: var(--testColorOne);
+`;
 
-  :before,
-  :after {
-    content: '';
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 10px;
-    background: linear-gradient(to right, transparent 0%, #eaa733 50%, transparent 100%);
-    animation: ${fadeIn} 1s forwards;
-  }
+export const UploadButton = styled.button`
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  position: absolute;
+  bottom: 10px;
 
-  :before {
-    left: -10px;
-  }
-
-  :after {
-    right: -10px;
+  :hover {
+    background-color: #0056b3;
   }
 `;
 
