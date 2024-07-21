@@ -3,6 +3,7 @@ import './Login.css'
 import Login from "../../components/login/Login";
 import UserList from "../../components/lists/UserList";
 import UserProfile from "../../components/lists/UserProfile";
+import UserComponent from "../../configs/users/UserComponent";
 
 function LoginPage() {
     const [showLogin, setShowLogin] = useState(false);
@@ -13,7 +14,8 @@ function LoginPage() {
             <div className="login-page-container">
                 <Login/>
                 <UserProfile/>
-                <UserList/>
+                {/*<UserComponent/>*/}
+                {/*<UserList/>*/}
                 {/*<LoginMenu/>*/}
                 {/*<LoginPopupMainComponent/>*/}
 

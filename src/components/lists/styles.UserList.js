@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import { FaUserCircle } from 'react-icons/fa'; // Import a user icon
 
 const fadeIn = keyframes`
   from {
@@ -23,6 +24,28 @@ const expandGlow = keyframes`
 export const UserImage = styled.img`
   width: 100px;
   height: 100px;
+  border-radius: 50%; /* Make the image circular */
+  margin-right: 20px; /* Space between image and details */
+`;
+
+export const NoImageContainer = styled.div`
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  margin-right: 20px;
+  text-align: center;
+  font-size: 1rem;
+  color: #999;
+`;
+
+export const NoImageIcon = styled(FaUserCircle)`
+  font-size: 3rem;
+  color: #aaa;
 `;
 
 export const GlowingRow = styled.tr`

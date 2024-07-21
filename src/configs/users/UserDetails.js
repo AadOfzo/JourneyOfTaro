@@ -1,52 +1,49 @@
 import React from 'react';
 import {
-    UserDetailsContainer,
-    UserInfoContainer,
-    UserInfo,
-    UserDetail,
-    UserDetailLabel,
-    UserDetailValue,
-    ExpandButton
-} from '../../components/lists/styles.UserList';
+    UserDetailsContainer, UserDetail, UserDetailLabel, UserDetailValue
+} from './styles.UserComponent';
 
-const UserDetails = ({ user, grantAdminPrivilege }) => (
-    <UserDetailsContainer>
-        <UserInfoContainer>
-            <UserInfo>
-                <UserDetail>
-                    <UserDetailLabel>Role:</UserDetailLabel>
-                    <UserDetailValue>{user.roles.join(', ')}</UserDetailValue>
-                </UserDetail>
-                <UserDetail>
-                    <UserDetailLabel>API Key:</UserDetailLabel>
-                    <UserDetailValue>{user.apikey}</UserDetailValue>
-                </UserDetail>
-                <UserDetail>
-                    <UserDetailLabel>First Name:</UserDetailLabel>
-                    <UserDetailValue>{user.firstname}</UserDetailValue>
-                </UserDetail>
-                <UserDetail>
-                    <UserDetailLabel>Last Name:</UserDetailLabel>
-                    <UserDetailValue>{user.lastname}</UserDetailValue>
-                </UserDetail>
-                <UserDetail>
-                    <UserDetailLabel>Country:</UserDetailLabel>
-                    <UserDetailValue>{user.country}</UserDetailValue>
-                </UserDetail>
-                <UserDetail>
-                    <UserDetailLabel>Email:</UserDetailLabel>
-                    <UserDetailValue>{user.email}</UserDetailValue>
-                </UserDetail>
-                <UserDetail>
-                    <UserDetailLabel>Artist Name:</UserDetailLabel>
-                    <UserDetailValue>{user.artistname}</UserDetailValue>
-                </UserDetail>
-                <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>
-                    Add Admin
-                </ExpandButton>
-            </UserInfo>
-        </UserInfoContainer>
-    </UserDetailsContainer>
-);
+const UserDetails = ({ user }) => {
+    return (
+        <UserDetailsContainer>
+            <table>
+                <tbody>
+                <tr>
+                    <td><UserDetailLabel>First Name:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.firstname}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>Last Name:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.lastname}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>Username:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.username}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>Email:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.email}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>Country:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.country}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>Artist Name:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.artistname}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>API Key:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.apikey}</UserDetailValue></td>
+                </tr>
+                <tr>
+                    <td><UserDetailLabel>Roles:</UserDetailLabel></td>
+                    <td><UserDetailValue>{user.roles.join(', ')}</UserDetailValue></td>
+                </tr>
+                </tbody>
+            </table>
+        </UserDetailsContainer>
+    );
+};
 
 export default UserDetails;

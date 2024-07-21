@@ -11,12 +11,13 @@ import {
     LoadingWheel
 } from './styles.ImageForm';
 
-const ImageForm = ({ onImageUploaded }) => {
+const ImageForm = ({ userId, onImageUploaded }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [uploaded, setUploaded] = useState(false);
 
     const handleFileChange = (e) => {
+        console.log({userId})
         setFile(e.target.files[0]);
         setUploaded(false); // Reset the uploaded state when a new file is selected
     };

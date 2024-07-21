@@ -61,9 +61,9 @@ const ApiService = {
         }
     },
 
-    fetchUserDetails: async (token) => {
+    async fetchUserDetails(token) {
         try {
-            const response = await api.get('/users/${userId}', {
+            const response = await api.get('/users/', { // Adjust endpoint if necessary
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
