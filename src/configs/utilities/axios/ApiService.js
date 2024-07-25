@@ -3,34 +3,42 @@ import axios from "axios";
 const api = axios.create({
     baseURL: 'http://localhost:8080',
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     }
 });
 
-api.interceptors.request.use(
-    config => {
-        const token = localStorage.getItem('token'); // Get the token from localStorage
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
+// api.interceptors.request.use(
+//     config => {
+//         const token = localStorage.getItem('token');
+//         if (token) {
+//             config.headers['Authorization'] = `Bearer ${token}`;
+//         } else {
+//             console.error('Token is missing');
+//         }
+//         return config;
+//     },
+//     error => {
+//         return Promise.reject(error);
+//     }
+// );
 
 const ApiService = {
     // Authentication endpoint
     async authenticate(username, password) {
+        console.log(username, password)
         try {
             const response = await api.post('/authenticate', { username, password });
-            return response.data;
+            const { jwt } = response.data;
+            if (jwt) {
+                localStorage.setItem('token', response.data.jwt);
+            }
+            console.log(response.data)
+            return jwt;
         } catch (error) {
+            console.error('Error authenticating', error);
             throw new Error(`Error authenticating: ${error.message}`);
         }
     },
-
 
     // Users endpoints
     async fetchUsers() {
@@ -61,13 +69,14 @@ const ApiService = {
         }
     },
 
-    async fetchUserDetails(token) {
+    async fetchUserDetails(token, username) {
         try {
-            const response = await api.get('/users/', { // Adjust endpoint if necessary
+            const response = await api.get(`/username/${username}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
+            console.log(response);
             return response.data;
         } catch (error) {
             console.error('Error fetching user details:', error);
@@ -186,8 +195,24 @@ const ApiService = {
     },
 
     async uploadSong(formData) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Token is missing');
+        }
+
+        console.log("Token used for upload:", token); // Log the token
+
         return await api.post('/fileUpload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            console.log("Upload response:", response.data);
+            return response.data;
+        }).catch(error => {
+            console.error("Upload error:", error);
+            throw error;
         });
     },
 

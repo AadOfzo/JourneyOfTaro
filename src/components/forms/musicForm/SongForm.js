@@ -46,7 +46,15 @@ const SongForm = () => {
             formDataToSend.append('songTitle', songTitle);
             formDataToSend.append('artistName', artistName);
 
-            await ApiService.uploadSong(formDataToSend);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+
+            // Log the token to verify its format
+            console.log('Token:', token);
+
+            await ApiService.uploadSong(formDataToSend, token);
             await fetchSongs();
             setFormData({ file: null });
             setSongTitle('');

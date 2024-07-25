@@ -39,7 +39,7 @@ const UserComponent = ({ users = [], onUserChange }) => {
                 ))}
             </select>
 
-            {user && <UserDetails user={user} />}
+            {/*{user && <UserDetails user={user} />}*/}
         </UserListContainer>
     );
 };

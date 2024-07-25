@@ -43,6 +43,11 @@ function NavBar2({ isLoggedIn, userRole }) {
                                 Music
                             </NavLink>
                         </li>
+                        <li>
+                            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                Admin Dashboard
+                            </NavLink>
+                        </li>
                         {isLoggedIn && (
                             <>
                                 <li>
@@ -52,8 +57,8 @@ function NavBar2({ isLoggedIn, userRole }) {
                                 </li>
                                 {userRole === 'ADMIN' && (
                                     <li>
-                                        <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                            Admin Panel
+                                        <NavLink to="/unused" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                            Unused Components
                                         </NavLink>
                                     </li>
                                 )}

@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import UserComponent from "../../configs/users/UserComponent";
 import UserDetails from "../../configs/users/UserDetails";
-import { UserImage, UserListContainer, NoImageContainer, NoImageIcon, UploadButton } from '../../configs/users/styles.UserComponent';
+import { UserImage, NoImageContainer, NoImageIcon, UploadButton, UserListContainer } from '../../configs/users/styles.UserComponent';
 import axios from "axios";
 
 const UserProfile = () => {
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [user, setUser] = useState(null);
-    const [file, setFile] = useState(null); // State to hold the file
-    const fileInputRef = useRef(null); // Ref to access the file input
+    const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         axios.get('http://localhost:8080/users')
@@ -52,8 +52,8 @@ const UserProfile = () => {
                 }
             })
                 .then(response => {
-                    setUser(response.data); // Refresh user data with the new image
-                    setFile(null); // Clear the file input
+                    setUser(response.data);
+                    setFile(null);
                 })
                 .catch(error => {
                     console.error('There was an error uploading the image!', error);
@@ -63,7 +63,7 @@ const UserProfile = () => {
 
     const handleNoImageClick = () => {
         if (fileInputRef.current) {
-            fileInputRef.current.click(); // Trigger file input click
+            fileInputRef.current.click();
         }
     };
 
@@ -72,16 +72,20 @@ const UserProfile = () => {
             return <UserImage src={imageUrl} alt="User" />;
         } else {
             return (
-                <NoImageContainer onClick={handleNoImageClick}>
-                    <NoImageIcon />
-                    <p>No user image</p>
+                <NoImageContainer
+                    hasImage={!!file}
+                    imageUrl={file ? URL.createObjectURL(file) : null}
+                    onClick={handleNoImageClick}
+                >
+                    {!file && <NoImageIcon />}
+                    <p>{!file ? 'No user image' : ''}</p>
                     <input
                         type="file"
                         ref={fileInputRef}
                         onChange={handleFileChange}
                         style={{ display: 'none' }}
                     />
-                    <UploadButton onClick={handleUploadClick}>Upload Image</UploadButton>
+                    <UploadButton file={file} onClick={handleUploadClick}>Upload Image</UploadButton>
                 </NoImageContainer>
             );
         }

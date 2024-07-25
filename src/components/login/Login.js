@@ -16,11 +16,13 @@ const LoginForm = () => {
         e.preventDefault();
         try {
             const response = await ApiService.authenticate(username, password);
-            const { token } = response;
-            login({ username }, token);
+            // const { token } = response;
+            login({ username }, response);
+            console.log(response);
             setSuccessMessage('Login successful');
             navigate('/dashboard');
         } catch (error) {
+            console.error(error)
             setError('Invalid username or password');
         }
     };

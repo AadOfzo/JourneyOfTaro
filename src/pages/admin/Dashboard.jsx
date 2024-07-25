@@ -1,10 +1,12 @@
-import UserList from "../../components/lists/UserList";
+import UserManagement from "../../components/authentication/UserManagement";
 
 function Dashboard() {
     return (
         <main className="pages-main-container">
 
-            <UserList/>
+            {/*<UserProfile/>*/}
+            <UserManagement/>
+            {/*<UserList/>*/}
 
         </main>
     )

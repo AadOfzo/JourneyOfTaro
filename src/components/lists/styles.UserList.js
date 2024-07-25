@@ -181,6 +181,10 @@ export const ExpandButton = styled.button`
     background-color: #0056b3;
   }
 `;
+export const UserListInnerContainer = styled.div`
+    display: flex;
+    height: 40vh;
+`;
 
 export const UserListContainer = styled.div`
   display: flex;
@@ -191,10 +195,14 @@ export const UserListContainer = styled.div`
 `;
 
 export const UserDetailsContainer = styled.div`
-  width: 40vw;
-  overflow-y: auto;
+  width: 100%;
+  max-width: 60vw; /* Set max width */
   padding: 20px;
   text-align: center;
+  border: 2px solid #ddd; /* Add border */
+  border-radius: 5px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
 
   @media (max-width: 768px) {
     width: 100%; /* Full width on mobile devices */
@@ -203,21 +211,71 @@ export const UserDetailsContainer = styled.div`
 
 export const CenteredH2 = styled.h2`
   text-align: center;
-  font-size: 3rem;
+  font-size: 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
   border-bottom: solid 1px var(--secondary);
 `;
 
-export const UserDetail = styled.div`
-  margin-bottom: 1.2rem;
+export const UserSelect = styled.div`
+  width: 20vw;
+  border: 2px solid var(--secondary);
+  border-radius: 5px;
+  overflow-y: auto; 
+  box-sizing: border-box; 
 `;
 
-export const UserDetailLabel = styled.p`
-  margin: 0;
+export const UserSelectHeader = styled.div`
+  font-size: 1.2rem;
   font-weight: bold;
+  padding: 10px;
+  border-bottom: 2px solid #a71818; 
 `;
 
-export const UserDetailValue = styled.p`
-  margin: 0;
+export const UserSelectList = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+export const UserSelectItem = styled.tr`
+  cursor: pointer;
+  background-color: transparent;
+  box-shadow: ${({isActive}) => (isActive ? 'inset 0 0 10px rgba(234, 167, 51, 0.5)' : 'none')};
+  animation: ${({isActive}) => (isActive ? fadeIn : 'none')} 0.5s forwards;
+  transition: background-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    background-color: #80532f;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #80532f;
+  }
+`;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Space between buttons */
+  margin-top: 20px;
+`;
+
+export const ActionButton = styled.button`
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #007bff;
+  transition: background-color 0.3s;
+
+  :hover {
+    background-color: #0056b3;
+  }
+
+  :active {
+    background-color: #004494;
+  }
 `;
