@@ -8,14 +8,14 @@ import {
     UserListContainer,
     UserDetailsContainer,
     UserListInnerContainer,
-    ActionButton,
+    AddAdminButton,
+    UserDeleteButton,
     ButtonsContainer,
     UserSelectList,
     UserSelectItem,
     UserSelectHeader
 } from './styles.UserList';
 import { NoImageContainer, NoImageIcon, UploadButton, UserImage } from "../../configs/users/styles.UserComponent";
-import UserComponent from "../../configs/users/UserComponent";
 
 function UserList() {
     const [user, setUser] = useState(null);
@@ -60,12 +60,6 @@ function UserList() {
         } finally {
             setLoadingUsers(false);
         }
-    };
-
-    const handleUserChange = (event) => {
-        setSelectedUserId(event.target.value);
-        const selectedUser = users.find(u => u.userId === event.target.value);
-        setUser(selectedUser);
     };
 
     const handleNoImageClick = () => {
@@ -150,16 +144,20 @@ function UserList() {
                             ))}
                         </UserSelectList>
                     </UserSelect>
-                        <UserDetailsContainer>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                {renderUserImage(user.imageUrl)}
-                                <UserDetails user={user} />
-                            </div>
-                        </UserDetailsContainer>
-                    <ButtonsContainer>
-                        <ActionButton onClick={() => grantAdminPrivilege(user.username)}>Grant Admin Rights</ActionButton>
-                        <ActionButton onClick={() => deleteUser(user.username)}>Delete User</ActionButton>
-                    </ButtonsContainer>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        {user && (
+                            <>
+                                <UserDetailsContainer>
+                                    {renderUserImage(user.imageUrl)}
+                                    <UserDetails user={user} />
+                                </UserDetailsContainer>
+                                <ButtonsContainer>
+                                    <AddAdminButton onClick={() => grantAdminPrivilege(user.username)}>Grant Admin Rights</AddAdminButton>
+                                    <UserDeleteButton onClick={() => deleteUser(user.username)}>Delete User</UserDeleteButton>
+                                </ButtonsContainer>
+                            </>
+                        )}
+                    </div>
                 </UserListInnerContainer>
             )}
         </UserListContainer>

@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { FaUserCircle } from 'react-icons/fa'; // Import a user icon
 
 const fadeIn = keyframes`
   from {
@@ -10,141 +9,23 @@ const fadeIn = keyframes`
   }
 `;
 
-const expandGlow = keyframes`
+
+const fadeOutEffect = keyframes`
   from {
-    opacity: 0;
-    transform: scaleX(0);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
   to {
-    opacity: 1;
-    transform: scaleX(1);
+    box-shadow: 0 0 10px 5px var(--testColorTwo);
   }
 `;
 
-export const UserImage = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%; /* Make the image circular */
-  margin-right: 20px; /* Space between image and details */
-`;
-
-export const NoImageContainer = styled.div`
-  width: 100px;
-  height: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #ddd;
-  border-radius: 50%;
-  margin-right: 20px;
-  text-align: center;
-  font-size: 1rem;
-  color: #999;
-`;
-
-export const NoImageIcon = styled(FaUserCircle)`
-  font-size: 3rem;
-  color: #aaa;
-`;
-
-export const GlowingRow = styled.tr`
-  td {
-    padding: 0.75rem;
-    height: 0;
-    opacity: 0;
-    transform: scaleX(0);
-    animation: ${expandGlow} 1s forwards;
-    transition: height 1s, opacity 1s, transform 1s;
-    position: relative;
+const fadeOutEffectDelete = keyframes`
+  from {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
-
-  :hover td {
-    cursor: pointer;
-    height: auto;
-    opacity: 1;
-    transform: scaleX(1);
+  to {
+    box-shadow: 0 0 10px 5px var(--testColorOne);
   }
-
-  :before,
-  :after {
-    content: '';
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 10px;
-    background: linear-gradient(to right, transparent 0%, #eaa733 50%, transparent 100%);
-    animation: ${fadeIn} 1s forwards;
-  }
-
-  :before {
-    left: -10px;
-  }
-
-  :after {
-    right: -10px;
-  }
-`;
-
-export const UserInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  overflow-y: auto; /* Add scrollbars if needed */
-`;
-
-export const UserInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 2rem;
-
-  @media (min-width: 1280px) {
-    width: 30vw; /* Adjust width as needed */
-  }
-
-  h2 {
-    font-size: 3rem;
-    text-align: center; /* Center the h2 text */
-  }
-
-  h3 {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    padding: 1rem;
-
-    :hover {
-      cursor: pointer;
-      animation: ${fadeIn} 0.5s forwards;
-    }
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  li {
-    font-size: 1.2rem;
-    padding: 0.75rem;
-    font-weight: bold;
-    width: 40vw;
-    text-align: center;
-    cursor: pointer;
-
-    :hover {
-      animation: ${fadeIn} 0.5s forwards;
-    }
-  }
-`;
-
-export const ImageContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
 `;
 
 export const Image = styled.img`
@@ -153,34 +34,6 @@ export const Image = styled.img`
   object-fit: contain;
 `;
 
-export const ExpandableContent = styled.div`
-  display: block; /* Always display the content block */
-  width: 100%;
-  padding: 20px;
-  margin-top: 10px;
-  animation: ${fadeIn} 0.5s forwards;
-  max-width: 40vw; /* Adjust width as needed */
-  overflow: hidden;
-  justify-content: center;
-
-  @media (max-width: 768px) {
-    display: ${({ expanded }) => (expanded ? 'block' : 'none')}; /* Only expandable on mobile devices */
-  }
-`;
-
-export const ExpandButton = styled.button`
-  margin-top: 10px;
-  padding: 5px 10px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-
-  :hover {
-    background-color: #0056b3;
-  }
-`;
 export const UserListInnerContainer = styled.div`
     display: flex;
     height: 40vh;
@@ -261,21 +114,40 @@ export const ButtonsContainer = styled.div`
   margin-top: 20px;
 `;
 
-export const ActionButton = styled.button`
-  padding: 10px 20px;
-  font-size: 1rem;
+export const AddAdminButton = styled.button`
+  margin-top: 10px;
+  padding: 5px 10px;
   cursor: pointer;
-  border: none;
+  background-color: var(--testColorTwo);
+  color: var(--textSecondary);
+  border: 2px solid var(--testColorTwo);
   border-radius: 5px;
-  color: white;
-  background-color: #007bff;
-  transition: background-color 0.3s;
+  font-size: 0.9rem;
+  transition: border 0.3s, box-shadow 0.3s;
+  margin-right: 10px;
 
   :hover {
-    background-color: #0056b3;
+    cursor: pointer;
+    color: var(--textPrimary);
+    animation: ${fadeOutEffect} 0.3s forwards;
   }
+`;
 
-  :active {
-    background-color: #004494;
+export const UserDeleteButton = styled.button`
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: var(--testColorOne);
+  color: white;
+  border: 2px solid var(--testColorOne);
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: border 0.3s, box-shadow 0.3s;
+  margin-right: 10px;
+
+  :hover {
+    cursor: pointer;
+    background-color: #0056b3;
+    animation: ${fadeOutEffectDelete} 0.3s forwards;
   }
 `;

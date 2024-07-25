@@ -25,7 +25,6 @@ const api = axios.create({
 const ApiService = {
     // Authentication endpoint
     async authenticate(username, password) {
-        console.log(username, password)
         try {
             const response = await api.post('/authenticate', { username, password });
             const { jwt } = response.data;
@@ -69,14 +68,13 @@ const ApiService = {
         }
     },
 
-    async fetchUserDetails(token, username) {
+    async fetchUserDetails(token) {
         try {
-            const response = await api.get(`/username/${username}`, {
+            const response = await api.get('/users/', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(response);
             return response.data;
         } catch (error) {
             console.error('Error fetching user details:', error);

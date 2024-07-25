@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import SnavBar2 from './styles.navBar2';
 import { NavLink } from 'react-router-dom';
 import NavBarDropdown from "./NavBarDropdown";
 import { useAuth } from '../authentication/Auth';
 
-function NavBar2({ isLoggedIn, userRole }) {
+function NavBar2() {
     const navRef = useRef();
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const { logout } = useAuth();
+    const { user, logout } = useAuth(); // Destructure `user` and `logout` from useAuth
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
@@ -48,14 +48,14 @@ function NavBar2({ isLoggedIn, userRole }) {
                                 Admin Dashboard
                             </NavLink>
                         </li>
-                        {isLoggedIn && (
+                        {user ? (
                             <>
                                 <li>
                                     <NavLink to="/about" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                         About
                                     </NavLink>
                                 </li>
-                                {userRole === 'ADMIN' && (
+                                {user.role === 'ADMIN' && (
                                     <li>
                                         <NavLink to="/unused" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                             Unused Components
@@ -66,8 +66,7 @@ function NavBar2({ isLoggedIn, userRole }) {
                                     <button onClick={handleLogout}>Logout</button>
                                 </li>
                             </>
-                        )}
-                        {!isLoggedIn && (
+                        ) : (
                             <li>
                                 <NavLink to="/login" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                     Login
@@ -75,7 +74,7 @@ function NavBar2({ isLoggedIn, userRole }) {
                             </li>
                         )}
                     </ul>
-                    <NavBarDropdown isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+                    <NavBarDropdown isLoggedIn={!!user} handleLogout={handleLogout} />
                 </div>
                 <div className="hamburger" onClick={toggleNav}>
                     <div className={`bar ${isNavOpen ? 'open' : ''}`}></div>

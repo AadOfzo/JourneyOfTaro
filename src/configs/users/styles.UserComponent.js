@@ -96,23 +96,25 @@ export const UserDetailLabel = styled.p`
 export const UserDetailValue = styled.p`
   text-align: left;
   padding-left: 1.2rem;
-  margin: 0px;
+  margin: 0;
 `;
 
 export const ActionButton = styled.button`
-  margin-top: 10px;
-  padding: 5px 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
   cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: 2px solid var(--testColorOne);
+  border: none;
   border-radius: 5px;
-  font-size: 0.9rem;
-  transition: border 0.3s;
-  margin-right: 10px;
+  color: white;
+  background-color: #007bff;
+  transition: background-color 0.3s;
 
   :hover {
     background-color: #0056b3;
+  }
+
+  :active {
+    background-color: #004494;
   }
 `;
 

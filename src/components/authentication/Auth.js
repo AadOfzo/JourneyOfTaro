@@ -22,18 +22,21 @@ export const AuthProvider = ({ children }) => {
             }
         };
         fetchUserData();
-    }, [token]);
+    }, [token, username]);
 
     const login = (userData, authToken) => {
+        localStorage.setItem('token', authToken);
+        localStorage.setItem('username', userData.username);
         console.log(userData)
         setUserName(userData.username);
-        localStorage.setItem('token', authToken);
         setToken(authToken);
+        setUser(userData);
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem('token');
+        localStorage.removeItem('username');
         setToken(null);
     };
 
