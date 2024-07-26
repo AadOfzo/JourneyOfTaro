@@ -49,29 +49,22 @@ function NavBar2({ isLoggedIn }) {
                                 Music
                             </NavLink>
                         </li>
-                        {isAdmin && (
-                            <li>
-                                <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                    Admin Dashboard
-                                </NavLink>
-                            </li>
-                        )}
                         {user ? (
                             <>
                                 <li>
-                                    <NavLink to="/about" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                        About
+                                    <NavLink to="/unused" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                        Unused Components
                                     </NavLink>
                                 </li>
                                 {isAdmin && (
                                     <li>
-                                        <NavLink to="/unused" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                            Unused Components
+                                        <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                            Admin Dashboard
                                         </NavLink>
                                     </li>
                                 )}
                                 <li>
-                                    <button onClick={handleLogout}>Logout</button>
+                                    <button onClick={handleLogout} className="logout-button">Logout</button>
                                 </li>
                             </>
                         ) : (

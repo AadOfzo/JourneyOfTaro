@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import UserComponent from "../../configs/users/UserComponent";
 import UserDetails from "../../configs/users/UserDetails";
-import { UserImage, NoImageContainer, NoImageIcon, UploadButton, UserListContainer, CenteredH2, UserDetailsContainer, UserDetail, UserDetailLabel, UserDetailValue, ActionButton, ButtonsContainer } from '../../configs/users/styles.UserComponent';
-import axios from "axios";
+import { UserImage, NoImageContainer, NoImageIcon, UploadButton, UserListContainer, CenteredH2, UserDetailsContainer, ActionButton, ButtonsContainer } from '../../configs/users/styles.UserComponent';
+import ApiService from "../../configs/utilities/axios/ApiService";
 import UserList from "../lists/UserList";
 
 const UserManagement = () => {
@@ -16,27 +16,29 @@ const UserManagement = () => {
         fetchUsers();
     }, []);
 
-    const fetchUsers = () => {
-        axios.get('http://localhost:8080/users')
-            .then(response => {
-                setUsers(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the users!', error);
-            });
+    const fetchUsers = async () => {
+        try {
+            const data = await ApiService.fetchUsers();
+            setUsers(data);
+        } catch (error) {
+            console.error('There was an error fetching the users!', error);
+        }
     };
 
     useEffect(() => {
         if (selectedUserId) {
-            axios.get(`http://localhost:8080/users/${selectedUserId}`)
-                .then(response => {
-                    setUser(response.data);
-                })
-                .catch(error => {
-                    console.error(`There was an error fetching the user with ID ${selectedUserId}!`, error);
-                });
+            fetchUserById(selectedUserId);
         }
     }, [selectedUserId]);
+
+    const fetchUserById = async (userId) => {
+        try {
+            const data = await ApiService.fetchUserById(userId);
+            setUser(data);
+        } catch (error) {
+            console.error(`There was an error fetching the user with ID ${userId}!`, error);
+        }
+    };
 
     const handleUserChange = (event) => {
         setSelectedUserId(event.target.value);
@@ -46,23 +48,18 @@ const UserManagement = () => {
         setFile(event.target.files[0]);
     };
 
-    const handleUploadClick = () => {
+    const handleUploadClick = async () => {
         if (file && selectedUserId) {
             const formData = new FormData();
             formData.append('file', file);
 
-            axios.post(`http://localhost:8080/users/${selectedUserId}/image`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            })
-                .then(response => {
-                    setUser(response.data);
-                    setFile(null);
-                })
-                .catch(error => {
-                    console.error('There was an error uploading the image!', error);
-                });
+            try {
+                const data = await ApiService.addUserImage(selectedUserId, file);
+                setUser(data);
+                setFile(null);
+            } catch (error) {
+                console.error('There was an error uploading the image!', error);
+            }
         }
     };
 
@@ -96,39 +93,31 @@ const UserManagement = () => {
         }
     };
 
-    const grantAdminRights = (username) => {
-        axios.post(`http://localhost:8080/users/${username}/authorities`, {
-            authority: 'ROLE_ADMIN'
-        })
-            .then(response => {
-                if (response.status === 204) {
-                    alert('Admin rights granted successfully!');
-                    fetchUsers();
-                } else {
-                    alert('Failed to grant admin rights.');
-                }
-            })
-            .catch(error => console.error('Error granting admin rights:', error));
+    const grantAdminRights = async (username) => {
+        try {
+            await ApiService.grantAdminPrivilege(username);
+            alert('Admin rights granted successfully!');
+            fetchUsers();  // Refresh user list to reflect changes
+        } catch (error) {
+            console.error('Error granting admin rights:', error);
+        }
     };
 
-    const deleteUser = (username) => {
-        axios.delete(`http://localhost:8080/users/${username}`)
-            .then(response => {
-                if (response.status === 204) {
-                    alert('User deleted successfully!');
-                    fetchUsers();
-                } else {
-                    alert('Failed to delete user.');
-                }
-            })
-            .catch(error => console.error('Error deleting user:', error));
+    const deleteUser = async (username) => {
+        try {
+            await ApiService.deleteUser(username);
+            alert('User deleted successfully!');
+            fetchUsers();  // Refresh user list to reflect changes
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
     };
 
     return (
         <UserListContainer>
             <CenteredH2>User Management</CenteredH2>
             <UserList />
-            <UserComponent onUserChange={handleUserChange} users={users} />
+            {/*<UserComponent onUserChange={handleUserChange} users={users} />*/}
             {user && (
                 <UserDetailsContainer>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

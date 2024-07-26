@@ -1,24 +1,60 @@
-import UserManagement from "../../components/authentication/UserManagement";
-import SongList from "../../components/lists/SongList";
-import SongCollectionList from "../../components/lists/Music/SongCollectionList";
-import React from "react";
-import ImageListBase64 from "../../components/images/ImageListBase64";
+// src/pages/Dashboard.js
+import React, { useState } from 'react';
+import UserManagement from '../../components/authentication/UserManagement';
+import SongList from '../../components/lists/SongList';
+import SongCollectionList from '../../components/lists/Music/SongCollectionList';
+import ImageListBase64 from '../../components/images/ImageListBase64';
+import {
+    DashboardContainer,
+    SectionSelect,
+    Section,
+    SectionButton
+} from './styles.Dashboard';
 
 function Dashboard() {
+    const [selectedSection, setSelectedSection] = useState('User');
+
+    const handleSectionChange = (section) => {
+        setSelectedSection(section);
+    };
+
     return (
         <main className="pages-main-container">
+            <DashboardContainer>
+                <SectionSelect>
+                    <SectionButton
+                        onClick={() => handleSectionChange('User')}
+                        active={selectedSection === 'User'}
+                    >
+                        User
+                    </SectionButton>
+                    <SectionButton
+                        onClick={() => handleSectionChange('Audio')}
+                        active={selectedSection === 'Audio'}
+                    >
+                        Audio
+                    </SectionButton>
+                    <SectionButton
+                        onClick={() => handleSectionChange('Image')}
+                        active={selectedSection === 'Image'}
+                    >
+                        Images
+                    </SectionButton>
+                </SectionSelect>
 
-            {/*<UserProfile/>*/}
-            <UserManagement/>
-
-            {/*<SongList/>*/}
-            {/*<SongCollectionList/>*/}
-            {/*<UserList/>*/}
-
-            {/*<ImageListBase64/>*/}
-
+                <Section>
+                    {selectedSection === 'User' && <UserManagement />}
+                    {selectedSection === 'Audio' && (
+                        <>
+                            <SongList />
+                            <SongCollectionList />
+                        </>
+                    )}
+                    {selectedSection === 'Image' && <ImageListBase64 />}
+                </Section>
+            </DashboardContainer>
         </main>
-    )
+    );
 }
 
 export default Dashboard;

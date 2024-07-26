@@ -88,7 +88,7 @@ const ApiService = {
     async grantAdminPrivilege(username) {
         try {
             const response = await api.put(`/users/${username}/grant-admin`);
-            return response.data;
+            return response.data; // or simply return the response if you don't need data
         } catch (error) {
             throw new Error(`Error granting admin privilege to ${username}: ${error.message}`);
         }
