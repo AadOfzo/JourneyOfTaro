@@ -79,7 +79,7 @@ const ImageListBase64 = () => {
                 <ImageListInnerContainer>
                     {images.length > 0 ? (
                         images.map((image) => (
-                            <ImageListItem key={image.imageId}> {/* Unique key added here */}
+                            <ImageListItem key={image.imageId}>
                                 <ImageLabel>
                                     <PreviewImage src={getImageSrc(image)} alt={image.imageAltName || image.imageName} />
                                     <ImageName>{image.imageName}</ImageName>
