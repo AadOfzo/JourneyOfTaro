@@ -35,10 +35,23 @@ function SongList() {
 
     const handleAddSong = async (id) => {
         try {
-            await ApiService.addSong(id);
-            setReload(!reload);
+            const song = songs.find(song => song.id === id);
+            if (!song) throw new Error('Song not found');
+
+            const downloadUrl = await ApiService.getDownloadUrl(song.songTitle);
+
+            // Create a link element to trigger the download
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = song.songTitle; // Ensure this matches the file name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setMessage('Song downloaded successfully.');
         } catch (error) {
-            console.error('Error adding song:', error);
+            console.error('Error downloading song:', error);
+            setMessage('Error downloading song.');
         }
     };
 
@@ -106,10 +119,9 @@ function SongList() {
                                             </audio>
                                         </AudioPlayerContainer>
                                         <SongActionButtons>
-                                            <SongAddButton onClick={() => handleAddSong(song.id)}>Add</SongAddButton>
+                                            <SongAddButton onClick={() => handleAddSong(song.id)}>Download</SongAddButton>
                                             <SongDeleteButton onClick={() => handleDelete(song.id)}>Delete</SongDeleteButton>
                                         </SongActionButtons>
-                                        {/*<ImageForm />*/}
                                         <SongCollectionManager songs={[song]} />
                                         {message && <p>{message}</p>}
                                     </td>

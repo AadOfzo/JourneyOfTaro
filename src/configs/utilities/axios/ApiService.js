@@ -206,6 +206,16 @@ const ApiService = {
         }
     },
 
+    async getDownloadUrl(songTitle) {
+        try {
+            const response = await api.get(`/songs/files/${songTitle}`);
+            return response.data; // Assuming the backend returns the URL or a relevant message
+        } catch (error) {
+            console.error('Error fetching song download URL:', error);
+            throw error;
+        }
+    },
+
     async uploadSong(formData) {
         try {
             const response = await api.post('/fileUpload', formData, {
