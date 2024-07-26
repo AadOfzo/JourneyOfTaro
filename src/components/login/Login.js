@@ -19,7 +19,7 @@ const LoginForm = () => {
             login({ username }, response);
             console.log(response);
             setSuccessMessage('Login successful');
-            navigate('/image-form'); // Navigate to ImageForm after successful login
+            navigate('/'); // Navigate to ImageForm after successful login
         } catch (error) {
             console.log(error)
             console.error(error);
@@ -29,7 +29,7 @@ const LoginForm = () => {
 
     return (
         <div>
-            <h3>Login</h3>
+            <h3>Login: Admin_2 ExamplePassword2</h3>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

@@ -10,6 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token');
+        console.log(token);
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
@@ -70,8 +71,9 @@ const ApiService = {
     },
 
     async fetchUserDetails(token, username) {
+        console.log(token, username);
         try {
-            const response = await api.get(`/username/${username}`, {
+            const response = await api.get(`/users/username/${username}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -144,10 +146,14 @@ const ApiService = {
     },
 
     async deleteImage(id) {
+        if (!id) {
+            throw new Error('Image ID is required');
+        }
+
         try {
-            await api.delete(`/images/${id}`);
+            return await api.delete(`/images/${id}`);
         } catch (error) {
-            console.error('Error deleting image:', error);
+            console.error('Error deleting image:', error.response || error.message || error);
             throw error;
         }
     },
@@ -191,7 +197,13 @@ const ApiService = {
 
     // Songs endpoint api calls
     async fetchSongs() {
-        return await api.get('/songs');
+        try {
+            const response = await api.get('/songs');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching songs:', error);
+            throw error;
+        }
     },
 
     async uploadSong(formData) {
@@ -207,16 +219,32 @@ const ApiService = {
         }
     },
 
-    async addSong(id) {
-        return await api.post(`/fileUpload`);
+    async addSong(songId) {
+        try {
+            await api.post(`/songs/${songId}`);
+        } catch (error) {
+            console.error('Error adding song:', error);
+            throw error;
+        }
     },
 
-    async deleteSong(id) {
-        return await api.delete(`/songs/${id}`);
+    async deleteSong(songId) {
+        try {
+            await api.delete(`/songs/${songId}`);
+        } catch (error) {
+            console.error('Error deleting song:', error);
+            throw error;
+        }
     },
 
     async fetchSongCollections() {
-        return await api.get('/songCollections');
+        try {
+            const response = await api.get('/songCollections');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching song collections:', error);
+            throw error;
+        }
     },
 
     async addSongToCollection(songId, collectionId) {

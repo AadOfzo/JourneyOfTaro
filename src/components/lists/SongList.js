@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import ApiService from "../../configs/utilities/axios/ApiService";
 import {
-    ArtistName, AudioPlayerContainer,
+    ArtistName,
+    AudioPlayerContainer,
     GlowingRow,
     SongContainer,
     SongListContainer,
     SongListItem,
     SongTitle
 } from "./Music/styles.SongList";
-import {SongActionButtons, SongAddButton, SongDeleteButton} from "../buttons/styles.Buttons";
+import { SongActionButtons, SongAddButton, SongDeleteButton } from "../buttons/styles.Buttons";
 import SongCollectionManager from "../forms/musicForm/SongCollectionManager";
 
 function SongList() {
@@ -21,8 +22,10 @@ function SongList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await fetchSongs();
-                await fetchSongCollections();
+                const fetchedSongs = await ApiService.fetchSongs();
+                const fetchedCollections = await ApiService.fetchSongCollections();
+                setSongs(fetchedSongs);
+                setSongCollections(fetchedCollections);
             } catch (error) {
                 console.error('Error fetching songs or collections: ', error);
             }
@@ -30,36 +33,18 @@ function SongList() {
         fetchData();
     }, [reload]);
 
-    const fetchSongs = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/songs');
-            setSongs(response.data);
-        } catch (e) {
-            console.error('Error fetching Songs!', e);
-        }
-    };
-
-    const fetchSongCollections = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/songCollections');
-            setSongCollections(response.data);
-        } catch (e) {
-            console.error('Error fetching collections!', e);
-        }
-    };
-
     const handleAddSong = async (id) => {
         try {
-            await axios.post(`http://localhost:8080/songs/${id}`);
+            await ApiService.addSong(id);
             setReload(!reload);
         } catch (error) {
-            console.error('Error Adding song:', error);
+            console.error('Error adding song:', error);
         }
     };
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/songs/${id}`);
+            await ApiService.deleteSong(id);
             setReload(!reload);
         } catch (error) {
             console.error('Error deleting song:', error);
@@ -68,7 +53,7 @@ function SongList() {
 
     const handleAddSongToCollection = async (songId, collectionId) => {
         try {
-            await axios.post(`http://localhost:8080/songCollections/${collectionId}/songs`, [songId]);
+            await ApiService.addSongToCollection(songId, collectionId);
             setMessage('Song added to collection successfully.');
             setReload(!reload);
         } catch (error) {

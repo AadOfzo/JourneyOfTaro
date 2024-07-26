@@ -11,13 +11,12 @@ import {
     LoadingWheel
 } from './styles.ImageForm';
 
-const ImageForm = ({ userId, onImageUploaded }) => {
+const ImageForm = ({ onImageUploaded }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [uploaded, setUploaded] = useState(false);
 
     const handleFileChange = (e) => {
-        console.log({userId})
         setFile(e.target.files[0]);
         setUploaded(false); // Reset the uploaded state when a new file is selected
     };
@@ -37,12 +36,12 @@ const ImageForm = ({ userId, onImageUploaded }) => {
 
         try {
             await ApiService.uploadImage(formData);
-            if (onImageUploaded) {
-                onImageUploaded();
-            }
             setFile(null);
             setLoading(false);
             setUploaded(true); // Set the uploaded state to true after successful upload
+            if (onImageUploaded) {
+                onImageUploaded(); // Call the callback to refresh the image list
+            }
         } catch (error) {
             console.error('Error uploading image:', error);
             setLoading(false);

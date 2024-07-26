@@ -7,31 +7,12 @@ import FooterMenu from './components/footer/FooterMenu';
 import PageRoutes from './configs/routes/PageRoutes';
 import ComponentRoutes from './configs/routes/ComponentRoutes';
 import AppRoutes from './configs/routes/AppRoutes';
-import ApiService from "./configs/utilities/axios/ApiService";
 
 function App() {
     const { user, token, logout } = useAuth();
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('visitor');
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                if (token) {
-                    const userDetails = await ApiService.fetchUserDetails();
-                    setUserName(userDetails.username);
-                    setUserRole(userDetails.role);
-                } else {
-                    setUserName('');
-                    setUserRole('visitor');
-                }
-            } catch (error) {
-                console.error('Error fetching user details:', error);
-            }
-        };
-
-        fetchUserData();
-    }, [token]);
+    console.log(user?.userId);
 
     return (
         <div className="main-outer-container">

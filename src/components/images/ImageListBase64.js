@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiService from "../../configs/utilities/axios/ApiService";
+import ImageForm from "../forms/imageForm/ImageForm";
 import {
     Container,
     PreviewImage,
@@ -13,24 +14,39 @@ import {
 } from "../forms/imageForm/styles.ImageForm";
 
 const ImageListBase64 = () => {
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState([]); // Initialize with an empty array
 
     const fetchImages = async () => {
         try {
             const response = await ApiService.fetchImages();
-            setImages(response.data);
+            if (response && Array.isArray(response)) {
+                setImages(response);
+            } else {
+                console.error('Unexpected response format:', response);
+                setImages([]);
+            }
         } catch (error) {
             console.error('Error fetching images:', error);
+            setImages([]); // Optionally set to an empty array on error
         }
     };
 
-    const handleDelete = async (id) => {
-        try {
-            await ApiService.deleteImage(id);
-            await fetchImages(); // Refresh the image list after deletion
-        } catch (error) {
-            console.error('Error deleting image:', error);
+    const handleDelete = async (imageId) => {
+        if (!imageId) {
+            console.error('Image ID is missing');
+            return; // Exit if ID is missing
         }
+
+        try {
+            await ApiService.deleteImage(imageId);
+            fetchImages(); // Refresh the image list after deletion
+        } catch (error) {
+            console.error('Error deleting image:', error.response || error.message || error);
+        }
+    };
+
+    const handleImageUploaded = () => {
+        fetchImages(); // Refresh the image list after a successful upload
     };
 
     useEffect(() => {
@@ -57,18 +73,23 @@ const ImageListBase64 = () => {
 
     return (
         <Container>
+            <ImageForm onImageUploaded={handleImageUploaded} />
             <ImageListOuterContainer>
                 <ImageListTitle>Image List</ImageListTitle>
                 <ImageListInnerContainer>
-                    {images.map((image) => (
-                        <ImageListItem key={image.id}>
-                            <ImageLabel>
-                                <PreviewImage src={getImageSrc(image)} alt={image.imageAltName || image.imageName} />
-                                <ImageName>{image.imageName}</ImageName>
-                            </ImageLabel>
-                            <ImageDeleteButton onClick={() => handleDelete(image.id)}>Delete</ImageDeleteButton>
-                        </ImageListItem>
-                    ))}
+                    {images.length > 0 ? (
+                        images.map((image) => (
+                            <ImageListItem key={image.imageId}> {/* Unique key added here */}
+                                <ImageLabel>
+                                    <PreviewImage src={getImageSrc(image)} alt={image.imageAltName || image.imageName} />
+                                    <ImageName>{image.imageName}</ImageName>
+                                </ImageLabel>
+                                <ImageDeleteButton onClick={() => handleDelete(image.imageId)}>Delete</ImageDeleteButton>
+                            </ImageListItem>
+                        ))
+                    ) : (
+                        <p>No images found</p> // Display a message if no images are available
+                    )}
                 </ImageListInnerContainer>
             </ImageListOuterContainer>
         </Container>

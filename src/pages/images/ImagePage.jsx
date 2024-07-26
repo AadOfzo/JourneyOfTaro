@@ -12,10 +12,10 @@ function ImagePage() {
     return (
         <div className="pages-main-container">
         <SImagePage>
-            <ImageForm/>
-            {/*<ImageListBase64/>*/}
+            {/*<ImageForm/>*/}
+            <ImageListBase64/>
             {/*<ImageComponent/>*/}
-            <ImageGallery/>
+            {/*<ImageGallery/>*/}
             {/*<ImageGalleryWithUrls/>*/}
             {/*<ImageHandler/>*/}
         </SImagePage>
