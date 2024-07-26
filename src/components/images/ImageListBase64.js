@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ApiService from "../../configs/utilities/axios/ApiService";
-import ImageForm from "../forms/imageForm/ImageForm";
 import {
     Container,
     PreviewImage,
@@ -31,22 +30,13 @@ const ImageListBase64 = () => {
         }
     };
 
-    const handleDelete = async (imageId) => {
-        if (!imageId) {
-            console.error('Image ID is missing');
-            return; // Exit if ID is missing
-        }
-
+    const handleDelete = async (id) => {
         try {
-            await ApiService.deleteImage(imageId);
+            await ApiService.deleteImage(id);
             fetchImages(); // Refresh the image list after deletion
         } catch (error) {
-            console.error('Error deleting image:', error.response || error.message || error);
+            console.error('Error deleting image:', error);
         }
-    };
-
-    const handleImageUploaded = () => {
-        fetchImages(); // Refresh the image list after a successful upload
     };
 
     useEffect(() => {
@@ -73,18 +63,17 @@ const ImageListBase64 = () => {
 
     return (
         <Container>
-            <ImageForm onImageUploaded={handleImageUploaded} />
             <ImageListOuterContainer>
                 <ImageListTitle>Image List</ImageListTitle>
                 <ImageListInnerContainer>
                     {images.length > 0 ? (
                         images.map((image) => (
-                            <ImageListItem key={image.imageId}> {/* Unique key added here */}
+                            <ImageListItem key={image.id}>
                                 <ImageLabel>
                                     <PreviewImage src={getImageSrc(image)} alt={image.imageAltName || image.imageName} />
                                     <ImageName>{image.imageName}</ImageName>
                                 </ImageLabel>
-                                <ImageDeleteButton onClick={() => handleDelete(image.imageId)}>Delete</ImageDeleteButton>
+                                <ImageDeleteButton onClick={() => handleDelete(image.id)}>Delete</ImageDeleteButton>
                             </ImageListItem>
                         ))
                     ) : (
