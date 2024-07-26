@@ -17,6 +17,12 @@ function NavBar2({ isLoggedIn }) {
         logout();
     };
 
+    // Debug logging
+    console.log('User:', user);
+
+    // Check if user roles include 'ADMIN'
+    const isAdmin = user && user.roles && user.roles.includes('ADMIN');
+
     return (
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>
             <div className="nav-container">
@@ -43,11 +49,13 @@ function NavBar2({ isLoggedIn }) {
                                 Music
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                Admin Dashboard
-                            </NavLink>
-                        </li>
+                        {isAdmin && (
+                            <li>
+                                <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                    Admin Dashboard
+                                </NavLink>
+                            </li>
+                        )}
                         {user ? (
                             <>
                                 <li>
@@ -55,7 +63,7 @@ function NavBar2({ isLoggedIn }) {
                                         About
                                     </NavLink>
                                 </li>
-                                {user.role === 'ADMIN' && (
+                                {isAdmin && (
                                     <li>
                                         <NavLink to="/unused" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                             Unused Components
