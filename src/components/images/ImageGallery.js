@@ -34,7 +34,7 @@ const ImageGallery = () => {
                             style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                         />
                         <div className="image-info">
-                            <h4>{image.imageName}</h4>
+                            {/*<h4>{image.imageName}</h4>*/}
                             {/* Add additional information as needed */}
                         </div>
                     </div>

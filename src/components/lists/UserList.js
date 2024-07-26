@@ -41,11 +41,11 @@ function UserList() {
 
             // Fetch images for each user
             const imagePromises = usersResponse.data.map(user =>
-                ApiService.getImageFromUser(user.userId)
+                ApiService.getUserImage(user.userId)
                     .then(response => ({
                         userId: user.userId,
                         imageData: response.data,
-                        mimeType: response.mimeType // Assuming you adjust the response structure
+                        mimeType: response.headers['content-type'] // Adjust the response structure if needed
                     }))
                     .catch(error => ({
                         userId: user.userId,
@@ -76,7 +76,7 @@ function UserList() {
 
     const renderUserImage = (imageUrl) => {
         if (imageUrl) {
-            return <UserImage src={imageUrl} alt="User" />;
+            return <UserImage src={`data:${imageUrl.mimeType};base64,${imageUrl.imageData}`} alt="User" />;
         } else {
             return (
                 <NoImageContainer
@@ -131,9 +131,11 @@ function UserList() {
                 <UserListInnerContainer> {/* Flex container for static layout */}
                     <UserSelect>
                         <UserSelectHeader>Users</UserSelectHeader>
-                        <UserSelectList>
+                        <UserSelectList as="table">
+                            <tbody>
                             {users.map(user => (
                                 <UserSelectItem
+                                    as="tr"
                                     key={user.userId}
                                     onClick={() => toggleExpand(user.userId)}
                                     isActive={expandedUserId === user.userId}
@@ -142,6 +144,7 @@ function UserList() {
                                     <td>{user.username}</td>
                                 </UserSelectItem>
                             ))}
+                            </tbody>
                         </UserSelectList>
                     </UserSelect>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

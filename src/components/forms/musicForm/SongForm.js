@@ -7,59 +7,45 @@ import {
     ChooseFileButton,
     PlusIcon,
     SongUploadLabel,
-    SongUploadContainer,
-    SongListTitle,
     SongUploadButton,
     StyledInput,
 } from './styles.SongForm';
 import LoadingComponent from "../../loadingWheel/LoadingComponent";
-import {
-    fetchSongs,
-    handleDragEnter,
-    handleDragLeave,
-    handleDrop,
-    handleFileChange
-} from "../../../configs/utilities/FileUtilities";
+import { useAuth } from '../../authentication/Auth';
 
 const SongForm = () => {
+    const { token } = useAuth();
     const [songTitle, setSongTitle] = useState('');
     const [artistName, setArtistName] = useState('');
-    const [formData, setFormData] = useState({ file: null });
+    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [dragOver, setDragOver] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+        setUploaded(false); // Reset the uploaded state when a new file is selected
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
+
+        setLoading(true);
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('songTitle', songTitle);
+        formData.append('artistName', artistName);
+
         try {
-            setLoading(true);
-            const file = formData.file;
-
-            if (!file) {
-                console.error('No file selected');
-                setLoading(false);
-                return;
-            }
-
-            const formDataToSend = new FormData();
-            formDataToSend.append('file', file);
-            formDataToSend.append('songTitle', songTitle);
-            formDataToSend.append('artistName', artistName);
-
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('Token is missing');
-            }
-
-            // Log the token to verify its format
-            console.log('Token:', token);
-
-            await ApiService.uploadSong(formDataToSend, token);
-            await fetchSongs();
-            setFormData({ file: null });
-            setSongTitle('');
-            setArtistName('');
+            await ApiService.uploadSong(formData);
+            setFile(null);
             setLoading(false);
+            setUploaded(true); // Set the uploaded state to true after successful upload
         } catch (error) {
             console.error('Error uploading song:', error);
             setLoading(false);
@@ -68,48 +54,35 @@ const SongForm = () => {
 
     return (
         <SongContainer>
-            <SongUploadContainer>
-                <SongListTitle>Upload Song</SongListTitle>
-                <Form
-                    onSubmit={handleSubmit}
-                    onDragEnter={(e) => handleDragEnter(e, setDragOver)}
-                    onDragLeave={(e) => handleDragLeave(e, setDragOver)}
-                    onDrop={(e) => handleDrop(e, setDragOver, setFormData, formData)}
-                    dragOver={dragOver}
-                >
-                    {!formData.file && (
-                        <>
-                            <FileInput
-                                type="file"
-                                name="file"
-                                id="file"
-                                onChange={(e) => handleFileChange(e, setFormData, formData)}
+            <Form onSubmit={handleSubmit}>
+                <FileInput type="file" onChange={handleFileChange} id="file-input" />
+                {!file ? (
+                    <ChooseFileButton htmlFor="file-input">
+                        <PlusIcon>+</PlusIcon> Choose File
+                    </ChooseFileButton>
+                ) : (
+                    <>
+                        <SongUploadLabel>
+                            Song Title:
+                            <StyledInput
+                                type="text"
+                                value={songTitle}
+                                onChange={(e) => setSongTitle(e.target.value)}
                             />
-                            <ChooseFileButton
-                                htmlFor="file"
-                                dragOver={dragOver}
-                            >
-                                <PlusIcon>+</PlusIcon> {dragOver ? 'Drop here' : 'Choose File'}
-                            </ChooseFileButton>
-                        </>
-                    )}
-                    {loading && <LoadingComponent />}
-                    {formData.file && <SongUploadButton type="submit">Upload Song</SongUploadButton>}
-                    {formData.file && <SongUploadLabel>Selected file: {formData.file.name}</SongUploadLabel>}
-                    <StyledInput
-                        type="text"
-                        value={songTitle}
-                        placeholder="Enter song title"
-                        onChange={(e) => setSongTitle(e.target.value)}
-                    />
-                    <StyledInput
-                        type="text"
-                        value={artistName}
-                        placeholder="Enter artist name"
-                        onChange={(e) => setArtistName(e.target.value)}
-                    />
-                </Form>
-            </SongUploadContainer>
+                        </SongUploadLabel>
+                        <SongUploadLabel>
+                            Artist Name:
+                            <StyledInput
+                                type="text"
+                                value={artistName}
+                                onChange={(e) => setArtistName(e.target.value)}
+                            />
+                        </SongUploadLabel>
+                        <SongUploadButton type="submit">Upload</SongUploadButton>
+                    </>
+                )}
+                {loading && <LoadingComponent />}
+            </Form>
         </SongContainer>
     );
 };

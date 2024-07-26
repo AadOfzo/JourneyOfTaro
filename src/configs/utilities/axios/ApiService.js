@@ -7,32 +7,33 @@ const api = axios.create({
     }
 });
 
-// api.interceptors.request.use(
-//     config => {
-//         const token = localStorage.getItem('token');
-//         if (token) {
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         } else {
-//             console.error('Token is missing');
-//         }
-//         return config;
-//     },
-//     error => {
-//         return Promise.reject(error);
-//     }
-// );
+api.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            console.error('Token is missing');
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
 const ApiService = {
-    // Authentication endpoint
+    getToken: () => localStorage.getItem('token'),
+
     async authenticate(username, password) {
         try {
             const response = await api.post('/authenticate', { username, password });
-            const { jwt } = response.data;
+            const { jwt, user } = response.data;
             if (jwt) {
                 localStorage.setItem('token', response.data.jwt);
             }
             console.log(response.data)
-            return jwt;
+            return { jwt, user };
         } catch (error) {
             console.error('Error authenticating', error);
             throw new Error(`Error authenticating: ${error.message}`);
@@ -68,9 +69,9 @@ const ApiService = {
         }
     },
 
-    async fetchUserDetails(token) {
+    async fetchUserDetails(token, username) {
         try {
-            const response = await api.get('/users/', {
+            const response = await api.get(`/username/${username}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -151,18 +152,19 @@ const ApiService = {
         }
     },
 
-    async getUserImage(userId) {
-        try {
-            const response = await api.get(`/users/${userId}/images`, { responseType: 'arraybuffer' });
-            if (response.status === 200) {
-                const imageData = Buffer.from(response.data, 'binary').toString('base64');
-                const mimeType = response.headers['content-type'];
-                return { imageData, mimeType };
-            }
-            throw new Error(`Failed to fetch image for user ${userId}. Status: ${response.status}`);
-        } catch (error) {
-            throw new Error(`Error fetching image for user ${userId}: ${error.message}`);
+    getUserImage: async (userId) => {
+        const token = ApiService.getToken();
+        if (!token) {
+            console.error('Token is missing');
+            throw new Error('Token is missing');
         }
+
+        const response = await axios.get(`http://localhost:8080/users/${userId}/image`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
     },
 
     async addUserImage(userId, file) {
@@ -193,29 +195,20 @@ const ApiService = {
     },
 
     async uploadSong(formData) {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('Token is missing');
-        }
-
-        console.log("Token used for upload:", token); // Log the token
-
-        return await api.post('/fileUpload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => {
+        try {
+            const response = await api.post('/fileUpload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
             console.log("Upload response:", response.data);
             return response.data;
-        }).catch(error => {
-            console.error("Upload error:", error);
+        } catch (error) {
+            console.error('Error uploading song:', error);
             throw error;
-        });
+        }
     },
 
     async addSong(id) {
-        return await api.post(`/songs/${id}`);
+        return await api.post(`/fileUpload`);
     },
 
     async deleteSong(id) {
