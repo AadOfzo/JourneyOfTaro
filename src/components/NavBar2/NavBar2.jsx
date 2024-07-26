@@ -39,18 +39,19 @@ function NavBar2({ isLoggedIn }) {
                                 Start Tour
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to="/images" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                Images
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/music" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
-                                Music
-                            </NavLink>
-                        </li>
+
                         {user ? (
                             <>
+                                <li>
+                                    <NavLink to="/images" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                        Images
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/music" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
+                                        Music
+                                    </NavLink>
+                                </li>
                                 <li>
                                     <NavLink to="/unused" className={({ isActive }) => (isActive ? 'active-link' : 'default-link')}>
                                         Unused Components

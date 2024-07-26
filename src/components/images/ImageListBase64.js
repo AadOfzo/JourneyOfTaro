@@ -31,27 +31,22 @@ const ImageListBase64 = () => {
         }
     };
 
-    const handleDelete = async (imageId) => {
-        if (!imageId) {
-            console.error('Image ID is missing');
-            return; // Exit if ID is missing
-        }
-
+    const handleDelete = async (userId) => {
         try {
-            await ApiService.deleteImage(imageId);
+            await ApiService.deleteImage(userId);
             fetchImages(); // Refresh the image list after deletion
         } catch (error) {
-            console.error('Error deleting image:', error.response || error.message || error);
+            console.error('Error deleting image:', error);
         }
-    };
-
-    const handleImageUploaded = () => {
-        fetchImages(); // Refresh the image list after a successful upload
     };
 
     useEffect(() => {
         fetchImages();
     }, []);
+
+    const handleImageUploaded = () => {
+        fetchImages(); // Refresh the image list when a new image is uploaded
+    };
 
     const getImageSrc = (image) => {
         let mimeType;
@@ -73,13 +68,13 @@ const ImageListBase64 = () => {
 
     return (
         <Container>
-            <ImageForm onImageUploaded={handleImageUploaded} />
+            <ImageForm onImageUploaded={handleImageUploaded} /> {/* Include ImageForm and pass the callback */}
             <ImageListOuterContainer>
                 <ImageListTitle>Image List</ImageListTitle>
                 <ImageListInnerContainer>
                     {images.length > 0 ? (
                         images.map((image) => (
-                            <ImageListItem key={image.imageId}> {/* Unique key added here */}
+                            <ImageListItem key={image.imageId}>
                                 <ImageLabel>
                                     <PreviewImage src={getImageSrc(image)} alt={image.imageAltName || image.imageName} />
                                     <ImageName>{image.imageName}</ImageName>
@@ -88,7 +83,7 @@ const ImageListBase64 = () => {
                             </ImageListItem>
                         ))
                     ) : (
-                        <p>No images found</p> // Display a message if no images are available
+                        <p>No images found</p>
                     )}
                 </ImageListInnerContainer>
             </ImageListOuterContainer>

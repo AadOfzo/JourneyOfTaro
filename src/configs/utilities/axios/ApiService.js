@@ -145,13 +145,13 @@ const ApiService = {
         }
     },
 
-    async deleteImage(id) {
-        if (!id) {
+    async deleteImage(userId) {
+        if (!userId) {
             throw new Error('Image ID is required');
         }
 
         try {
-            return await api.delete(`/images/${id}`);
+            return await api.delete(`/images/${userId}`);
         } catch (error) {
             console.error('Error deleting image:', error.response || error.message || error);
             throw error;
