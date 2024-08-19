@@ -6,14 +6,13 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token'));
-    const [username, setUserName] = useState(null);
+    const [username, setUsername] = useState(localStorage.getItem('username'));
+
     useEffect(() => {
         const fetchUserData = async () => {
-            console.log(token);
-            if (token) {
+            if (token && username) {
                 try {
                     const userDetails = await ApiService.fetchUserDetails(token, username);
-                    console.log(userDetails);
                     setUser(userDetails);
                 } catch (error) {
                     console.error('Error fetching user details:', error);
@@ -22,15 +21,14 @@ export const AuthProvider = ({ children }) => {
             }
         };
         fetchUserData();
-    }, [token]);
+    }, [token, username]);
 
     const login = (userData, authToken) => {
         localStorage.setItem('token', authToken.jwt);
         localStorage.setItem('username', userData.username);
-        console.log(userData)
-        setUserName(userData.username);
+        setUsername(userData.username);
         setToken(authToken.jwt);
-        // setUser(userData);
+        setUser(userData);
     };
 
     const logout = () => {
@@ -38,6 +36,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         setToken(null);
+        setUsername(null);
     };
 
     return (

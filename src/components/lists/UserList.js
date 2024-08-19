@@ -113,10 +113,10 @@ function UserList() {
         }
     };
 
-    const deleteUser = async (username) => {
+    const deleteUser = async (userId) => {
         try {
-            await ApiService.deleteUser(username);
-            fetchUsers(); // Refresh user list after deleting a user
+            await ApiService.deleteUser(userId);
+            fetchUsers();
         } catch (error) {
             console.error('Error deleting user:', error);
         }
@@ -155,7 +155,7 @@ function UserList() {
                                 </UserDetailsContainer>
                                 <ButtonsContainer>
                                     <AddAdminButton onClick={() => grantAdminPrivilege(user.username)}>Grant Admin Rights</AddAdminButton>
-                                    <UserDeleteButton onClick={() => deleteUser(user.username)}>Delete User</UserDeleteButton>
+                                    <UserDeleteButton onClick={() => deleteUser(user.userId)}>Delete User</UserDeleteButton>
                                 </ButtonsContainer>
                                 <NoImageContainer
                                     hasImage={!!file}
