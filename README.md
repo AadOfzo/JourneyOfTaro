@@ -1,4 +1,11 @@
-1 Start een IDE naar jouw keuze (deze applicatie is gebouwd met WebStorm).
+1 Start een IDE naar jouw keuze deze applicatie is gebouwd met WebStorm op een MacBook pro mid 2012 op PORT=3000.
+  Voor Windows verwijder PORT=3000 uit de package.json:
+    "scripts": {
+    "start": "PORT=3000 react-scripts start", <-- Verwijder PORT=3000
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+    },
 
    2 De applicatie starten
    2.1 Als je het project gecloned hebt naar jouw locale machine, installeer je eerst de node_modules door het volgende commando in de terminal te runnen:

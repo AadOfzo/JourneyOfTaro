@@ -3,11 +3,18 @@ import {
     UserDetailsContainer, UserDetail, UserDetailLabel, UserDetailValue
 } from './styles.UserComponent';
 
-const UserDetails = ({ user }) => {
+const UserDetails = ({ user, imageUrl }) => {
     return (
         <UserDetailsContainer>
             <table>
                 <tbody>
+                {imageUrl && (
+                    <tr>
+                        <td colSpan="2">
+                            <img src={imageUrl} alt={`${user.username}'s image`} style={{ maxWidth: '200px' }} />
+                        </td>
+                    </tr>
+                )}
                 <tr>
                     <td><UserDetailLabel>First Name:</UserDetailLabel></td>
                     <td><UserDetailValue>{user.firstname}</UserDetailValue></td>

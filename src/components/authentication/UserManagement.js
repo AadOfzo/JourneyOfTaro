@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import UserComponent from "../../configs/users/UserComponent";
 import UserDetails from "../../configs/users/UserDetails";
 import { UserImage, NoImageContainer, NoImageIcon, UploadButton, UserListContainer, CenteredH2, UserDetailsContainer, ActionButton, ButtonsContainer } from '../../configs/users/styles.UserComponent';
 import ApiService from "../../configs/utilities/axios/ApiService";
 import UserList from "../lists/UserList";
 
 const UserManagement = () => {
-    const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [user, setUser] = useState(null);
+    const [userImage, setUserImage] = useState(null);
     const [file, setFile] = useState(null);
+    const [buttonText, setButtonText] = useState("Upload Image");
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const UserManagement = () => {
     const fetchUsers = async () => {
         try {
             const data = await ApiService.fetchUsers();
-            setUsers(data);
+            setSelectedUserId(data[0]?.id);  // Automatically select the first user
         } catch (error) {
             console.error('There was an error fetching the users!', error);
         }
@@ -35,50 +35,49 @@ const UserManagement = () => {
         try {
             const data = await ApiService.fetchUserById(userId);
             setUser(data);
+
+            const imageResponse = await ApiService.getUserImage(userId);
+            const imageUrl = URL.createObjectURL(imageResponse.data);
+            setUserImage(imageUrl);
+
         } catch (error) {
             console.error(`There was an error fetching the user with ID ${userId}!`, error);
         }
     };
 
-    const handleUserChange = (event) => {
-        setSelectedUserId(event.target.value);
-    };
-
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
+        setButtonText("Add Image");
     };
 
     const handleUploadClick = async () => {
         if (file && selectedUserId) {
-            const formData = new FormData();
-            formData.append('file', file);
-
             try {
                 const data = await ApiService.addUserImage(selectedUserId, file);
                 setUser(data);
                 setFile(null);
+                setButtonText("Upload Image");
+                fetchUserById(selectedUserId); // Refresh user image
             } catch (error) {
                 console.error('There was an error uploading the image!', error);
             }
         }
     };
 
-    const handleNoImageClick = () => {
+    const handleImageClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
     };
 
-    const renderUserImage = (imageUrl) => {
-        if (imageUrl) {
-            return <UserImage src={imageUrl} alt="User" />;
+    const renderUserImage = () => {
+        if (userImage) {
+            return (
+                <UserImage src={userImage} alt="User" onClick={handleImageClick} />
+            );
         } else {
             return (
-                <NoImageContainer
-                    hasImage={!!file}
-                    imageUrl={file ? URL.createObjectURL(file) : null}
-                    onClick={handleNoImageClick}
-                >
+                <NoImageContainer onClick={handleImageClick}>
                     {!file && <NoImageIcon />}
                     <p>{!file ? 'No user image' : ''}</p>
                     <input
@@ -87,7 +86,7 @@ const UserManagement = () => {
                         onChange={handleFileChange}
                         style={{ display: 'none' }}
                     />
-                    <UploadButton file={file} onClick={handleUploadClick}>Upload Image</UploadButton>
+                    {file && <UploadButton onClick={handleUploadClick}>{buttonText}</UploadButton>}
                 </NoImageContainer>
             );
         }
@@ -97,7 +96,7 @@ const UserManagement = () => {
         try {
             await ApiService.grantAdminPrivilege(username);
             alert('Admin rights granted successfully!');
-            fetchUsers();  // Refresh user list to reflect changes
+            fetchUserById(selectedUserId);  // Refresh user details to reflect changes
         } catch (error) {
             console.error('Error granting admin rights:', error);
         }
@@ -108,6 +107,7 @@ const UserManagement = () => {
             await ApiService.deleteUser(username);
             alert('User deleted successfully!');
             fetchUsers();  // Refresh user list to reflect changes
+            setUser(null); // Reset the selected user after deletion
         } catch (error) {
             console.error('Error deleting user:', error);
         }
@@ -116,13 +116,12 @@ const UserManagement = () => {
     return (
         <UserListContainer>
             <CenteredH2>User Management</CenteredH2>
-            <UserList />
-            {/*<UserComponent onUserChange={handleUserChange} users={users} />*/}
+            <UserList setSelectedUserId={setSelectedUserId} />
             {user && (
                 <UserDetailsContainer>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        {renderUserImage(user.imageUrl)}
-                        <UserDetails user={user} />
+                        {renderUserImage()}
+                        <UserDetails user={user} imageUrl={userImage} />
                         <ButtonsContainer>
                             <ActionButton onClick={() => grantAdminRights(user.username)}>Grant Admin Rights</ActionButton>
                             <ActionButton onClick={() => deleteUser(user.username)}>Delete User</ActionButton>

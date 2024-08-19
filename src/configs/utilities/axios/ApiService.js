@@ -168,10 +168,12 @@ const ApiService = {
         const response = await axios.get(`http://localhost:8080/users/${userId}/image`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            },
+            responseType: 'blob' // Add this line to specify the response type as a blob
         });
         return response;
     },
+
 
     async addUserImage(userId, file) {
         const formData = new FormData();

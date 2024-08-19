@@ -20,8 +20,8 @@ function ImagePage() {
         return <div>Loading...</div>;
     }
 
-    const isAdmin = user.roles.includes('ADMIN');
-    const isUser = user.roles.includes('USER');
+    const isAdmin = user.roles.includes('ROLE_ADMIN');
+    const isUser = user.roles.includes('ROLE_USER');
 
     return (
         <div className="pages-main-container">

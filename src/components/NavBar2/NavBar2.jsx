@@ -21,7 +21,7 @@ function NavBar2({ isLoggedIn }) {
     console.log('User:', user);
 
     // Check if user roles include 'ADMIN'
-    const isAdmin = user && user.roles && user.roles.includes('ADMIN');
+    const isAdmin = user && user.roles && user.roles.includes('ROLE_ADMIN');
 
     return (
         <SnavBar2 ref={navRef} className={`${isNavOpen ? 'open' : ''}`}>

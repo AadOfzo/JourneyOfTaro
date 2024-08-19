@@ -1,5 +1,5 @@
 // src/pages/Dashboard.js
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import UserManagement from '../../components/authentication/UserManagement';
 import SongList from '../../components/lists/SongList';
 import SongCollectionList from '../../components/lists/Music/SongCollectionList';
@@ -10,6 +10,7 @@ import {
     Section,
     SectionButton
 } from './styles.Dashboard';
+import UserDetails2 from "../../components/users/UserDetails2";
 
 function Dashboard() {
     const [selectedSection, setSelectedSection] = useState('User');
@@ -43,14 +44,19 @@ function Dashboard() {
                 </SectionSelect>
 
                 <Section>
-                    {selectedSection === 'User' && <UserManagement />}
-                    {selectedSection === 'Audio' && (
+                    {selectedSection === 'User' && (
                         <>
-                            <SongList />
-                            <SongCollectionList />
+                            <UserManagement/>
+                            {/*<UserDetails2/>*/}
                         </>
                     )}
-                    {selectedSection === 'Image' && <ImageListBase64 />}
+                    {selectedSection === 'Audio' && (
+                        <>
+                            <SongList/>
+                            <SongCollectionList/>
+                        </>
+                    )}
+                    {selectedSection === 'Image' && <ImageListBase64/>}
                 </Section>
             </DashboardContainer>
         </main>

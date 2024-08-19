@@ -22,10 +22,13 @@ function UserList() {
     const [users, setUsers] = useState([]);
     const [expandedUserId, setExpandedUserId] = useState(null);
     const [loadingUsers, setLoadingUsers] = useState(false);
-    const [errorUsers, setErrorUsers] = useState(null);
+    const [ setErrorUsers ] = useState(null);
     const [images, setImages] = useState([]);
-    const [selectedUserId, setSelectedUserId] = useState(null);
     const [file, setFile] = useState(null);
+    const [buttonText, setButtonText] = useState("Upload Image");
+
+    // New state for the selected user's ID
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
     const fileInputRef = useRef(null);
 
@@ -63,20 +66,43 @@ function UserList() {
     };
 
     const handleNoImageClick = () => {
-        fileInputRef.current.click();
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
     };
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
+        setButtonText("Add Image");
     };
 
-    const handleUploadClick = () => {
-        fileInputRef.current.click();
+    const handleUploadClick = async () => {
+        if (file && selectedUserId) {
+            const formData = new FormData();
+            formData.append('file', file); // 'file' must be the exact key expected by the backend
+
+            try {
+                const response = await ApiService.addUserImage(selectedUserId, formData);
+                setUser(response.data); // Assuming the backend returns the updated user
+                setFile(null);
+            } catch (error) {
+                console.error('Error uploading the image:', error);
+            }
+        }
     };
 
-    const renderUserImage = (imageUrl) => {
+    const renderUserImage = (user) => {
+        const imageUrl = images.find(image => image.userId === user.userId)?.imageData;
+        const mimeType = images.find(image => image.userId === user.userId)?.mimeType;
+
         if (imageUrl) {
-            return <UserImage src={`data:${imageUrl.mimeType};base64,${imageUrl.imageData}`} alt="User" />;
+            return (
+                <UserImage
+                    src={`data:${mimeType};base64,${imageUrl}`}
+                    alt="User"
+                    onClick={handleNoImageClick}
+                />
+            );
         } else {
             return (
                 <NoImageContainer
@@ -92,7 +118,9 @@ function UserList() {
                         onChange={handleFileChange}
                         style={{ display: 'none' }}
                     />
-                    <UploadButton file={file} onClick={handleUploadClick}>Upload Image</UploadButton>
+                    <UploadButton file={file} onClick={handleUploadClick}>
+                        {buttonText}
+                    </UploadButton>
                 </NoImageContainer>
             );
         }
@@ -102,6 +130,7 @@ function UserList() {
         setExpandedUserId(prevState => (prevState === userId ? null : userId));
         const selectedUser = users.find(u => u.userId === userId);
         setUser(selectedUser);
+        setSelectedUserId(userId); // Set the selected user's ID
     };
 
     const grantAdminPrivilege = async (username) => {
@@ -151,7 +180,7 @@ function UserList() {
                         {user && (
                             <>
                                 <UserDetailsContainer>
-                                    {renderUserImage(user.imageUrl)}
+                                    {renderUserImage(user)}
                                     <UserDetails user={user} />
                                 </UserDetailsContainer>
                                 <ButtonsContainer>
