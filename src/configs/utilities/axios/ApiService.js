@@ -112,15 +112,14 @@ const ApiService = {
         }
     },
 
-    async deleteUser(username) {
+    async deleteUser(userId) {
         try {
-            const response = await api.delete(`/users/${username}`);
+            const response = await api.delete(`/users/${userId}`);
             return response.data;
         } catch (error) {
-            throw new Error(`Error deleting user ${username}: ${error.message}`);
+            throw new Error(`Error deleting user ${userId}: ${error.message}`);
         }
     },
-
 
     // Image endpoints
     async fetchImages() {
