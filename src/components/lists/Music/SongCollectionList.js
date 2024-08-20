@@ -25,18 +25,40 @@ function SongCollectionList({ onVisibilityChange = () => {}, showActions = true 
     };
 
     const handleToggleVisibility = async (collection) => {
+        const newVisibility = !collection.isPublic;
+
+        // Optimistically update UI for instant feedback
+        setCollections(prevCollections =>
+            prevCollections.map(col =>
+                col.id === collection.id ? { ...col, isPublic: newVisibility } : col
+            )
+        );
+
         try {
-            const updatedCollection = await ApiService.toggleSongCollectionVisibility(collection.id, !collection.isPublic);
+            // Send the request to the backend with the new visibility state
+            const updatedCollection = await ApiService.toggleSongCollectionVisibility(collection.id, { isPublic: newVisibility });
+
+            // Sync the UI with the actual backend response
             setCollections(prevCollections =>
                 prevCollections.map(col =>
                     col.id === collection.id ? updatedCollection : col
                 )
             );
-            onVisibilityChange(updatedCollection); // Call the function
+
+            // Notify the parent component if needed
+            onVisibilityChange(updatedCollection);
         } catch (error) {
             console.error('Error toggling visibility:', error);
+
+            // Revert UI change if error occurs
+            setCollections(prevCollections =>
+                prevCollections.map(col =>
+                    col.id === collection.id ? { ...col, isPublic: !newVisibility } : col
+                )
+            );
         }
     };
+
 
     const handleImageUploaded = async (file, collectionId) => {
         try {

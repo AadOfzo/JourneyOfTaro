@@ -2,12 +2,14 @@ import React from "react";
 import MusicApp from "../../components/musicPlayer/MusicApp";
 import OutlineLogo from "../../assets/images/svg/JourneyOfTaro_Logo_CompassOutline_V2.svg";
 import ContentContainer from "../../components/contentLayout/ContentContainer";
+import UserAccount from "../../components/users/UserAccount";
 
 function UnusedComponents(){
 
     return(
         <main className="pages-main-container">
          <h2>Unused Components</h2>
+            <UserAccount />
             <MusicApp />
             <ContentContainer
                 layout={'text'}

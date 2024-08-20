@@ -16,8 +16,9 @@ function About() {
                             <h3>Users</h3>
                             <p>
                                 1. Een USER kan aangemaakt worden op de 'Start Tour' pagina.
+                            </p>
+                            <p>
                                 2. Na het maken van een USER kan je inloggen en 'Images en Songs' uploaden via de 'Image en Music' pagina's.
-
                             </p>
 
                             <h3>Images</h3>

@@ -1,26 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ApiService from '../../configs/utilities/axios/ApiService';
-import UserDetails from "../../configs/users/UserDetails";
+import UserDetails from '../../configs/users/UserDetails';
 import {
     AccountContainer,
     AccountDetailsForm,
     InputField,
     UpdateButton,
-    CenteredH2
+    CenteredH2,
 } from './styles.UserAccount';
+import {
+    NoImageContainer,
+    NoImageIcon,
+    UploadButton
+} from '../../configs/users/styles.UserComponent';
 
 function UserAccount() {
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [file, setFile] = useState(null);
+    const [buttonText, setButtonText] = useState("Upload Image");
+    const [imageUrl, setImageUrl] = useState(null);
 
-    // Mock user ID for demonstration, replace this with actual logic
-    const userId = '12345'; // Replace with logic to get the actual user ID
+    const fileInputRef = useRef(null);
+
+    const userId = localStorage.getItem('userId'); // Ensure this key matches what is stored
 
     useEffect(() => {
-        fetchUserDetails();
-    }, []);
+        if (userId) {
+            fetchUserDetails();
+            fetchUserImage(userId);
+        } else {
+            setError('User ID is missing.');
+            setLoading(false);
+        }
+    }, [userId]);
 
     const fetchUserDetails = async () => {
         try {
@@ -31,6 +46,22 @@ function UserAccount() {
             setError('Error fetching user details. Please try again later.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchUserImage = async (userId) => {
+        try {
+            const imageResponse = await ApiService.getUserImage(userId);
+            setImageUrl(URL.createObjectURL(imageResponse.data));
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                // No image found, set URL to null
+                setImageUrl(null);
+            } else {
+                // Handle other errors
+                console.error('Error fetching user image:', error);
+                setImageUrl(null); // Fallback if there's an error
+            }
         }
     };
 
@@ -54,6 +85,33 @@ function UserAccount() {
         }
     };
 
+    const handleNoImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+        setButtonText("Add Image");
+    };
+
+    const handleUploadClick = async () => {
+        if (file && userId) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                await ApiService.addUserImage(userId, file);
+                setFile(null);
+                setButtonText("Upload Image");
+                fetchUserImage(userId); // Refresh user image
+            } catch (error) {
+                console.error('Error uploading the image:', error);
+            }
+        }
+    };
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -64,7 +122,7 @@ function UserAccount() {
             {error && <p>{error}</p>}
             {userDetails && (
                 <>
-                    <UserDetails user={userDetails} /> {/* Render UserDetails component */}
+                    <UserDetails user={userDetails} imageUrl={imageUrl} />
                     <AccountDetailsForm onSubmit={handleFormSubmit}>
                         <InputField
                             type="text"
@@ -98,6 +156,23 @@ function UserAccount() {
                         <UpdateButton type="submit">Update Details</UpdateButton>
                         {updateSuccess && <p>Account details updated successfully!</p>}
                     </AccountDetailsForm>
+                    <NoImageContainer
+                        hasImage={!!file}
+                        imageUrl={file ? URL.createObjectURL(file) : null}
+                        onClick={handleNoImageClick}
+                    >
+                        {!file && <NoImageIcon />}
+                        <p>{!file ? 'No user image' : ''}</p>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                        />
+                        <UploadButton file={file} onClick={handleUploadClick}>
+                            {buttonText}
+                        </UploadButton>
+                    </NoImageContainer>
                 </>
             )}
         </AccountContainer>

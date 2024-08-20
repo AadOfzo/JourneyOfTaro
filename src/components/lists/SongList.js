@@ -10,11 +10,11 @@ import {
     SongTitle
 } from "./Music/styles.SongList";
 import { SongActionButtons, SongAddButton, SongDeleteButton } from "../buttons/styles.Buttons";
-import SongCollectionManager from "../forms/musicForm/SongCollectionManager";
+import SongCollectionManager from "./Music/SongCollectionManager";
 
 function SongList() {
     const [songs, setSongs] = useState([]);
-    const [songCollections, setSongCollections] = useState([]);
+    const [ setSongCollections] = useState([]);
     const [expandedSongId, setExpandedSongId] = useState(null);
     const [message, setMessage] = useState('');
     const [reload, setReload] = useState(false);
