@@ -24,8 +24,8 @@ Er is ook een pdf versie van de handleiding meegeleverd. Hier staan ook screensh
     3.1.a Login als ADMIN met user: Example_Admin_1 password: ExamplePassword2.
     3.1.b Er zijn nu meer opties voor de ADMIN in de verschillende pagina's ook is er een AdminDashboard
     3.1.c De verschillende menu's zijn voor
-        -Users: User informatie bekijken, Admin rechten geven, user deleten (werkt niet).
-        -Songs: Songs beluisteren met standaard player, downloaden (werkt niet) en deleten (werkt wel).
-        -Images: Images bekijken, verwijderen, aan ImageGallery toevoegen (werkt niet).
+        -Users: User informatie bekijken, Admin rechten geven, user deleten.
+        -Songs: Songs beluisteren met standaard player, downloaden (werkt niet) en deleten.
+        -Images: Images bekijken, verwijderen, aan ImageGallery toevoegen (geen functie voor).
 3.2 Je kan nu images en songs uploaden. Bij Images moet je reloaden, maar in het Admin component niet. Songs kan alleen een Admin beluisteren.
 3.2.b Alle files worden opgeslagen in http://localhost:8080/uploads/

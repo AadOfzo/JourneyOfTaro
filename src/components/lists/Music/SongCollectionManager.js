@@ -2,9 +2,9 @@ import React from 'react';
 import ApiService from "../../../configs/utilities/axios/ApiService";
 
 function SongCollectionManager({ collection, onVisibilityChange }) {
-    if (!collection) {
-        return <div>Loading...</div>; // or another appropriate fallback
-    }
+    // if (!collection) {
+    //     return <div>Loading...</div>; // or another appropriate fallback
+    // }
 
     // Check if `collection` has `isPublic`
     if (typeof collection.isPublic !== 'boolean') {

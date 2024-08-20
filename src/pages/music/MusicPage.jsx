@@ -27,7 +27,7 @@ function MusicPage() {
                     <>
                         <SongForm/>
                         <SongList/>
-                        <SongCollectionList/>
+                        <SongCollectionList showActions={true} />
                     </>
                 ) : (
                     isUser &&
@@ -35,8 +35,7 @@ function MusicPage() {
                         <h2>Upload Music</h2>
                         <SongForm/>
                         <div>
-                            <h1>Music Page</h1>
-                            <SongCollectionList />
+                            <SongCollectionList showActions={false} />
                         </div>
                     </>
                 )}
