@@ -12,6 +12,8 @@ import SongForm from "../../components/forms/musicForm/SongForm";
 import MusicApp from "../../components/musicPlayer/MusicApp";
 import MusicPlayerTop from "../../components/musicPlayer/MusicPlayerTop";
 import ContentContainer from "../../components/contentLayout/ContentContainer";
+import UserAccount from "../../components/users/UserAccount";
+import PageMenu from "../../components/pageMenu/PageMenu";
 
 const ComponentRoutes = () => {
     return (
@@ -19,10 +21,12 @@ const ComponentRoutes = () => {
             <Route path="/user-profile/:userId" element={<UserProfile />} />
             <Route path="/signup" element={<UserForm2 />} />
             <Route path="/account" element={<UserList />} />
+            <Route path="/user-account" element={<UserAccount />} />
             <Route path="/success" element={<SuccessMessage />} />
             <Route path="/error" element={<ErrorMessage />} />
 
             <Route path="/content-container" element={<ContentContainer />} />
+            <Route path="/page-menu" element={<PageMenu />} />
 
             <Route path="/image-form" element={<ImageForm />} />
             <Route path="/song-form" element={<SongForm />} />

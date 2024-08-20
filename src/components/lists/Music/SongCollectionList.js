@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { SongContainer, SongListContainer, ImageContainer, Image } from './styles.SongCollectionList';
 import ImageForm from "../../forms/imageForm/ImageForm";
+import ApiService from "../../../configs/utilities/axios/ApiService";
 
 function SongCollectionList() {
     const [collections, setCollections] = useState([]);
@@ -12,9 +12,9 @@ function SongCollectionList() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/songCollections');
-            console.log('Response from backend:', response.data);
-            setCollections(response.data);
+            const response = await ApiService.fetchSongCollections();
+            console.log('Response from backend:', response);
+            setCollections(response);
         } catch (error) {
             console.error('Error fetching collections!', error);
         }
@@ -24,17 +24,22 @@ function SongCollectionList() {
         if (collection.imageUrl) {
             return <Image src={collection.imageUrl} alt="Collection Image" />;
         } else {
-            return <ImageForm onImageUploaded={(uploadedImage) => handleImageUploaded(uploadedImage, collection.id)} />;
+            return <ImageForm onImageUploaded={(file) => handleImageUploaded(file, collection.id)} />;
         }
     };
 
-    const handleImageUploaded = (uploadedImage, collectionId) => {
-        // Update the collection with the new image URL
-        setCollections(prevCollections =>
-            prevCollections.map(collection =>
-                collection.id === collectionId ? { ...collection, imageUrl: uploadedImage } : collection
-            )
-        );
+    const handleImageUploaded = async (file, collectionId) => {
+        try {
+            const updatedCollection = await ApiService.addImageToSongCollection(collectionId, file);
+            // Update the collection with the new image URL
+            setCollections(prevCollections =>
+                prevCollections.map(collection =>
+                    collection.id === collectionId ? updatedCollection : collection
+                )
+            );
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
     };
 
     const toggleSongDetails = (id) => {

@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import SImagePage from "./styles.ImagePage";
 
 import ImageGallery from "../../components/images/ImageGallery";
-import ImageHandler from "../../components/fileHandling/ImageHandler";
-import ImageComponent from "../../components/images/ImageComponent";
 import ImageForm from "../../components/forms/imageForm/ImageForm";
 import ImageListBase64 from "../../components/images/ImageListBase64";
 import ImageGalleryWithUrls from "../../components/images/ImageGalleryWithUrls";
 import { useAuth } from "../../components/authentication/Auth";
+import LoadingComponent from "../../components/loadingWheel/LoadingComponent";
 
 function ImagePage() {
     const { user } = useAuth();
@@ -17,7 +16,7 @@ function ImagePage() {
     }, [user]);
 
     if (!user) {
-        return <div>Loading...</div>;
+        return <LoadingComponent/>;
     }
 
     const isAdmin = user.roles.includes('ROLE_ADMIN');
@@ -33,6 +32,7 @@ function ImagePage() {
                 ) : (
                     isUser && (
                         <>
+                            <h2>Upload Images</h2>
                             <ImageForm />
                             <ImageGallery />
                         </>

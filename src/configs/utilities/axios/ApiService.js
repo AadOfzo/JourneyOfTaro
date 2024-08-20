@@ -164,7 +164,7 @@ const ApiService = {
             throw new Error('Token is missing');
         }
 
-        const response = await axios.get(`http://localhost:8080/users/${userId}/image`, {
+        const response = await api.get(`http://localhost:8080/users/${userId}/image`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -258,9 +258,30 @@ const ApiService = {
         }
     },
 
-    async addSongToCollection(songId, collectionId) {
-        return await api.post(`/songCollections/${collectionId}/songs`, [songId]);
+    async addSongToCollection(songId, id) {
+        return await api.post(`/songCollections/${id}/songs`, [songId]);
     },
+
+    async toggleSongCollectionVisibility(id, makePublic) {
+        try {
+            const response = await api.patch(`/songCollections/${id}/visibility`, { isPublic: makePublic });
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating visibility for collection ${id}:`, error);
+            throw new Error(`Error updating visibility for collection ${id}: ${error.message}`);
+        }
+    },
+
+    async toggleSongVisibility(songId, makePublic) {
+        try {
+            const response = await api.patch(`/songs/${songId}/visibility`, { isPublic: makePublic });
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating visibility for song ${songId}:`, error);
+            throw new Error(`Error updating visibility for song ${songId}: ${error.message}`);
+        }
+    }
+
 };
 
 export default ApiService;

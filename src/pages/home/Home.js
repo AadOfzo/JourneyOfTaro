@@ -1,7 +1,6 @@
-import React from 'react';
-// Pages
+import React, {useEffect} from 'react';
 import './Home.css'
-// Components
+import { useAuth} from "../../components/authentication/Auth";
 import PageMenu from "../../components/pageMenu/PageMenu";
 // Assets
 import OutlineLogo from "../../assets/images/svg/JourneyOfTaro_Logo_CompassOutline_V2.svg";
@@ -9,6 +8,7 @@ import GongLogo from "../../assets/images/svg/JavaneseGamelan_Logo_GongOutline.s
 import FaceLogo from "../../assets/images/svg/JourneyOfTaro_Logo_PortraitOutline.svg";
 
 function Home() {
+
     return (
         <>
             <main className="pages-main-container">

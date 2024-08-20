@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './Login.css'
 import Login from "../../components/login/Login";
+import UserAccount from "../../components/users/UserAccount";
 
 
 function LoginPage() {
@@ -11,6 +12,7 @@ function LoginPage() {
         <div className="page-menus-container">
             <div className="login-page-container">
                 <Login/>
+                <UserAccount />
             </div>
         </div>
 
