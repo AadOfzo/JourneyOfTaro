@@ -1,32 +1,35 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import SuccessMessage from "../messaging/SuccessMessage";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../authentication/Auth'; // Update import path
+import ApiService from '../../configs/utilities/axios/ApiService';
+import SuccessMessage from '../messaging/SuccessMessage';
 
 const LoginForm = () => {
+    const navigate = useNavigate();
+    const { login } = useAuth(); // Use useAuth hook to access login function
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState(''); // State for success message
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/authenticate', {
-                username,
-                password,
-            });
-            const { jwt } = response.data;
-            localStorage.setItem('token', jwt);
+            const response = await ApiService.authenticate(username, password);
+            login({ username }, response);
+            console.log(response);
             setSuccessMessage('Login successful');
-
+            navigate('/'); // Navigate to ImageForm after successful login
         } catch (error) {
-            setError('Invalid username or password'); // Display error message to user
+            console.log(error)
+            console.error(error);
+            setError('Invalid username or password');
         }
     };
 
     return (
         <div>
-            <h3>Login</h3>
+            <h3>Login:</h3>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -43,7 +46,7 @@ const LoginForm = () => {
                 <button type="submit">Login</button>
             </form>
             {error && <div>{error}</div>}
-            {successMessage && <SuccessMessage message={successMessage} />} {/* Display success message if exists */}
+            {successMessage && <SuccessMessage message={successMessage} />}
         </div>
     );
 };

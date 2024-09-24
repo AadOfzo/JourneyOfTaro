@@ -21,7 +21,7 @@ const SnavBar2 = styled.div`
     color: var(--secondary);
     border-bottom: solid 1px var(--testColorOne);
   }
-  
+
   .navbar-title {
     margin-bottom: 1rem;
     font-size: 2rem;
@@ -54,30 +54,31 @@ const SnavBar2 = styled.div`
           &:hover {
             border-bottom: 1px solid #eaa733;
             transition: .5s;
-            
+          }
+        }
+
+        button {
+          font-family: 'Julius Sans One', sans-serif;
+          font-size: 1.2rem;
+          background: none;
+          border: none;
+          color: var(--secondary);
+          cursor: pointer;
+          font-weight: 500;
+          transition: border 0.3s ease, color 0.3s ease;
+
+          &:hover {
+            border: solid 1px var(--testColorOne);
+          }
+
+          &.active {
+            border: 2px solid #eaa733;
+            color: #eaa733;
           }
         }
       }
     }
   }
-
-  //.dropdown-content ul {
-  //  color: aqua;
-  //  font-size: 1rem;
-  //  list-style: none;
-  //  padding: 1.1rem;
-  //  margin: 1.1rem;
-  //}
-  //
-  //.dropdown-content li {
-  //  padding: 10px;
-  //  text-align: center;
-  //}
-  //
-  //.dropdown-content a {
-  //  text-decoration: none;
-  //  display: block;
-  //}
 
   /* Styling for hamburger menu */
   .hamburger {
@@ -110,7 +111,7 @@ const SnavBar2 = styled.div`
       background-color: var(--primary);
       border-bottom: solid 1px transparent;
       transition: transform 0.5s ease-in-out, border-bottom 0.5s ease-in-out;
-      
+
       ul {
         display: block;
         list-style: circle;

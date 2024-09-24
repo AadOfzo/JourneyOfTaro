@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { fetchUserDetails } from '../../configs/utilities/axios/ApiService';
 import ApiService from '../../configs/utilities/axios/ApiService';
 import GongLogo from '../../assets/images/svg/JavaneseGamelan_Logo_GongOutline.svg';
 
@@ -6,28 +7,39 @@ const ImageGalleryWithUrls = () => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userName, setUserName] = useState('');
+    const [userRole, setUserRole] = useState('');
 
     useEffect(() => {
-        fetchImages();
-    }, []);
+        const fetchData = async () => {
+            await fetchImages();
+            await fetchUserData();
+        };
 
-    useEffect(() => {
-        fetchImages();
+        fetchData();
     }, []);
 
     const fetchImages = async () => {
         try {
             const response = await ApiService.fetchImages();
-            console.log('Fetched images:', response.data);
             setImages(response.data);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching images:', error);
             setError(error);
             setLoading(false);
         }
     };
 
+    const fetchUserData = async () => {
+        try {
+            const response = await ApiService.fetchUserDetails();
+            const userData = response.data;
+            setUserName(userData.username);
+            setUserRole(userData.role);
+        } catch (error) {
+            setError(error);
+        }
+    };
 
     const handleImageError = (e) => {
         e.target.onerror = null;
@@ -52,7 +64,6 @@ const ImageGalleryWithUrls = () => {
                         />
                         <div className="image-info">
                             <h4>{image.imageName}</h4>
-                            {/* Optionally display upload time or other information */}
                         </div>
                     </div>
                 ))}

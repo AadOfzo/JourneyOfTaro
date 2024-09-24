@@ -13,7 +13,8 @@ function AuthContextProvider({ children }) {
             user: {
                 id: 2,
                 username: 'Test_User_2',
-                email: 'ExamplePassword2'
+                password: 'ExamplePassword2',
+                roles: ['ROLE_USER'],
             },
             status: 'done',
         });
@@ -25,6 +26,20 @@ function AuthContextProvider({ children }) {
         });
 
     }, []);
+
+    const login = (userData) => {
+        setAuthState({
+            user: userData,
+            status: 'done',
+        });
+    };
+
+    const logout = () => {
+        setAuthState({
+            user: null,
+            status: 'done',
+        });
+    };
 
     const data = {
         ...authState,

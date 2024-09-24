@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { SongContainer, SongListContainer, ImageContainer, Image } from './styles.SongCollectionList';
 import ImageForm from "../../forms/imageForm/ImageForm";
+import ApiService from "../../../configs/utilities/axios/ApiService";
+import LoadingComponent from "../../loadingWheel/LoadingComponent";
 
-function SongCollectionList() {
+function SongCollectionList({ onVisibilityChange = () => {}, showActions = true }) {
     const [collections, setCollections] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchData();
@@ -12,11 +14,62 @@ function SongCollectionList() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/songCollections');
-            console.log('Response from backend:', response.data);
-            setCollections(response.data);
+            const response = await ApiService.fetchSongCollections();
+            console.log('Response from backend:', response);
+            setCollections(response);
         } catch (error) {
             console.error('Error fetching collections!', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggleVisibility = async (collection) => {
+        const newVisibility = !collection.isPublic;
+
+        // Optimistically update UI for instant feedback
+        setCollections(prevCollections =>
+            prevCollections.map(col =>
+                col.id === collection.id ? { ...col, isPublic: newVisibility } : col
+            )
+        );
+
+        try {
+            // Send the request to the backend with the new visibility state
+            const updatedCollection = await ApiService.toggleSongCollectionVisibility(collection.id, { isPublic: newVisibility });
+
+            // Sync the UI with the actual backend response
+            setCollections(prevCollections =>
+                prevCollections.map(col =>
+                    col.id === collection.id ? updatedCollection : col
+                )
+            );
+
+            // Notify the parent component if needed
+            onVisibilityChange(updatedCollection);
+        } catch (error) {
+            console.error('Error toggling visibility:', error);
+
+            // Revert UI change if error occurs
+            setCollections(prevCollections =>
+                prevCollections.map(col =>
+                    col.id === collection.id ? { ...col, isPublic: !newVisibility } : col
+                )
+            );
+        }
+    };
+
+
+    const handleImageUploaded = async (file, collectionId) => {
+        try {
+            const updatedCollection = await ApiService.addImageToSongCollection(collectionId, file);
+            setCollections(prevCollections =>
+                prevCollections.map(collection =>
+                    collection.id === collectionId ? updatedCollection : collection
+                )
+            );
+        } catch (error) {
+            console.error('Error uploading image:', error);
         }
     };
 
@@ -24,30 +77,25 @@ function SongCollectionList() {
         if (collection.imageUrl) {
             return <Image src={collection.imageUrl} alt="Collection Image" />;
         } else {
-            return <ImageForm onImageUploaded={(uploadedImage) => handleImageUploaded(uploadedImage, collection.id)} />;
+            return <ImageForm onImageUploaded={(file) => handleImageUploaded(file, collection.id)} />;
         }
     };
 
-    const handleImageUploaded = (uploadedImage, collectionId) => {
-        // Update the collection with the new image URL
+    const toggleSongDetails = (id) => {
         setCollections(prevCollections =>
             prevCollections.map(collection =>
-                collection.id === collectionId ? { ...collection, imageUrl: uploadedImage } : collection
+                collection.id === id ? { ...collection, expanded: !collection.expanded } : collection
             )
         );
     };
 
-    const toggleSongDetails = (id) => {
-        setCollections(prevCollections => {
-            return prevCollections.map(collection => {
-                if (collection.id === id) {
-                    return { ...collection, expanded: !collection.expanded };
-                } else {
-                    return collection;
-                }
-            });
-        });
-    };
+    if (loading) {
+        return <LoadingComponent />;
+    }
+
+    if (collections.length === 0) {
+        return <div>No collections found.</div>;
+    }
 
     return (
         <SongContainer>
@@ -55,7 +103,9 @@ function SongCollectionList() {
             {collections.map((collection) => (
                 <div key={collection.id}>
                     <SongListContainer>
-                        <h3 onClick={() => toggleSongDetails(collection.id)}>{collection.songCollectionTitle}</h3>
+                        <h3 onClick={() => toggleSongDetails(collection.id)}>
+                            {collection.songCollectionTitle}
+                        </h3>
                         {collection.expanded && (
                             <>
                                 <ul>
@@ -63,11 +113,19 @@ function SongCollectionList() {
                                         {renderImage(collection)}
                                     </ImageContainer>
                                 </ul>
+                                <h3>Songs in collection:</h3>
                                 <ul>
                                     {collection.songIds.map((song) => (
-                                        <li key={song.id}>{song.songTitle}</li>
+                                        <li key={song.id}>
+                                            {song.songTitle}, {song.artistName}
+                                        </li>
                                     ))}
                                 </ul>
+                                {showActions && (
+                                    <button onClick={() => handleToggleVisibility(collection)}>
+                                        {collection.isPublic ? 'Make Private' : 'Make Public'}
+                                    </button>
+                                )}
                             </>
                         )}
                     </SongListContainer>

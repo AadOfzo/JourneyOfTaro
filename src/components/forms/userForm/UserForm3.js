@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PopUp1 from '../../popup/PopUp1';
 import SUserForm from './styles.UserForm';
+import ImageForm from "../imageForm/ImageForm";
+import UserProfile from "../../lists/UserProfile";
 import ApiService from "../../../configs/utilities/axios/ApiService";
 import CountryMenu from "../../countryMenu/CountryMenu";
-import UserProfile from "../../lists/UserProfile";
-import Login from "../../login/Login";
 
-const UserForm2 = () => {
+const UserForm3 = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
@@ -21,58 +22,73 @@ const UserForm2 = () => {
 
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [showImageForm, setShowImageForm] = useState(false);
+    const [createdUsername, setCreatedUsername] = useState('');
     const [createdUserId, setCreatedUserId] = useState(null);
+
+    useEffect(() => {
+        console.log("createdUserId updated:", createdUserId);
+    }, [createdUserId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const userPayload = {
-            ...formData,
-            authorities: 'USER', // Assigning the user authority
-        };
-
         try {
-            const response = await ApiService.createUser(userPayload);
-            console.log(response);
-            // const { id, jwt } = response.data; // Expecting the backend to return JWT and user ID
-            //
-            // // Save JWT token in local storage or state
-            // localStorage.setItem('token', jwt);
-            //
-            setSuccessMessage('Your account has been created successfully. Please Login');
-            // setErrorMessage(''); // Clear error message
-            // setCreatedUserId(id); // Store the user ID from the backend response
-            // setFormData({
-            //     username: '',
-            //     password: '',
-            //     firstname: '',
-            //     lastname: '',
-            //     dateofbirth: '',
-            //     country: '',
-            //     email: '',
-            //     artistname: '',
-            // });
+            const response = await ApiService.createUser(formData);
+            setSuccessMessage('User created successfully.');
+            setShowPopup(true);
+            setCreatedUsername(formData.username);
+            setCreatedUserId(response.data.id); // Store the user ID from the backend response
+            setFormData({
+                username: '',
+                password: '',
+                firstname: '',
+                lastname: '',
+                dateofbirth: '',
+                country: '',
+                email: '',
+                artistname: '',
+            });
         } catch (error) {
-            console.log(error);
-            setSuccessMessage(''); // Clear success message
             setErrorMessage('Failed to create user. Please try again.');
         }
+    };
+
+    const handleLogin = () => {
+        navigate('/');
+    };
+
+    const handleYes = async () => {
+        setShowPopup(false);
+        setShowImageForm(true);
+    };
+
+    const handleNo = () => {
+        setShowPopup(false);
+        handleLogin();
+    };
+
+    const handleImageUploaded = () => {
+        console.log("Image uploaded: Showing user profile");
+        setShowImageForm(false); // Hide the image form after upload
     };
 
     const handleCountryChange = (e) => {
         setFormData({ ...formData, country: e.target.value });
     };
 
-    if (createdUserId) {
-        return <UserProfile userId={createdUserId} />;
-    }
-
     return (
         <SUserForm>
-            {successMessage ? (
-                <>
-                    <p>{successMessage}</p>
-                    <Login/>
-                </>
+            {showPopup ? (
+                <PopUp1
+                    message="Thank you for signing up! Would you like to login or upload a profile image?"
+                    onYes={handleYes} // Show image upload form on 'Yes'
+                    onNo={handleNo}
+                />
+            ) : showImageForm && createdUserId ? (
+                <ImageForm userId={createdUserId} onImageUploaded={handleImageUploaded} />
+            ) : createdUserId ? (
+                <UserProfile username={createdUsername} />
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -158,6 +174,7 @@ const UserForm2 = () => {
                         />
                     </div>
                     <button type="submit">Submit</button>
+                    {successMessage && <p>{successMessage}</p>}
                     {errorMessage && <p>{errorMessage}</p>}
                 </form>
             )}
@@ -165,4 +182,4 @@ const UserForm2 = () => {
     );
 };
 
-export default UserForm2;
+export default UserForm3;

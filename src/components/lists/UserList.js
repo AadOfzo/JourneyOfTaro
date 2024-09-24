@@ -1,137 +1,184 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ImageForm from "../forms/imageForm/ImageForm";
+import React, { useState, useEffect, useRef } from 'react';
 import ApiService from "../../configs/utilities/axios/ApiService";
+import UserDetails from "../../configs/users/UserDetails";
 import {
-    GlowingRow,
-    UserImage as StyledUserImage,
-    UserInfoContainer,
-    UserInfo,
-    ImageContainer,
-    Image,
-    ExpandableContent,
-    ExpandButton,
+    UserSelect,
+    CenteredH2,
     UserListContainer,
-    UserDetailsContainer
+    UserDetailsContainer,
+    UserListInnerContainer,
+    AddAdminButton,
+    UserDeleteButton,
+    ButtonsContainer,
+    UserSelectList,
+    UserSelectItem,
+    UserSelectHeader
 } from './styles.UserList';
 
 function UserList() {
+    const [user, setUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [expandedUserId, setExpandedUserId] = useState(null);
     const [loadingUsers, setLoadingUsers] = useState(false);
-    const [errorUsers, setErrorUsers] = useState(null);
-    const [images, setImages] = useState([]);
-    const [errorImages, setErrorImages] = useState(null);
+    const [ setErrorUsers ] = useState(null);
+    const [file, setFile] = useState(null);
+    const [buttonText, setButtonText] = useState("Upload Image");
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
+
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
-        fetchUsersAndImages();
+        fetchUsers();
     }, []);
 
-    const fetchUsersAndImages = async () => {
+    const fetchUsers = async () => {
         setLoadingUsers(true);
         try {
-            const usersResponse = await axios.get('http://localhost:8080/users');
-            setUsers(usersResponse.data);
+            const usersResponse = await ApiService.fetchUsers();
+            setUsers(usersResponse);
 
-            // Fetch images for each user
-            const imagePromises = usersResponse.data.map(user =>
-                ApiService.getImageFromUser(user.userId)
-                    .then(response => ({
-                        userId: user.userId,
-                        imageData: response.data,
-                        mimeType: response.headers['content-type']
-                    }))
-            );
-            const fetchedImages = await Promise.all(imagePromises);
-            setImages(fetchedImages);
+            // Fetch the image for the selected user
+            if (selectedUserId) {
+                await fetchUserImage(selectedUserId);
+            }
         } catch (error) {
-            console.error('Error fetching users and images:', error);
+            console.error('Error fetching users:', error);
             setErrorUsers('Error fetching users. Please try again later.');
-            setErrorImages('Error fetching images. Please try again later.');
         } finally {
             setLoadingUsers(false);
         }
     };
 
-    const toggleExpand = (userId) => {
+    const fetchUserImage = async (userId) => {
+        try {
+            const imageResponse = await ApiService.getUserImage(userId);
+            setImageUrl(URL.createObjectURL(imageResponse.data));
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                // No image found, set URL to null
+                setImageUrl(null);
+            } else {
+                // Handle other errors
+                console.error('Error fetching user image:', error);
+                setImageUrl(null); // Fallback if there's an error
+            }
+        }
+    };
+
+    const handleNoImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+        setButtonText("Add Image");
+    };
+
+    const handleUploadClick = async () => {
+        if (file && selectedUserId) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                await ApiService.addUserImage(selectedUserId, file);
+                setFile(null);
+                setButtonText("Upload Image");
+                fetchUsers(); // Refresh user list and image
+            } catch (error) {
+                console.error('Error uploading the image:', error);
+            }
+        }
+    };
+
+    const toggleExpand = async (userId) => {
         setExpandedUserId(prevState => (prevState === userId ? null : userId));
+        const selectedUser = users.find(u => u.userId === userId);
+        setUser(selectedUser);
+        setSelectedUserId(userId); // Set the selected user's ID
+
+        // Fetch and set the user image
+        await fetchUserImage(userId);
     };
 
     const grantAdminPrivilege = async (username) => {
         try {
-            await axios.post(`http://localhost:8080/users/${username}/authorities`, { authority: 'ROLE_ADMIN' }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            fetchUsersAndImages(); // Refresh user list after updating privileges
+            await ApiService.grantAdminPrivilege(username);
+            fetchUsers(); // Refresh user list after updating privileges
         } catch (error) {
             console.error('Error granting admin privilege:', error);
         }
     };
 
-    const getUserImage = (userId) => {
-        const userImage = images.find(img => img.userId === userId);
-        if (userImage && userImage.imageData) {
-            return <StyledUserImage src={`data:${userImage.mimeType};base64,${userImage.imageData}`} alt="User Image" />;
-        } else {
-            return <ImageForm onImageUploaded={() => fetchUsersAndImages()} />;
+    const deleteUser = async (userId) => {
+        try {
+            await ApiService.deleteUser(userId);
+            fetchUsers();
+        } catch (error) {
+            console.error('Error deleting user:', error);
         }
     };
 
     return (
-        <>
-            <h2>User List</h2>
-            <UserListContainer>
-                <UserInfoContainer>
-                    {loadingUsers ? (
-                        <p>Loading...</p>
-                    ) : (
-                        <UserInfo>
-                            <table>
-                                <tbody>
-                                {users.slice(0, 10).map(user => (
-                                    <React.Fragment key={user.userId}>
-                                        <GlowingRow onClick={() => toggleExpand(user.userId)}>
-                                            <td>{user.userId}</td>
-                                            <td>{user.username}</td>
-                                        </GlowingRow>
-                                    </React.Fragment>
-                                ))}
-                                </tbody>
-                            </table>
-                        </UserInfo>
-                    )}
-                    {errorUsers && <p>{errorUsers}</p>}
-                    {errorImages && <p>{errorImages}</p>}
-                </UserInfoContainer>
-                <UserDetailsContainer>
-                    {users.map(user => (
-                        <React.Fragment key={user.userId}>
-                            {expandedUserId === user.userId && (
-                                <ExpandableContent expanded={expandedUserId === user.userId}>
-                                    <div>
-                                        <ImageContainer>
-                                            {getUserImage(user.userId)}
-                                        </ImageContainer>
-                                        <p>Role: {user.roles}</p>
-                                        <p>API Key: {user.apikey}</p>
-                                        <p>First Name: {user.firstName}</p>
-                                        <p>Last Name: {user.lastName}</p>
-                                        <p>Country: {user.country}</p>
-                                        <p>Email: {user.email}</p>
-                                        <p>Artist Name: {user.artistName}</p>
-                                        <p>Songs: {user.songTitle}</p>
-                                        <ExpandButton onClick={() => grantAdminPrivilege(user.username)}>Add Admin</ExpandButton>
-                                    </div>
-                                </ExpandableContent>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </UserDetailsContainer>
-            </UserListContainer>
-        </>
+        <UserListContainer>
+            <CenteredH2>User List</CenteredH2>
+            {loadingUsers ? (
+                <p>Loading...</p>
+            ) : (
+                <UserListInnerContainer>
+                    <UserSelect>
+                        <UserSelectHeader>Users</UserSelectHeader>
+                        <UserSelectList as="table">
+                            <tbody>
+                            {users.map(user => (
+                                <UserSelectItem
+                                    as="tr"
+                                    key={user.userId}
+                                    onClick={() => toggleExpand(user.userId)}
+                                    isActive={expandedUserId === user.userId}
+                                >
+                                    <td>{user.userId}</td>
+                                    <td>{user.username}</td>
+                                </UserSelectItem>
+                            ))}
+                            </tbody>
+                        </UserSelectList>
+                    </UserSelect>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        {user && (
+                            <>
+                                <UserDetailsContainer>
+                                    <UserDetails user={user} imageUrl={imageUrl} />
+                                </UserDetailsContainer>
+                                <ButtonsContainer>
+                                    <AddAdminButton onClick={() => grantAdminPrivilege(user.username)}>Grant Admin Rights</AddAdminButton>
+                                    <UserDeleteButton onClick={() => deleteUser(user.userId)}>Delete User</UserDeleteButton>
+                                </ButtonsContainer>
+                                <NoImageContainer
+                                    hasImage={!!file}
+                                    imageUrl={file ? URL.createObjectURL(file) : null}
+                                    onClick={handleNoImageClick}
+                                >
+                                    {!file && <NoImageIcon />}
+                                    <p>{!file ? 'No user image' : ''}</p>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                    />
+                                    <UploadButton file={file} onClick={handleUploadClick}>
+                                        {buttonText}
+                                    </UploadButton>
+                                </NoImageContainer>
+                            </>
+                        )}
+                    </div>
+                </UserListInnerContainer>
+            )}
+        </UserListContainer>
     );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ApiService from "../../../configs/utilities/axios/ApiService";
+import ApiService from "../../../configs/utilities/axios/ApiService"; // Moved to the top
 import {
     Container,
     Form,
@@ -11,7 +11,7 @@ import {
     LoadingWheel
 } from './styles.ImageForm';
 
-const ImageForm = ({ onImageUploaded }) => {
+const UserImageForm = ({ userId, onImageUploaded }) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [uploaded, setUploaded] = useState(false);
@@ -35,13 +35,13 @@ const ImageForm = ({ onImageUploaded }) => {
         formData.append('file', file);
 
         try {
-            await ApiService.uploadImage(formData);
+            await ApiService.uploadUserImage(formData, userId);
+            if (onImageUploaded) {
+                onImageUploaded();
+            }
             setFile(null);
             setLoading(false);
             setUploaded(true); // Set the uploaded state to true after successful upload
-            if (onImageUploaded) {
-                onImageUploaded(); // Call the callback to refresh the image list
-            }
         } catch (error) {
             console.error('Error uploading image:', error);
             setLoading(false);
@@ -72,4 +72,4 @@ const ImageForm = ({ onImageUploaded }) => {
     );
 };
 
-export default ImageForm;
+export default UserImageForm;

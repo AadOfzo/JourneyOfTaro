@@ -7,21 +7,23 @@ import About from '../../pages/about/About';
 import LoginPage from '../../pages/login/LoginPage';
 import ImagePage from '../../pages/images/ImagePage';
 import NotFound from '../../pages/notfound/NotFound';
-import UserForm3 from "../../components/forms/userForm/UserForm3";
 import UserList from "../../components/lists/UserList";
-import UserProfile from "../../components/lists/UserProfile";
+import UserForm2 from "../../components/forms/userForm/UserForm2";
+import Dashboard from "../../pages/admin/Dashboard";
+import UnusedComponents from "../../pages/unused/UnusedComponents";
 
 const PageRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/music" element={<Music />} />
+            <Route path="/images" element={<ImagePage />} />
+            <Route path="/unused" element={<UnusedComponents />} />
             <Route path="/samples" element={<Samples />} />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/images" element={<ImagePage />} />
-            <Route path="/signup" element={<UserForm3 />} />
-            <Route path="/user/:username" element={<UserProfile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/signup" element={<UserForm2 />} />
             <Route path="/account" element={<UserList />} />
             <Route path="*" element={<NotFound />} />
         </Routes>

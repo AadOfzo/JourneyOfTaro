@@ -11,7 +11,7 @@ const ImageGallery = () => {
     const fetchImages = async () => {
         try {
             const response = await ApiService.fetchImages();
-            setImages(response.data); // Assuming your API response has a 'data' property with image data
+            setImages(response); // Assuming response is directly the array of images
         } catch (error) {
             console.error('Error fetching images:', error);
         }
@@ -34,8 +34,8 @@ const ImageGallery = () => {
                             style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                         />
                         <div className="image-info">
-                            <h4>{image.imageName}</h4>
-                            {/* Opties voor meer informatie zoals imageName, uploadTime, etc */}
+                            {/*<h4>{image.imageName}</h4>*/}
+                            {/* Add additional information as needed */}
                         </div>
                     </div>
                 ))}

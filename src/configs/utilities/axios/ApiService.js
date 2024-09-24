@@ -1,66 +1,286 @@
-import api from "./api";
+import axios from "axios";
+
+const api = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+        'Content-Type': 'application/json',
+    }
+});
+
+api.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        console.log(token);
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            console.error('Token is missing');
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
 const ApiService = {
+    getToken: () => localStorage.getItem('token'),
 
-    // Images
-    async uploadImage(formData) {
-        return await api.post('/fileUpload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-    },
-
-    async fetchImages() {
-        return await api.get('/images');
-    },
-
-    async deleteImage(id) {
-        return await api.delete(`/images/${id}`);
-    },
-
-    async getImageFromUser(userId) {
+    async authenticate(username, password) {
         try {
-            const response = await api.get(`/users/${userId}/image`, {
-                responseType: 'arraybuffer' // Ensure response is treated as binary data
-            });
-            if (response.status === 200) {
-                const imageData = Buffer.from(response.data, 'binary').toString('base64');
-                const mimeType = response.headers['content-type'];
-                return { imageData, mimeType };
+            const response = await api.post('/authenticate', { username, password });
+            const { jwt, user } = response.data;
+            if (jwt) {
+                localStorage.setItem('token', response.data.jwt);
             }
-            throw new Error(`Failed to fetch image for user ${userId}. Status: ${response.status}`);
+            console.log(response.data)
+            return { jwt, user };
         } catch (error) {
-            console.error(`Error fetching image for user ${userId}:`, error);
-            throw error; // Rethrow the error to be handled by the caller (e.g., UserList component)
+            console.error('Error authenticating', error);
+            throw new Error(`Error authenticating: ${error.message}`);
         }
     },
 
-    // Songs
+    // Users endpoints
+    async fetchUsers() {
+        try {
+            const response = await api.get('/users');
+            return response.data || []; // Handle empty response
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            throw new Error('Failed to fetch users.');
+        }
+    },
+
+    async fetchUserByUsername(username) {
+        try {
+            const response = await api.get(`/users/username/${username}`);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error fetching user ${username}: ${error.message}`);
+        }
+    },
+
+    async fetchUserById(userId) {
+        try {
+            const response = await api.get(`/users/${userId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error fetching user ${userId}: ${error.message}`);
+        }
+    },
+
+    async fetchUserDetails(token, username) {
+        console.log(token, username);
+        try {
+            const response = await api.get(`/users/username/${username}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+            throw error;
+        }
+    },
+
+    async grantAdminPrivilege(username) {
+        try {
+            const response = await api.put(`/users/${username}/grant-admin`);
+            return response.data; // or simply return the response if you don't need data
+        } catch (error) {
+            throw new Error(`Error granting admin privilege to ${username}: ${error.message}`);
+        }
+    },
+
+    async updateUser(userId, userData) {
+        try {
+            const response = await api.put(`/users/${userId}`, userData);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error updating user ${userId}: ${error.message}`);
+        }
+    },
+
+    async createUser(userData) {
+        try {
+            const response = await api.post('/users', userData);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error creating user: ${error.message}`);
+        }
+    },
+
+    async deleteUser(userId) {
+        try {
+            const response = await api.delete(`/users/${userId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error deleting user ${userId}: ${error.message}`);
+        }
+    },
+
+    // Image endpoints
+    async fetchImages() {
+        try {
+            const response = await api.get('/images');
+            return response.data || [];
+        } catch (error) {
+            console.error('Error fetching images:', error);
+            throw new Error('Failed to fetch images.');
+        }
+    },
+
+    async uploadImage(formData) {
+        try {
+            const response = await api.post('/fileUpload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            throw error;
+        }
+    },
+
+    async deleteImage(userId) {
+        if (!userId) {
+            throw new Error('Image ID is required');
+        }
+
+        try {
+            return await api.delete(`/images/${userId}`);
+        } catch (error) {
+            console.error('Error deleting image:', error.response || error.message || error);
+            throw error;
+        }
+    },
+
+    getUserImage: async (userId) => {
+        const token = ApiService.getToken();
+        if (!token) {
+            console.error('Token is missing');
+            throw new Error('Token is missing');
+        }
+
+        const response = await api.get(`http://localhost:8080/users/${userId}/image`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            responseType: 'blob' // Add this line to specify the response type as a blob
+        });
+        return response;
+    },
+
+
+    async addUserImage(userId, file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const response = await api.post(`/users/${userId}/image`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error adding image to user ${userId}: ${error.message}`);
+        }
+    },
+
+    async deleteUserImage(imageId) {
+        try {
+            const response = await api.delete(`/images/${imageId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error(`Error deleting image ${imageId}: ${error.message}`);
+        }
+    },
+
+    // Songs endpoint api calls
     async fetchSongs() {
-        return await api.get('/songs');
+        try {
+            const response = await api.get('/songs');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching songs:', error);
+            throw error;
+        }
+    },
+
+    async getDownloadUrl(songTitle) {
+        try {
+            const response = await api.get(`/songs/files/${songTitle}`);
+            return response.data; // Assuming the backend returns the URL or a relevant message
+        } catch (error) {
+            console.error('Error fetching song download URL:', error);
+            throw error;
+        }
     },
 
     async uploadSong(formData) {
-        return await api.post('/fileUpload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        try {
+            const response = await api.post('/fileUpload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            console.log("Upload response:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error uploading song:', error);
+            throw error;
+        }
     },
 
-    async addSong(id) {
-        return await api.post(`/songs/${id}`);
+    async addSong(songId) {
+        try {
+            await api.post(`/songs/${songId}`);
+        } catch (error) {
+            console.error('Error adding song:', error);
+            throw error;
+        }
     },
 
-    async deleteSong(id) {
-        return await api.delete(`/songs/${id}`);
+    async deleteSong(songId) {
+        try {
+            await api.delete(`/songs/${songId}`);
+        } catch (error) {
+            console.error('Error deleting song:', error);
+            throw error;
+        }
     },
 
-    // Song Collections
     async fetchSongCollections() {
-        return await api.get('/songCollections');
+        try {
+            const response = await api.get('/songCollections');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching song collections:', error);
+            throw error;
+        }
     },
 
-    async addSongToCollection(songId, collectionId) {
-        return await api.post(`/songCollections/${collectionId}/songs`, [songId]);
+    async addSongToCollection(songId, id) {
+        return await api.post(`/songCollections/${id}/songs`, [songId]);
     },
+
+    async toggleSongCollectionVisibility(id, makePublic) {
+        try {
+            const response = await api.patch(`/songCollections/${id}/visibility`, { isPublic: makePublic });
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating visibility for collection ${id}:`, error);
+            throw new Error(`Error updating visibility for collection ${id}: ${error.message}`);
+        }
+    },
+
+    async toggleSongVisibility(songId, makePublic) {
+        try {
+            const response = await api.patch(`/songs/${songId}/visibility`, { isPublic: makePublic });
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating visibility for song ${songId}:`, error);
+            throw new Error(`Error updating visibility for song ${songId}: ${error.message}`);
+        }
+    }
 
 };
 

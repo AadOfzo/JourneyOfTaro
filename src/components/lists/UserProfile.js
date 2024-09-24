@@ -1,77 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ImageForm from "../forms/imageForm/ImageForm";
-import ApiService from "../../configs/utilities/axios/ApiService";
-import {
-    GlowingRow,
-    UserImage as StyledUserImage,
-} from './styles.UserList';
+import React, { useState, useEffect, useRef } from 'react';
+import UserComponent from "../../configs/users/UserComponent";
+import UserDetails from "../../configs/users/UserDetails";
+import { UserImage, NoImageContainer, NoImageIcon, UploadButton, UserListContainer } from '../../configs/users/styles.UserComponent';
+import axios from "axios";
 
-const UserProfile = ({ username }) => {
+const UserProfile = () => {
+    const [users, setUsers] = useState([]);
+    const [selectedUserId, setSelectedUserId] = useState(null);
     const [user, setUser] = useState(null);
-    const [error, setError] = useState(null);
-    const [image, setImage] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
-        const fetchUserAndImage = async () => {
-            if (!username) {
-                setError('Username is undefined.');
-                setLoading(false);
-                return;
-            }
+        axios.get('http://localhost:8080/users')
+            .then(response => {
+                setUsers(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the users!', error);
+            });
+    }, []);
 
-            try {
-                const userResponse = await axios.get(`http://localhost:8080/users/${username}`);
-                setUser(userResponse.data);
-
-                const imageResponse = await ApiService.getImageFromUser(userResponse.data.userId);
-                setImage({
-                    imageData: imageResponse.data,
-                    mimeType: imageResponse.headers['content-type']
+    useEffect(() => {
+        if (selectedUserId) {
+            axios.get(`http://localhost:8080/users/${selectedUserId}`)
+                .then(response => {
+                    setUser(response.data);
+                })
+                .catch(error => {
+                    console.error(`There was an error fetching the user with ID ${selectedUserId}!`, error);
                 });
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-                setError('Failed to fetch user data.');
-            } finally {
-                setLoading(false);
-            }
-        };
+        }
+    }, [selectedUserId]);
 
-        fetchUserAndImage();
-    }, [username]);
+    const handleUserChange = (event) => {
+        setSelectedUserId(event.target.value);
+    };
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+    };
 
-    if (error) {
-        return <p>{error}</p>;
-    }
+    const handleUploadClick = () => {
+        if (file && selectedUserId) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            axios.post(`http://localhost:8080/users/${selectedUserId}/image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+                .then(response => {
+                    setUser(response.data);
+                    setFile(null);
+                })
+                .catch(error => {
+                    console.error('There was an error uploading the image!', error);
+                });
+        }
+    };
+
+    const handleNoImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const renderUserImage = (imageUrl) => {
+        if (imageUrl) {
+            return <UserImage src={imageUrl} alt="User" />;
+        } else {
+            return (
+                <NoImageContainer
+                    hasImage={!!file}
+                    imageUrl={file ? URL.createObjectURL(file) : null}
+                    onClick={handleNoImageClick}
+                >
+                    {!file && <NoImageIcon />}
+                    <p>{!file ? 'No user image' : ''}</p>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                    />
+                    <UploadButton file={file} onClick={handleUploadClick}>Upload Image</UploadButton>
+                </NoImageContainer>
+            );
+        }
+    };
 
     return (
-        <div>
-            <h2>User Profile</h2>
+        <UserListContainer>
+            <UserComponent onUserChange={handleUserChange} users={users} />
             {user && (
-                <div>
-                    <p>Username: {user.username}</p>
-                    <p>First Name: {user.firstName}</p>
-                    <p>Last Name: {user.lastName}</p>
-                    <p>Date of Birth: {user.dateOfBirth}</p>
-                    <p>Country: {user.country}</p>
-                    <p>Email: {user.email}</p>
-                    <p>Artist Name: {user.artistName}</p>
-                    {image ? (
-                        <StyledUserImage
-                            src={`data:${image.mimeType};base64,${image.imageData}`}
-                            alt="User Image"
-                        />
-                    ) : (
-                        <ImageForm username={username} onImageUploaded={() => window.location.reload()} />
-                    )}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {renderUserImage(user.imageUrl)}
+                    <UserDetails user={user} />
                 </div>
             )}
-        </div>
+        </UserListContainer>
     );
 };
 
