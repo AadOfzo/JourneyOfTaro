@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
 const fadeIn = keyframes`
   from {
@@ -8,7 +8,6 @@ const fadeIn = keyframes`
     box-shadow: inset 0 0 10px rgba(234, 167, 51, 0.5);
   }
 `;
-
 
 const fadeOutEffect = keyframes`
   from {
@@ -35,8 +34,8 @@ export const Image = styled.img`
 `;
 
 export const UserListInnerContainer = styled.div`
-    display: flex;
-    height: 40vh;
+  display: flex;
+  height: 40vh;
 `;
 
 export const UserListContainer = styled.div`
@@ -74,15 +73,15 @@ export const UserSelect = styled.div`
   width: 20vw;
   border: 2px solid var(--secondary);
   border-radius: 5px;
-  overflow-y: auto; 
-  box-sizing: border-box; 
+  overflow-y: auto;
+  box-sizing: border-box;
 `;
 
 export const UserSelectHeader = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
   padding: 10px;
-  border-bottom: 2px solid #a71818; 
+  border-bottom: 2px solid #a71818;
 `;
 
 export const UserSelectList = styled.table`
@@ -93,8 +92,9 @@ export const UserSelectList = styled.table`
 export const UserSelectItem = styled.tr`
   cursor: pointer;
   background-color: transparent;
-  box-shadow: ${({isActive}) => (isActive ? 'inset 0 0 10px rgba(234, 167, 51, 0.5)' : 'none')};
-  animation: ${({isActive}) => (isActive ? fadeIn : 'none')} 0.5s forwards;
+  box-shadow: ${({ isActive }) =>
+    isActive ? "inset 0 0 10px rgba(234, 167, 51, 0.5)" : "none"};
+  animation: ${({ isActive }) => (isActive ? fadeIn : "none")} 0.5s forwards;
   transition: background-color 0.3s, box-shadow 0.3s;
 
   &:hover {

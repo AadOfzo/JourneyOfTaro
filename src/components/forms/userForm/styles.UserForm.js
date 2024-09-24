@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
 const SUserForm = styled.div`
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     justify-content: center;
     align-items: center;
@@ -41,7 +43,8 @@ const SUserForm = styled.div`
       margin-bottom: 0.5rem;
     }
 
-    input, select {
+    input,
+    select {
       margin: 12px;
       width: 300px;
       appearance: auto;
@@ -60,7 +63,7 @@ const SUserForm = styled.div`
     button {
       height: 2rem;
       width: 360px;
-      font-family: 'Julius Sans One', sans-serif;
+      font-family: "Julius Sans One", sans-serif;
       font-size: 1.5rem;
       background-color: var(--secondary);
     }

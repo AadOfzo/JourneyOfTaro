@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const SnavBar2 = styled.div`
   position: sticky;
@@ -53,7 +53,7 @@ const SnavBar2 = styled.div`
           &.active-link,
           &:hover {
             border-bottom: 1px solid #eaa733;
-            transition: .5s;
+            transition: 0.5s;
           }
         }
 
@@ -65,7 +65,9 @@ const SnavBar2 = styled.div`
           color: var(--secondary);
           cursor: pointer;
           font-weight: 500;
-          transition: border 0.3s ease, color 0.3s ease;
+          transition:
+            border 0.3s ease,
+            color 0.3s ease;
 
           &:hover {
             border: solid 1px var(--testColorOne);
@@ -110,7 +112,9 @@ const SnavBar2 = styled.div`
       right: 0;
       background-color: var(--primary);
       border-bottom: solid 1px transparent;
-      transition: transform 0.5s ease-in-out, border-bottom 0.5s ease-in-out;
+      transition:
+        transform 0.5s ease-in-out,
+        border-bottom 0.5s ease-in-out;
 
       ul {
         display: block;

@@ -17,7 +17,6 @@ const SNavBarDropdown = styled.div`
     //background-color: var(--primary); /* Change background color to match NavBar2 */
     //min-width: 160px;
     border: solid 2px var(--testColorOne);
-
   }
 
   .dropdown-content ul {
